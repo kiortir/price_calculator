@@ -31,15 +31,17 @@ class CalculationView(TemplateView):
             print(context['priceList'])
             return render(request, template_name=self.template_name, context=context)
         except ObjectDoesNotExist:
+            print('EROOR')
             return render(request, template_name=self.notfound_template)
 
 
 class NewCalc(TemplateView):
     login_url = '/calc/login'
-    template_name = "price_calc/index.html"
+    template_name = "main/index.html"
 
     def get(self, request, *args, **kwargs):
-        priceList = PriceList.objects.latest('id').priceList
+        print('fdfpdsf')
+        priceList = PriceList.objects.latest('id').value
         context = {
             "storage": {
                 'calc': json.loads(
@@ -47,7 +49,7 @@ class NewCalc(TemplateView):
                 'calcId': 'null',
                 "related_lead": ''
             },
-            "priceList": PriceList.objects.latest('id').priceList
+            "priceList": priceList
         }
 
         return render(request, template_name=self.template_name, context=context)
