@@ -26,9 +26,27 @@ FRONTEND_DIR = os.path.join(BASE_DIR, 'main', 'frontend')
 SECRET_KEY = 'django-insecure-q8ruu-*$o=q4sgs))i&q6z@(d@p317!cj-z1tg_x4n4vw#*$-0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = ['194.67.111.46', 'dev.unirock.ru', 'localhost']
+
+
+if DEBUG:
+    STATIC_DIR = os.path.join(BASE_DIR, 'static')
+    STATICFILES_DIRS = [
+        STATIC_DIR,
+        '/var/www/static/',
+    ]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+    STATICFILES_FINDERS = (
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    )
+MEDIA_URL = '/media/'
 
 # Application definition
 
@@ -84,32 +102,24 @@ WSGI_APPLICATION = 'calculator.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+ #       'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
+#    }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'calculation',
+        'USER': 'admin',
+        'PASSWORD': 'avalon11',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
-# DATABASES = {
-
-#     'default': {
-
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-#         'NAME': ‘<db_name>’,
-
-#         'USER': '<db_username>',
-
-#         'PASSWORD': '<password>',
-
-#         'HOST': '<db_hostname_or_ip>',
-
-#         'PORT': '<db_port>',
-
-#     }
-
-# }
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -145,8 +155,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = ['static']
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
