@@ -40,15 +40,9 @@ class NewCalc(TemplateView):
     template_name = "main/index.html"
 
     def get(self, request, *args, **kwargs):
-        print('fdfpdsf')
         priceList = PriceList.objects.latest('id').value
         context = {
-            "storage": {
-                'calc': json.loads(
-                    '{"material_cards": [{"materialName": null, "materialPrice": null, "materialCount": null}], "product_cards": [{"option_card": [], "chosenType": "", "addons": [], "installation": {}}], "logistics": {"zamerCount": null, "montazhCount": null, "dostavkaCount": null}}'),
-                'calcId': 'null',
-                "related_lead": ''
-            },
+            "server_state": json.loads('{"values": {"material_cards": [{"materialName": null,"materialPrice": null,"materialCount": null}],"product_cards": [{"option_card": [],"chosenType": null}],"logistics": {"zamerCount": null,"montazhCount": null, "dostavkaCount": null}}}'),
             "priceList": priceList
         }
 
