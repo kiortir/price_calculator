@@ -191,6 +191,7 @@ def SaveCalc(request):
     calc_storage['values'] = json.dumps(values, ensure_ascii=False)
 
     if calc_id is None:
+        calc_storage['pricelist_id'] = PriceList.objects.latest('id').id
         new_calc = Calculation.objects.create(**calc_storage)
         return JsonResponse({"new": True, "id": new_calc.id})
 
