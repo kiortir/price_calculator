@@ -19,6 +19,6 @@ class Calculation(models.Model):
                                    on_delete=models.PROTECT)
     related_lead = models.CharField(
         max_length=60, blank=True, null=True, default=None)
-    pricelist_id = models.IntegerField(default=0)
+    pricelist_id = models.IntegerField(default=1)
     values = models.TextField(
         default='{"material_cards": [{"materialName": null, "materialPrice": null, "materialCount": null}], "product_cards": [{"option_card": [], "chosenType": null}], "logistics": {"zamerCount": null, "montazhCount": null, "dostavkaCount": null}}')

@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, include
+# from django.urls.conf import include
 from django.views.generic import TemplateView
 
-from .views import CalculationView, NewCalc
+from .views import CalculationView, NewCalc, SaveCalc
 
 app_name = 'main'
 urlpatterns = [
@@ -10,6 +11,7 @@ urlpatterns = [
          name="app",
          ),
     path('<int:calc_id>', CalculationView.as_view()),
-    path('newcalc', NewCalc.as_view())
+    path('newcalc', NewCalc.as_view()),
+    path('save', SaveCalc)
 ]
 # urlpatterns += staticfiles_urlpatterns
