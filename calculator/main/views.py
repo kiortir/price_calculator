@@ -22,6 +22,7 @@ utc = pytz.UTC
 default_state = """{
 
    "values":{
+       "discount": 0,
 
       "material_cards":[
 
