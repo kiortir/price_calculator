@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import *
+from .models import PriceList, Calculation
 
 
 # Register your models here.
@@ -15,7 +15,6 @@ class HideModel(admin.ModelAdmin):
         Return empty perms dict thus hiding the model from admin index.
         """
         return {}
-
 
 
 admin.site.register(PriceList)
