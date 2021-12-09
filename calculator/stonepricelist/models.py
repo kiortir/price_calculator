@@ -170,6 +170,7 @@ class Currency(models.Model):
     code = models.CharField(max_length=3, unique=True,
                             default="USD", verbose_name='код валюты ЦБ')
     value = models.FloatField(default=0.0)
+    value_date = models.DateField(null=True, blank=True)
 
     class Meta:
 
