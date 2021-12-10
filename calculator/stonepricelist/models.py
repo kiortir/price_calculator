@@ -194,8 +194,8 @@ class Manufacturer(models.Model):
     currency = models.ForeignKey(
         Currency, on_delete=models.PROTECT, null=True, blank=True, verbose_name='валюта распространения')
 
-    vendor_discount = models.PositiveIntegerField(
-        default=0, verbose_name='скидка поставщика, %')
+    vendor_discount = models.FloatField(
+        default=0.0, verbose_name='скидка поставщика, %')
 
     @property
     def discount(self):

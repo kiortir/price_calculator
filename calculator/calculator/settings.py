@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,10 +28,10 @@ FRONTEND_DIR = os.path.join(BASE_DIR, 'main', 'frontend')
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q8ruu-*$o=q4sgs))i&q6z@(d@p317!cj-z1tg_x4n4vw#*$-0'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env('DEBUG') == 'True'
 
 if DEBUG:
     ALLOWED_HOSTS = ['*']
@@ -76,14 +81,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'calculator.urls'
 
 TEMPLATES = [
-    # {
-    #     'BACKEND': 'django.template.backends.jinja2.Jinja2',
-    #     'DIRS': [TEMPLATES_DIR, ],
-    #     'APP_DIRS': True,
-    #     'OPTIONS': {
-    #         'environment': 'calculator.jinja2.environment',
-    #     },
-    # },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [TEMPLATES_DIR, os.path.join(BASE_DIR, 'base_template/')],
