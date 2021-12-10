@@ -1,8 +1,10 @@
 import math
 
 from django.db import models
-from django.db.models.fields import CharField, SmallIntegerField
+from django.db.models.fields import CharField, PositiveIntegerField, SmallIntegerField
 from django.utils import timezone
+
+
 from smart_selects.db_fields import ChainedForeignKey, ChainedManyToManyField
 
 
@@ -204,7 +206,8 @@ class Manufacturer(models.Model):
 
 
 class AcrylicManufacturer(Manufacturer):
-    material = models.ForeignKey(Material, default='Акриловый камень', on_delete=models.PROTECT, related_name='manufacturers')
+    material = models.ForeignKey(Material, default='Акриловый камень',
+                                 on_delete=models.PROTECT, related_name='manufacturers')
 
     class Meta:
 
@@ -228,16 +231,14 @@ class AcrylicCollection(models.Model):
         AcrylicManufacturer, on_delete=models.CASCADE, related_name='collections', null=True, blank=True, verbose_name='производитель')
     priority = models.PositiveSmallIntegerField(default=500)
 
-    @property
-    def standart_price(self):
-        return self.configurations.get(alias="Стандарт").raw_price
+    _standart_price = PositiveIntegerField(default=0, null=True)
 
     class Meta:
 
         verbose_name = 'акриловая коллекция'
         verbose_name_plural = 'акриловые коллекции'
         unique_together = [['manufacturer', 'name']]
-        ordering = ['priority', 'name']
+        ordering = ['priority', '_standart_price', 'name']
 
     def __repr__(self) -> str:
         return self.name
@@ -266,8 +267,15 @@ class AcrylicConfiguration(models.Model):
 
         verbose_name = 'конфигурация текстуры'
         verbose_name_plural = 'конфигурации текстуры'
-        ordering = ['thickness__value']
+        ordering = ['-raw_price']
         unique_together = [['alias', 'collection', 'thickness']]
+
+    def save(self, *args, **kwargs) -> None:
+        if self.alias == 'Стандарт':
+            self.collection._standart_price = self.raw_price
+            self.collection.save()
+
+        return super().save(*args, **kwargs)
 
     @property
     def name(self) -> str:
