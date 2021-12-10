@@ -267,7 +267,7 @@ class AcrylicConfiguration(models.Model):
         verbose_name = 'конфигурация текстуры'
         verbose_name_plural = 'конфигурации текстуры'
         ordering = ['thickness__value']
-        unique_together = [['alias', 'collection']]
+        unique_together = [['alias', 'collection', 'thickness']]
 
     @property
     def name(self) -> str:

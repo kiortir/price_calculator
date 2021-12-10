@@ -1,11 +1,12 @@
 from django.contrib import admin
-from django.db import models
+
+import nested_admin
 
 
-from .models import AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
+from stonepricelist.models import AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
 
 
-class AcrylicConfigurationAdmin(admin.ModelAdmin):
+class AcrylicConfigurationAdmin(nested_admin.NestedModelAdmin):
     model = AcrylicConfiguration
     list_display = ('__str__', 'thickness', 'price', 'material_discount')
     list_filter = ('collection__manufacturer',)
@@ -15,20 +16,20 @@ class AcrylicConfigurationAdmin(admin.ModelAdmin):
 # class AcrylicStoneAdmin(admin.ModelAdmin):
 #     inlines = [AcrylicConfigurationInline]
 
-class AcrylicConfigurationInline(admin.TabularInline):
+class AcrylicConfigurationInline(nested_admin.NestedStackedInline):
     model = AcrylicConfiguration
 
 
 
-class AcrylicCollectionAdmin(admin.ModelAdmin):
+class AcrylicCollectionAdmin(nested_admin.NestedModelAdmin):
     inlines = [AcrylicConfigurationInline]
     list_filter = ('manufacturer',)
 
-class AcrylicCollectionInline(admin.TabularInline):
+class AcrylicCollectionInline(nested_admin.NestedStackedInline):
     model = AcrylicCollection
+    inlines = [AcrylicConfigurationInline]
 
-
-class AcrylicManufaturerAdmin(admin.ModelAdmin):
+class AcrylicManufaturerAdmin(nested_admin.NestedModelAdmin):
     inlines = [AcrylicCollectionInline]
 
 

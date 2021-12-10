@@ -26,7 +26,7 @@ FRONTEND_DIR = os.path.join(BASE_DIR, 'main', 'frontend')
 SECRET_KEY = 'django-insecure-q8ruu-*$o=q4sgs))i&q6z@(d@p317!cj-z1tg_x4n4vw#*$-0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 if DEBUG:
     ALLOWED_HOSTS = ['*']
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'nested_admin',
     'smart_selects',
     'rest_framework',
     'main',
