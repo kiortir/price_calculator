@@ -68,8 +68,8 @@ class ReverseAcrylicCollectionSerializer(serializers.ModelSerializer):
     texture = serializers.StringRelatedField()
 
     class Meta:
-        model = AcrylicManufacturer
-        fields = ('name', 'texture', 'configurations')
+        model = AcrylicCollection
+        fields = ('name', 'texture', 'configurations', 'price')
 
 
 class ReverseAcrylicManufactureSerializer(serializers.ModelSerializer):

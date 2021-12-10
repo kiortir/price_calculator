@@ -10,7 +10,10 @@
           <div class="h5 my-auto">{{ manufacturer.name }}</div>
         </div>
         <div class="card-body">
-          <table class="table table-sm table-striped table-hover mb-0">
+          <table
+            class="table table-sm table-striped table-hover mb-0"
+            v-if="spotlightConfigurations == null"
+          >
             <thead>
               <tr>
                 <th scope="col">Коллекция</th>
@@ -21,37 +24,68 @@
               <tr
                 v-for="collection in manufacturer.collections"
                 :key="collection.name"
+                @click="
+                  showConfigurations({
+                    data: collection.configurations,
+                    collection: {
+                      name: collection.name,
+                      price: collection.price,
+                    },
+                  })
+                "
               >
                 <td class="align-middle ps-2 h6">
-                  {{ collection.name }}
+                  <font-awesome-icon
+                    class="me-2"
+                    v-if="collection.configurations.length > 0"
+                    icon="ellipsis-v"
+                  />
+                  <span>{{ collection.name }}</span>
                 </td>
-                <td>
-                  <ul class="fs-6 my-auto list-group list-group-flush">
-                    <li
-                      class="list-group-item bg-transparent"
-                      v-for="configuration in collection.configurations"
-                      :key="configuration.alias"
-                    >
-                      <div class="row row-cols-1 row-cols-sm-2">
-                        <div class="col configuration my-auto">
-                          <span v-if="collection.configurations.length > 1">
-                            {{ configuration.alias }}
-                            {{ configuration.thickness }}</span
-                          >
-                        </div>
-                        <div class="text-end pe-2 col">
-                          {{ configuration.price
-                          }}<span class="configuration"
-                            >&nbsp;руб/м<sup>2</sup></span
-                          >
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
+                <td class="text-end pe-2 my-auto">
+                  {{ collection.price
+                  }}<span class="ms-1">руб/м<sup>2</sup></span>
                 </td>
               </tr>
             </tbody>
           </table>
+          <div v-else>
+            <table class="table table-sm table-striped table-hover mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Конфигурация</th>
+                  <th scope="col" class="text-end pe-2">Цена</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Стандарт</td>
+                  <td class="text-end pe-2 my-auto">
+                    {{ spotlightConfigurations.collection.price
+                    }}<span class="ms-1">руб/м<sup>2</sup></span>
+                  </td>
+                </tr>
+                <tr
+                  v-for="configuration in spotlightConfigurations.data"
+                  :key="configuration.alias"
+                >
+                  <td>
+                    {{ configuration.alias }},
+                    {{ configuration.thickness }}
+                  </td>
+                  <td class="text-end pe-2 my-auto">
+                    {{ configuration.price
+                    }}<span class="ms-1">руб/м<sup>2</sup></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div @click="hideConfigurations" type="button" class="mt-3">
+              <font-awesome-icon icon="chevron-left" /><span class="ms-2 h6"
+                >Коллекция {{ spotlightConfigurations.collection.name }}</span
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -64,6 +98,7 @@ export default {
   data() {
     return {
       stonelist: null,
+      spotlightConfigurations: null,
     };
   },
   mounted() {
@@ -75,6 +110,16 @@ export default {
       .catch((err) => {
         console.log(err);
       });
+  },
+  methods: {
+    showConfigurations(configurations) {
+      if (configurations.data.length > 0) {
+        this.spotlightConfigurations = configurations;
+      }
+    },
+    hideConfigurations() {
+      this.spotlightConfigurations = null;
+    },
   },
 };
 </script>

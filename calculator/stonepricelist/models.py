@@ -231,14 +231,19 @@ class AcrylicCollection(models.Model):
         AcrylicManufacturer, on_delete=models.CASCADE, related_name='collections', null=True, blank=True, verbose_name='производитель')
     priority = models.PositiveSmallIntegerField(default=500)
 
-    _standart_price = PositiveIntegerField(default=0, null=True)
+    _standart_raw_price = PositiveIntegerField(
+        default=0, null=True, verbose_name='стоимость стандартной конфигурации')
+
+    @property
+    def price(self) -> int:
+        return math.ceil(self._standart_raw_price * self.manufacturer.discount * self.manufacturer.currency.value * self.manufacturer.material.overprice)
 
     class Meta:
 
         verbose_name = 'акриловая коллекция'
         verbose_name_plural = 'акриловые коллекции'
         unique_together = [['manufacturer', 'name']]
-        ordering = ['priority', '_standart_price', 'name']
+        ordering = ['priority', '_standart_raw_price', 'name']
 
     def __repr__(self) -> str:
         return self.name
@@ -253,7 +258,7 @@ DEFAULT_CONFIGURATION_ENTRY = 1
 class AcrylicConfiguration(models.Model):
 
     alias = models.CharField(
-        max_length=50, default='Стандарт')
+        max_length=50, null=True, blank=True)
 
     thickness = models.ForeignKey(
         Thickness, on_delete=models.SET_DEFAULT, default=DEFAULT_CONFIGURATION_ENTRY, related_name='dependant_configurations', verbose_name='толщина камня')
@@ -270,12 +275,12 @@ class AcrylicConfiguration(models.Model):
         ordering = ['-raw_price']
         unique_together = [['alias', 'collection', 'thickness']]
 
-    def save(self, *args, **kwargs) -> None:
-        if self.alias == 'Стандарт':
-            self.collection._standart_price = self.raw_price
-            self.collection.save()
+    # def save(self, *args, **kwargs) -> None:
+    #     if self.alias == 'Стандарт':
+    #         self.collection._standart_price = self.price
+    #         self.collection.save()
 
-        return super().save(*args, **kwargs)
+    #     return super().save(*args, **kwargs)
 
     @property
     def name(self) -> str:
