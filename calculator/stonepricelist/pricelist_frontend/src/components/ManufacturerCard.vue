@@ -1,11 +1,17 @@
 <template>
   <div class="card card-shadow px-0">
-    <div class="card-header">
+    <div
+      class="card-header manufacturer"
+      :class="manufacturer.name.toLowerCase().replace(' ', '-')"
+    >
       <div class="h5 my-auto">{{ manufacturer.name }}</div>
     </div>
-    <div class="card-body">
+    <div
+      class="card-body manufacturer"
+      :class="manufacturer.name.toLowerCase().replace(' ', '-')"
+    >
       <table
-        class="table table-sm table-hover mb-0"
+        class="table table-sm table-hover table-borderless mb-0"
         v-if="spotlightConfigurations == null"
       >
         <thead>
@@ -106,20 +112,57 @@ export default {
 </script>
 
 
-<style>
-tbody.hanex tr:nth-child(odd) {
-  background-color: #ddf2f0;
+<style lang="scss">
+$hanex: #ddf2f0;
+$tristone: #b0f3fc;
+$staron: #ffdace;
+$grandex: #ced1ff;
+$lg_hi_macs: #ffcef8;
+$corian_dupont: #ffcece;
+$akrilika: #cefff7;
+$montelli: #cfceff;
+
+.card-header.manufacturer {
+  filter: brightness(96%) saturate(150%);
 }
-tbody.tristone tr:nth-child(odd) {
-  background-color: #b0f3fc;
+.card-body.manufacturer {
+  filter: brightness(108%) saturate(150%);
 }
-tbody.lg-hi-macs tr:nth-child(odd) {
-  background-color: #c7fbff;
+
+tbody tr:nth-child(odd) {
+  filter: brightness(95%) saturate(90%) !important;
 }
-tbody.corian-dupont tr:nth-child(odd) {
-  background-color: #fffab8;
+
+tbody tr {
+  border-bottom: solid rgb(187, 183, 183) 0.03rem;
 }
-tbody.staron tr:nth-child(odd) {
-  background-color: #ffdace;
+
+.hanex {
+  background-color: $hanex !important;
+}
+.grandex {
+  background-color: $grandex !important;
+}
+.lg-hi-macs {
+  background-color: $lg_hi_macs !important;
+}
+.tristone {
+  background-color: $tristone !important;
+}
+.staron {
+  background-color: $staron !important;
+}
+.corian-dupont {
+  background-color: $corian_dupont !important;
+}
+.akrilika {
+  background-color: $akrilika !important;
+}
+.montelli {
+  background-color: $montelli !important;
+}
+
+header tr:hover {
+  filter: brightness(80%);
 }
 </style>
