@@ -114,12 +114,12 @@ export default {
 
 <style lang="scss">
 $hanex: #ddf2f0;
-$tristone: #b0f3fc;
+$tristone: #b0fcd0;
 $staron: #ffdace;
 $grandex: #ced1ff;
-$lg_hi_macs: #ffcef8;
-$corian_dupont: #ffcece;
-$akrilika: #cefff7;
+$lg_hi_macs: #ffe8fc;
+$corian_dupont: #fcbaba;
+$akrilika: #e6fffb;
 $montelli: #cfceff;
 
 .card-header.manufacturer {
