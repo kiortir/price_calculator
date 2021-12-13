@@ -1,7 +1,7 @@
 <template>
   <div class="row" data-masonry='{"percentPosition": true }'>
     <div
-      class="col-12 col-md-6 col-xl-4 mb-4"
+      class="col col-12 col-md-6 col-xl-4 mb-4 masonry-grid-item"
       v-for="manufacturer in stonelist"
       :key="manufacturer.name"
     >
@@ -28,14 +28,17 @@ export default {
       .then((response) => {
         this.stonelist = response.data;
       })
+      .then(() => {
+        let row = document.querySelector("[data-masonry]");
+        new Masonry(row, {
+          // options
+          itemSelector: ".masonry-grid-item",
+          percentPosition: true,
+        });
+      })
       .catch((err) => {
         console.log(err);
       });
-    var row = document.querySelector("[data-masonry]");
-    new Masonry(row, {
-      // options
-      percentPosition: true,
-    });
   },
 
   components: {
