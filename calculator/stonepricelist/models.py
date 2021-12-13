@@ -234,19 +234,19 @@ class AcrylicCollection(models.Model):
         AcrylicManufacturer, on_delete=models.CASCADE, related_name='collections', null=True, blank=True, verbose_name='производитель')
     priority = models.PositiveSmallIntegerField(default=500)
 
-    _standart_raw_price = PositiveIntegerField(
+    standart_raw_price = PositiveIntegerField(
         default=0, null=True, verbose_name='стоимость стандартной конфигурации')
 
     @property
     def price(self) -> int:
-        return math.ceil(self._standart_raw_price * self.manufacturer.discount * self.manufacturer.currency.value * self.manufacturer.material.overprice)
+        return math.ceil(self.standart_raw_price * self.manufacturer.discount * self.manufacturer.currency.value * self.manufacturer.material.overprice)
 
     class Meta:
 
         verbose_name = 'акриловая коллекция'
         verbose_name_plural = 'акриловые коллекции'
         unique_together = [['manufacturer', 'name']]
-        ordering = ['priority', '_standart_raw_price', 'name']
+        ordering = ['priority', 'standart_raw_price', 'name']
 
     def __repr__(self) -> str:
         return self.name
