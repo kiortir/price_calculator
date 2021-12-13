@@ -86,7 +86,7 @@
         </div>
       </div>
       <div
-        class="mt-2 additional-info"
+        class="mt-3 mb-0 additional-info"
         v-html="manufacturer.additional_info"
       ></div>
     </div>
@@ -117,14 +117,14 @@ export default {
 
 
 <style lang="scss">
-$hanex: #ddf2f0;
+$hanex: #bdfff8;
 $tristone: #c1ffdb;
 $staron: #ffdace;
 $grandex: #ced1ff;
 $lg_hi_macs: #ffe8fc;
 $corian_dupont: #ffcdcd;
 $akrilika: #e6fffb;
-$montelli: #cfceff;
+$montelli: #ffceef;
 $neomarm: #feffd6;
 
 .card-header.manufacturer {
