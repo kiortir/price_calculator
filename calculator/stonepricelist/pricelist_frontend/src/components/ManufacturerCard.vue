@@ -121,7 +121,7 @@ $hanex: #bdfff8;
 $tristone: #c1ffdb;
 $staron: #ffdace;
 $grandex: #ced1ff;
-$lg_hi_macs: #ffe8fc;
+$lg_hi_macs: #fddef9;
 $corian_dupont: #ffcdcd;
 $akrilika: #e6fffb;
 $montelli: #ffceef;
