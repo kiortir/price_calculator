@@ -69,7 +69,8 @@ class ReverseAcrylicCollectionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AcrylicCollection
-        fields = ('name', 'texture', 'configurations', 'price')
+        fields = ('name', 'texture', 'configurations',
+                  'price')
 
 
 class ReverseAcrylicManufactureSerializer(serializers.ModelSerializer):
@@ -77,4 +78,4 @@ class ReverseAcrylicManufactureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AcrylicManufacturer
-        fields = ('name', 'collections', 'discount')
+        fields = ('name', 'collections', 'discount', 'additional_info')

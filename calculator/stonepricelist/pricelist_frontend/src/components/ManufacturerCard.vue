@@ -85,6 +85,10 @@
           >
         </div>
       </div>
+      <div
+        class="mt-2 additional-info"
+        v-html="manufacturer.additional_info"
+      ></div>
     </div>
   </div>
 </template>
@@ -164,5 +168,9 @@ tbody tr {
 
 header tr:hover {
   filter: brightness(80%);
+}
+
+.additional-info {
+  font-size: 0.9em;
 }
 </style>

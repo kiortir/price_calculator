@@ -211,6 +211,8 @@ class AcrylicManufacturer(Manufacturer):
 
     priority = models.PositiveSmallIntegerField(default=500)
 
+    additional_info = models.TextField(null=True, blank=True)
+
     class Meta:
 
         verbose_name = 'производитель акрила'
