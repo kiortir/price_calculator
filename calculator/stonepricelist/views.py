@@ -12,12 +12,9 @@ from django.shortcuts import render
 class DefaultAcrylPricelist(APIView):
 
     renderer_classes = [JSONRenderer]
-    def get(self, request):
+    def post(self, request):
         configs = AcrylicManufacturer.objects.all()
-        manufacturers = AcrylicConfigurationSerializer(
-            AcrylicConfiguration.objects.all(), many=True).data
         reverse = ReverseAcrylicManufactureSerializer(configs, many=True).data
-        print()
         return Response(reverse)
 
 class AcrylPricelist(TemplateView):

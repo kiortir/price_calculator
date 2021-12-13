@@ -103,7 +103,7 @@ export default {
   },
   mounted() {
     this.axios
-      .get("/pricelist/acryl/default")
+      .post("/pricelist/acryl/default")
       .then((response) => {
         this.stonelist = response.data;
       })
