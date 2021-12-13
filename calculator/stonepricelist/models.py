@@ -245,7 +245,7 @@ class AcrylicCollection(models.Model):
 
         verbose_name = 'акриловая коллекция'
         verbose_name_plural = 'акриловые коллекции'
-        # unique_together = [['manufacturer', 'name']]
+        unique_together = [['manufacturer', 'name']]
         ordering = ['priority', 'standart_raw_price', 'name']
 
     def __repr__(self) -> str:
