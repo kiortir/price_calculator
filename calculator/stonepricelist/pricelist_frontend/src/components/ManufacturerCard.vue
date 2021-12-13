@@ -166,6 +166,9 @@ tbody tr {
 .montelli {
   background-color: $montelli !important;
 }
+.neomarm {
+  background-color: $neomarm !important;
+}
 
 header tr:hover {
   filter: brightness(80%);
