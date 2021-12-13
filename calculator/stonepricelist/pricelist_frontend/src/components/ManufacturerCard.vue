@@ -118,13 +118,14 @@ export default {
 
 <style lang="scss">
 $hanex: #ddf2f0;
-$tristone: #b0fcd0;
+$tristone: #c1ffdb;
 $staron: #ffdace;
 $grandex: #ced1ff;
 $lg_hi_macs: #ffe8fc;
-$corian_dupont: #fcbaba;
+$corian_dupont: #ffcdcd;
 $akrilika: #e6fffb;
 $montelli: #cfceff;
+$neomarm: #feffd6;
 
 .card-header.manufacturer {
   filter: brightness(96%) saturate(150%);
