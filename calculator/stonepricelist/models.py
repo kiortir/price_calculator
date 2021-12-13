@@ -209,10 +209,13 @@ class AcrylicManufacturer(Manufacturer):
     material = models.ForeignKey(Material, default='Акриловый камень',
                                  on_delete=models.PROTECT, related_name='manufacturers')
 
+    priority = models.PositiveSmallIntegerField(default=500)
+
     class Meta:
 
         verbose_name = 'производитель акрила'
         verbose_name_plural = 'производители акрила'
+        ordering = ['priority']
 
     def __repr__(self) -> str:
         return self.name
