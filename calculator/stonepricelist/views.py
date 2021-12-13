@@ -12,14 +12,20 @@ from django.shortcuts import render
 class DefaultAcrylPricelist(APIView):
 
     renderer_classes = [JSONRenderer]
+
     def post(self, request):
-        configs = AcrylicManufacturer.objects.all()
-        reverse = ReverseAcrylicManufactureSerializer(configs, many=True).data
-        return Response(reverse)
+        try:
+            configs = AcrylicManufacturer.objects.all()
+            reverse = ReverseAcrylicManufactureSerializer(
+                configs, many=True).data
+            return Response(reverse)
+        except Exception:
+            return Response({"error": Exception})
+
 
 class AcrylPricelist(TemplateView):
     template_name = "stonepricelist/index.html"
 
     def get(self, request, *args, **kwargs):
-        
+
         return render(request, template_name=self.template_name)
