@@ -1,5 +1,5 @@
-from .models import AcrylicConfiguration, AcrylicManufacturer
-from .serializers import AcrylicConfigurationSerializer, ReverseAcrylicManufactureSerializer
+from .models import AcrylicConfiguration, AcrylicManufacturer, AcrylicCollection, AcrylicStone, additionalWorkAcryl
+from .serializers import AcrylicConfigurationSerializer, ReverseAcrylicManufactureSerializer, AcrylicStoneSerializer, additionalWorkAcrylSerializer
 
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -23,9 +23,38 @@ class DefaultAcrylPricelist(APIView):
             return Response({"error": Exception})
 
 
+class AcrylicCollectionView(APIView):
+
+    renderer_classes = [JSONRenderer]
+
+    def post(self, request):
+        # try:
+        print(request.data)
+        data = request.data
+        manufacturer = data.get('manufacturer', '')
+        collection = data.get('collection', '')
+        chosen_collection = AcrylicCollection.objects.filter(
+            manufacturer__name=manufacturer).get(name=collection)
+        stones = chosen_collection.stones.all()
+        return Response(AcrylicStoneSerializer(stones, many=True).data)
+        # except Exception:
+        #     print(Exception)
+        #     return Response({"error": "Exception"})
+
+
 class AcrylPricelist(TemplateView):
     template_name = "stonepricelist/index.html"
 
     def get(self, request, *args, **kwargs):
 
         return render(request, template_name=self.template_name)
+
+
+class AcrylicWorkView(APIView):
+
+    renderer_classes = [JSONRenderer]
+
+    def post(self, request):
+        # try:
+        work = additionalWorkAcryl.objects.all()
+        return Response(additionalWorkAcrylSerializer(work, many=True).data)

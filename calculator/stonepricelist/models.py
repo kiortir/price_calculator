@@ -1,4 +1,6 @@
+from collections import defaultdict
 import math
+import json
 
 from django.db import models
 from django.db.models.fields import CharField, PositiveIntegerField, SmallIntegerField
@@ -239,6 +241,8 @@ class AcrylicCollection(models.Model):
     standart_raw_price = PositiveIntegerField(
         default=0, null=True, verbose_name='стоимость стандартной конфигурации')
 
+    isWhite = models.BooleanField(default=False)
+
     @property
     def price(self) -> int:
         return math.ceil(self.standart_raw_price * self.manufacturer.discount * self.manufacturer.currency.value * self.manufacturer.material.overprice)
@@ -312,13 +316,16 @@ class AcrylicStone(Stone):
     manufacturer = models.ForeignKey(
         AcrylicManufacturer, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='производитель')
     collection = ChainedForeignKey(
-        AcrylicCollection, chained_field="manufacturer", chained_model_field="manufacturer", show_all=False, auto_choose=True, sort=True, verbose_name='коллекция')
+        AcrylicCollection, chained_field="manufacturer", chained_model_field="manufacturer", related_name="stones", show_all=False, auto_choose=True, sort=True, verbose_name='коллекция')
 
     same_textures = models.ManyToManyField(
         'self', blank=True, verbose_name='аналогичные текстуры')
 
-    configurations = ChainedManyToManyField(
-        AcrylicConfiguration, chained_field="collection", chained_model_field="collection_filter", auto_choose=True, verbose_name='конфигурации')
+    # configurations = ChainedManyToManyField(
+    #     AcrylicConfiguration, chained_field="collection", chained_model_field="collection", null=True, blank=True, verbose_name='конфигурации')
+
+    # notStandart = models.BooleanField(default=False)
+    # isWhite = models.BooleanField(default=False)
 
     class Meta:
 
@@ -326,8 +333,28 @@ class AcrylicStone(Stone):
         verbose_name = 'акриловая текстура'
         verbose_name_plural = 'акриловые текстуры'
 
+    # @property
+    # def configuratons(self):
+    #     pass
+
     def __repr__(self) -> str:
         return self.name
 
     def __str__(self) -> str:
         return self.name
+
+
+class additionalWorkAcryl(models.Model):
+    name = models.CharField(max_length=150, null=True, blank=True)
+    measurement = models.CharField(max_length=50, null=True, blank=True)
+    cost = models.CharField(max_length=100, null=True, blank=True)
+    spendings = models.CharField(max_length=100, null=True, blank=True)
+
+    def __repr__(self) -> str:
+        return self.name
+
+    def __str__(self) -> str:
+        if self.name:
+            return self.name
+        else:
+            return 'Доп работа'

@@ -1,9 +1,10 @@
 from django.contrib import admin
 
 import nested_admin
+from import_export import resources, fields
+from import_export.admin import ImportExportModelAdmin
 
-
-from stonepricelist.models import AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
+from stonepricelist.models import additionalWorkAcryl, AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
 
 
 class AcrylicConfigurationAdmin(nested_admin.NestedModelAdmin):
@@ -20,17 +21,50 @@ class AcrylicConfigurationInline(nested_admin.NestedStackedInline):
     model = AcrylicConfiguration
 
 
-
 class AcrylicCollectionAdmin(nested_admin.NestedModelAdmin):
     inlines = [AcrylicConfigurationInline]
     list_filter = ('manufacturer',)
+
 
 class AcrylicCollectionInline(nested_admin.NestedStackedInline):
     model = AcrylicCollection
     inlines = [AcrylicConfigurationInline]
 
+
 class AcrylicManufaturerAdmin(nested_admin.NestedModelAdmin):
     inlines = [AcrylicCollectionInline]
+
+
+class additionalWorkAcrylResource(resources.ModelResource):
+    # name = fields.Field(column_name='название', attribute="name")
+    # measurement = fields.Field(
+    #     column_name='ед. измерения', attribute="measurement")
+    # cost = fields.Field(column_name='стоимость', attribute="cost")
+    # spendings = fields.Field(column_name='затраты', attribute="spendings")
+
+    class Meta:
+        model = additionalWorkAcryl
+        # skip_unchanged = True
+        report_skipped = True
+        fields = ('name', 'measurement', 'cost', 'spendings')
+        import_id_fields = ('name',)
+
+
+class AcrylicStoneResource(resources.ModelResource):
+
+    class Meta:
+        model = AcrylicStone
+        exclude = ('id', )
+
+
+@admin.register(additionalWorkAcryl)
+class additionalWorkAcrylAdmin(ImportExportModelAdmin):
+    resource_class = additionalWorkAcrylResource
+
+
+@admin.register(AcrylicStone)
+class AcrylicStoneAdmin(ImportExportModelAdmin):
+    resource_class = AcrylicStoneResource
 
 
 admin.site.register(AcrylicCollection, AcrylicCollectionAdmin)
@@ -40,7 +74,7 @@ admin.site.register(Currency)
 admin.site.register(Thickness)
 admin.site.register(Texture)
 admin.site.register(Material)
-admin.site.register(AcrylicStone)
+# admin.site.register(AcrylicStone)
 admin.site.register(AcrylicConfiguration, AcrylicConfigurationAdmin)
 admin.site.register(SurfaceType)
 admin.site.register(SlabSize)

@@ -1,38 +1,45 @@
 <template>
-  <div class="card card-shadow px-0">
+  <div class="card shadow px-0">
     <div
-      class="card-header manufacturer"
+      class="card-header manufacturer row mx-0"
       :class="manufacturer.name.toLowerCase().replace(' ', '-')"
     >
-      <div class="h5 my-auto">{{ manufacturer.name }}</div>
+      <div class="h5 my-auto col">{{ manufacturer.name }}</div>
+      <slot></slot>
     </div>
     <div
       class="card-body manufacturer"
       :class="manufacturer.name.toLowerCase().replace(' ', '-')"
     >
-      <table
-        class="table table-sm table-hover table-borderless mb-0"
-        v-if="spotlightConfigurations == null"
+      <div
+        class="mb-2 pb-2 border-table-bottom"
+        v-if="collections.white.length > 0"
       >
-        <thead>
-          <tr>
-            <th scope="col">Коллекция</th>
-            <th scope="col" class="text-end pe-2">Цена</th>
-          </tr>
-        </thead>
+        <div class="h5">Белые текстуры</div>
+        <table class="table table-sm table-hover table-borderless mb-0">
+          <tbody :class="manufacturer.name.toLowerCase().replace(' ', '-')">
+            <tr v-for="collection in collections.white" :key="collection.name">
+              <td class="align-middle ps-2 h6">
+                <span>{{ collection.name }}</span>
+              </td>
+              <td class="text-end pe-2 my-auto">
+                {{ collection.price
+                }}<span class="ms-1">руб/м<sup>2</sup></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="h5">Коллекции</div>
+      <table class="table table-sm table-hover table-borderless mb-0">
         <tbody :class="manufacturer.name.toLowerCase().replace(' ', '-')">
           <tr
-            v-for="collection in manufacturer.collections"
+            v-for="collection in collections.basic"
             :key="collection.name"
-            @click="
-              showConfigurations({
-                data: collection.configurations,
-                collection: {
-                  name: collection.name,
-                  price: collection.price,
-                },
-              })
-            "
+            data-bs-toggle="offcanvas"
+            data-bs-target="#collectioninfo"
+            type="button"
+            @click="setOffcanvas(collection)"
           >
             <td class="align-middle ps-2 h6">
               <font-awesome-icon
@@ -48,68 +55,69 @@
           </tr>
         </tbody>
       </table>
-      <div v-else>
-        <table class="table table-sm table-hover mb-0">
-          <thead>
-            <tr>
-              <th scope="col">Конфигурация</th>
-              <th scope="col" class="text-end pe-2">Цена</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Стандарт</td>
-              <td class="text-end pe-2 my-auto">
-                {{ spotlightConfigurations.collection.price
-                }}<span class="ms-1">руб/м<sup>2</sup></span>
-              </td>
-            </tr>
-            <tr
-              v-for="configuration in spotlightConfigurations.data"
-              :key="configuration.alias"
-            >
-              <td>
-                {{ configuration.alias }},
-                {{ configuration.thickness }}
-              </td>
-              <td class="text-end pe-2 my-auto">
-                {{ configuration.price
-                }}<span class="ms-1">руб/м<sup>2</sup></span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div @click="hideConfigurations" type="button" class="mt-3">
-          <font-awesome-icon icon="chevron-left" /><span class="ms-2 h6"
-            >Коллекция {{ spotlightConfigurations.collection.name }}</span
-          >
-        </div>
-      </div>
       <div
-        class="mt-3 mb-0 additional-info"
+        class="mt-1 pt-2 mb-0 additional-info border-table-top"
         v-html="manufacturer.additional_info"
+        v-if="manufacturer.additional_info"
       ></div>
     </div>
   </div>
 </template>
 
 <script>
+// @click="
+//   showConfigurations({
+//     data: collection.configurations,
+//     collection: {
+//       name: collection.name,
+//       price: collection.price,
+//     },
+//   })
+// "
+
 export default {
   name: "ManufacturerCard",
   props: {
     manufacturer: Object,
   },
-  data() {
-    return { spotlightConfigurations: null };
+  emits: ["setOffcanvasData"],
+  // data() {
+  //   return {
+  //     spotlightConfigurations: null,
+  //   };
+  // },
+  computed: {
+    collections() {
+      let white = [];
+      let basic = [];
+      for (let collection of this.manufacturer.collections) {
+        console.log(collection);
+        if (collection.isWhite) {
+          white.push(collection);
+        } else {
+          basic.push(collection);
+        }
+      }
+      return {
+        white,
+        basic,
+      };
+    },
   },
   methods: {
-    showConfigurations(configurations) {
-      if (configurations.data.length > 0) {
-        this.spotlightConfigurations = configurations;
-      }
-    },
-    hideConfigurations() {
-      this.spotlightConfigurations = null;
+    // showConfigurations(configurations) {
+    //   if (configurations.data.length > 0) {
+    //     this.spotlightConfigurations = configurations;
+    //   }
+    // },
+    // hideConfigurations() {
+    //   this.spotlightConfigurations = null;
+    // },
+    setOffcanvas(collection) {
+      this.$emit("setOffcanvasData", {
+        collection,
+        manufacturer: this.manufacturer.name,
+      });
     },
   },
 };
@@ -134,8 +142,8 @@ $neomarm: #feffd6;
   filter: brightness(108%) saturate(150%);
 }
 
-tbody tr:nth-child(odd) {
-  filter: brightness(95%) saturate(90%) !important;
+tbody tr:last-child {
+  border: 0 !important;
 }
 
 tbody tr {
@@ -176,5 +184,11 @@ header tr:hover {
 
 .additional-info {
   font-size: 0.9em;
+}
+.border-table-bottom {
+  border-bottom: solid gray 0.07em;
+}
+.border-table-top {
+  border-top: solid gray 0.07em;
 }
 </style>

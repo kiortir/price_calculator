@@ -1,5 +1,6 @@
 import collections
 from django.db.models import fields
+from rest_framework.relations import SlugRelatedField
 from .models import *
 from rest_framework import serializers
 
@@ -70,7 +71,7 @@ class ReverseAcrylicCollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AcrylicCollection
         fields = ('name', 'texture', 'configurations',
-                  'price')
+                  'price', 'isWhite')
 
 
 class ReverseAcrylicManufactureSerializer(serializers.ModelSerializer):
@@ -79,3 +80,17 @@ class ReverseAcrylicManufactureSerializer(serializers.ModelSerializer):
     class Meta:
         model = AcrylicManufacturer
         fields = ('name', 'collections', 'discount', 'additional_info')
+
+
+class AcrylicStoneSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AcrylicStone
+        fields = ['name', 'code']
+
+
+class additionalWorkAcrylSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = additionalWorkAcryl
+        exclude = ('id', )
