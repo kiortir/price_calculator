@@ -38,7 +38,6 @@
             :key="collection.name"
             data-bs-toggle="offcanvas"
             data-bs-target="#collectioninfo"
-            type="button"
             @click="setOffcanvas(collection)"
           >
             <td class="align-middle ps-2 h6">
