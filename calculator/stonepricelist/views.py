@@ -9,6 +9,9 @@ from django.views.generic import TemplateView
 from django.shortcuts import render
 from django.db.models import Q
 
+import urllib.request
+import json
+
 
 class DefaultAcrylPricelist(APIView):
 
@@ -72,3 +75,15 @@ class AcrylicWorkView(APIView):
         # try:
         work = additionalWorkAcryl.objects.all()
         return Response(additionalWorkAcrylSerializer(work, many=True).data)
+
+
+class crossdomainData(APIView):
+    renderer_classes = [JSONRenderer]
+
+    def post(self, request):
+        url = request.data.get('url', "")
+        print(url)
+        # req = urllib.request.Request(url)
+        response = urllib.request.urlopen(url)
+        data = json.loads(response.read().decode('utf-8'))
+        return Response(data)

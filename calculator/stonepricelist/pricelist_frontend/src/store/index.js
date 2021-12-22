@@ -4,6 +4,7 @@ export default createStore({
   state: {
     active_component: null,
     component_data: null,
+    chosenStone: null,
   },
   actions: {
     setCollection({ commit }, payload) {

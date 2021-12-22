@@ -22,7 +22,11 @@
       class="table table-sm table-hover table-borderless mb-0"
     >
       <tbody>
-        <tr v-for="(stone, index) in searchresult" :key="index">
+        <tr
+          v-for="(stone, index) in searchresult"
+          :key="index"
+          @click="showStoneCard(stone)"
+        >
           <td>
             <span>{{ stone.name }}</span>
           </td>
@@ -38,27 +42,30 @@
         </tr>
       </tbody>
     </table>
+    <stone-card
+      class="position-fixed top-50 start-50 translate-middle"
+      v-if="chosenStone != null"
+      :stone="chosenStone"
+      @closeStone="chosenStone = null"
+    ></stone-card>
   </div>
 </template>
 
 
 <script>
+import StoneCard from "./StoneCard.vue";
 export default {
   name: "StoneSearchList",
-  // props: {
-  //   collection_name: String,
-  //   manufacturer: String,
-  //   configurations: Object,
-  // },
+  components: {
+    StoneCard,
+  },
   data() {
     return {
       searchinput: "",
       searchresult: [],
+      chosenStone: null,
     };
   },
-  //   mounted() {
-  //     document.getElementById("searchBarServer").focus;
-  //   },
   methods: {
     serverSearch(searchStr) {
       this.axios
@@ -72,6 +79,45 @@ export default {
           console.log(err);
         });
     },
+    showStoneCard(stone) {
+      this.axios
+        .post("/pricelist/prox/", {
+          url: `https://unirock.ru/include/popup/get-list-stone.php?popular[]=on&search=${stone.code}&nbsp;${stone.manufacturer}&sort=rat&page=1`,
+        })
+        .then((response) => {
+          response = response.data;
+          if (response.success == true && response.total == 1) {
+            console.log(response.rocks[0].image);
+            this.chosenStone = {
+              pic: response.rocks[0].image,
+              name: stone.name,
+              code: stone.code,
+              manufacturer: stone.manufacturer,
+            };
+          } else {
+            this.chosenStone = {
+              pic: null,
+              name: stone.name,
+              code: stone.code,
+              info: "Не нашелся(",
+            };
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
+
+<style>
+.stone-card {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0);
+  height: 40vh;
+  width: 40vw;
+  top: 30%;
+}
+</style>
