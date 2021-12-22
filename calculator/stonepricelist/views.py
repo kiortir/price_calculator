@@ -50,7 +50,7 @@ class AcrylicStonesView(APIView):
     def post(self, request):
         query = request.data.get('searchStr', '')
         stones = AcrylicStone.objects.filter(
-            Q(name__contains=query) | Q(code__contains=query)).all()
+            Q(name__icontains=query) | Q(code__icontains=query)).all()
         # chosen_collection = AcrylicManufacturer.objects.all()
         # stones = ManufacturersToStoneSerializer(chosen_collection, many=True)
         return Response(SearchStoneSerializer(stones, many=True).data)
