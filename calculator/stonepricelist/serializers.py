@@ -94,3 +94,21 @@ class additionalWorkAcrylSerializer(serializers.ModelSerializer):
     class Meta:
         model = additionalWorkAcryl
         exclude = ('id', )
+
+
+class SearchStoneSerializer(serializers.ModelSerializer):
+
+    manufacturer = serializers.StringRelatedField()
+    collection = serializers.StringRelatedField()
+
+    class Meta:
+        model = AcrylicStone
+        fields = ['name', 'code', 'manufacturer', 'collection']
+
+
+class ManufacturersToStoneSerializer(serializers.ModelSerializer):
+    stones = AcrylicStoneSerializer(many=True)
+
+    class Meta:
+        model = AcrylicManufacturer
+        fields = ('name', 'stones')

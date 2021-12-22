@@ -11,6 +11,7 @@ urlpatterns = [
     # path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('acryl/collectioninfo/', views.AcrylicCollectionView.as_view()),
+    path('acryl/stones/', views.AcrylicStonesView.as_view()),
     path('acryl/', views.AcrylPricelist.as_view()),
     path('acryl/default/', views.DefaultAcrylPricelist.as_view()),
     path('acryl/work/', views.AcrylicWorkView.as_view())

@@ -1,5 +1,5 @@
 from .models import AcrylicConfiguration, AcrylicManufacturer, AcrylicCollection, AcrylicStone, additionalWorkAcryl
-from .serializers import AcrylicConfigurationSerializer, ReverseAcrylicManufactureSerializer, AcrylicStoneSerializer, additionalWorkAcrylSerializer
+from .serializers import AcrylicConfigurationSerializer, ReverseAcrylicManufactureSerializer, AcrylicStoneSerializer, additionalWorkAcrylSerializer, SearchStoneSerializer
 
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from django.views.generic import TemplateView
 from django.shortcuts import render
+from django.db.models import Q
 
 
 class DefaultAcrylPricelist(APIView):
@@ -40,6 +41,19 @@ class AcrylicCollectionView(APIView):
         # except Exception:
         #     print(Exception)
         #     return Response({"error": "Exception"})
+
+
+class AcrylicStonesView(APIView):
+
+    renderer_classes = [JSONRenderer]
+
+    def post(self, request):
+        query = request.data.get('searchStr', '')
+        stones = AcrylicStone.objects.filter(
+            Q(name__contains=query) | Q(code__contains=query)).all()
+        # chosen_collection = AcrylicManufacturer.objects.all()
+        # stones = ManufacturersToStoneSerializer(chosen_collection, many=True)
+        return Response(SearchStoneSerializer(stones, many=True).data)
 
 
 class AcrylPricelist(TemplateView):

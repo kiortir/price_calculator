@@ -1,10 +1,23 @@
+import collections
 from django.contrib import admin
 
 import nested_admin
-from import_export import resources, fields
+from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget
 
-from stonepricelist.models import additionalWorkAcryl, AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
+from stonepricelist.models import Manufacturer, additionalWorkAcryl, AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
+from .imports import toCollection
+
+
+class AcrylicStoneResource(resources.ModelResource):
+    collection = fields.Field(attribute='collection', column_name='collection', widget=toCollection())
+    manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer', widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
+
+    class Meta:
+        model = AcrylicStone
+        fields = ('name', 'code', 'manufacturer', 'collection')
+        import_id_fields = ('name',)
 
 
 class AcrylicConfigurationAdmin(nested_admin.NestedModelAdmin):
@@ -50,11 +63,11 @@ class additionalWorkAcrylResource(resources.ModelResource):
         import_id_fields = ('name',)
 
 
-class AcrylicStoneResource(resources.ModelResource):
+# class AcrylicStoneResource(resources.ModelResource):
 
-    class Meta:
-        model = AcrylicStone
-        exclude = ('id', )
+#     class Meta:
+#         model = AcrylicStone
+#         exclude = ('id', )
 
 
 @admin.register(additionalWorkAcryl)

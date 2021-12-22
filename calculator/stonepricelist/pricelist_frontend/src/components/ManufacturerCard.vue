@@ -1,11 +1,10 @@
 <template>
   <div class="card shadow px-0">
     <div
-      class="card-header manufacturer row mx-0"
+      class="card-header manufacturer mx-0"
       :class="manufacturer.name.toLowerCase().replace(' ', '-')"
     >
-      <div class="h5 my-auto col">{{ manufacturer.name }}</div>
-      <slot></slot>
+      <div class="h5 my-auto">{{ manufacturer.name }}</div>
     </div>
     <div
       class="card-body manufacturer"
@@ -64,27 +63,13 @@
 </template>
 
 <script>
-// @click="
-//   showConfigurations({
-//     data: collection.configurations,
-//     collection: {
-//       name: collection.name,
-//       price: collection.price,
-//     },
-//   })
-// "
-
 export default {
   name: "ManufacturerCard",
   props: {
     manufacturer: Object,
   },
   emits: ["setOffcanvasData"],
-  // data() {
-  //   return {
-  //     spotlightConfigurations: null,
-  //   };
-  // },
+
   computed: {
     collections() {
       let white = [];
@@ -104,18 +89,11 @@ export default {
     },
   },
   methods: {
-    // showConfigurations(configurations) {
-    //   if (configurations.data.length > 0) {
-    //     this.spotlightConfigurations = configurations;
-    //   }
-    // },
-    // hideConfigurations() {
-    //   this.spotlightConfigurations = null;
-    // },
     setOffcanvas(collection) {
-      this.$emit("setOffcanvasData", {
-        collection,
+      this.$store.dispatch("setCollection", {
+        collection: collection.name,
         manufacturer: this.manufacturer.name,
+        configurations: collection.configurations,
       });
     },
   },

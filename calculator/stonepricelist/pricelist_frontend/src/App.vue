@@ -1,18 +1,13 @@
 <template>
-  <div class="container">
-    <default-pricelist-loader>
-      <div class="col text-end">
-        <button
-          id="work-btn"
-          class="btn btn-primary p-0"
-          @click="refreshWorkPricelist"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#work-pricelist"
-          type="button"
-        >
-          <font-awesome-icon class="p-0" icon="list" />
-        </button></div
-    ></default-pricelist-loader>
+  <div
+    class="container main-container"
+    v-touch:swipe.right="btnBlockHide"
+    v-touch:swipe.left="btnBlockShow"
+  >
+    <default-pricelist-loader> </default-pricelist-loader>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="collectioninfo">
+      <component :is="active_component"></component>
+    </div>
     <div class="offcanvas offcanvas-end wide" tabindex="-1" id="work-pricelist">
       <div class="offcanvas-header">
         <h5 class="offcanvas-title">Дополнительные работы</h5>
@@ -27,23 +22,59 @@
         <work-pricelist :pricelist="work_pricelist"></work-pricelist>
       </div>
     </div>
+    <transition name="slide">
+      <div class="btn-block" v-if="showButtonBlock">
+        <div class="work-button text-end">
+          <button
+            class="btn btn-primary p-0 func-btn"
+            @click="refreshWorkPricelist"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#work-pricelist"
+            type="button"
+          >
+            <font-awesome-icon class="p-0" icon="list" />
+          </button>
+        </div>
+        <div class="search-button">
+          <button
+            class="btn btn-primary p-0 func-btn"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#collectioninfo"
+            @click="showSearch"
+            type="button"
+          >
+            <font-awesome-icon class="p-0" icon="search" />
+          </button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import DefaultPricelistLoader from "./components/DefaultPricelistLoader.vue";
 import WorkPricelist from "./components/WorkPricelist.vue";
+import CollectionContent from "./components/CollectionContent.vue";
+import StoneSearchList from "./components/StoneSearchList.vue";
 
 export default {
   name: "App",
   data() {
     return {
       work_pricelist: {},
+      showButtonBlock: true,
     };
   },
   components: {
     DefaultPricelistLoader,
     WorkPricelist,
+    CollectionContent,
+    StoneSearchList,
+  },
+  computed: {
+    active_component() {
+      return this.$store.state.active_component;
+    },
   },
   methods: {
     refreshWorkPricelist() {
@@ -56,14 +87,33 @@ export default {
           console.log(err);
         });
     },
+    btnBlockHide() {
+      this.showButtonBlock = false;
+    },
+    btnBlockShow() {
+      this.showButtonBlock = true;
+    },
+    showSearch() {
+      this.$store.commit("showSearch");
+      this.$nextTick(() => {
+        // vm.$refs.textbox.focus()
+        console.log(this.$refs);
+      });
+    },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
+$slide_speed: 0.5s;
+
+body {
+  font-family: "Roboto Mono", monospace !important;
+}
+
 @media screen and (min-width: 1280px) {
   .wide {
-    width: 60vw !important;
+    width: 80vw !important;
   }
 }
 @media screen and (max-width: 540px) {
@@ -71,9 +121,69 @@ export default {
     width: 100vw !important;
   }
 }
-#work-btn {
-  width: 30px;
-  height: 30px;
+
+.btn-block {
+  position: fixed;
+  right: 8vh;
+  bottom: 5vh;
+  height: 15vh;
+}
+.work-button {
+  position: absolute;
+  bottom: 0;
+}
+.search-button {
+  position: absolute;
+  bottom: 7vh;
+}
+
+.func-btn {
+  width: 6vh;
+  height: 6vh;
   border-radius: 40px;
+}
+
+.main-container {
+  overflow-x: hidden !important;
+  position: relative;
+}
+// .offcanvas-body {
+//   position: relative;
+//   overflow-y: scroll;
+// }
+
+@keyframes swipeRight {
+  to {
+    position: absolute;
+    right: -8vh;
+  }
+}
+@keyframes swipeLeft {
+  to {
+    position: fixed;
+    right: 8vh;
+  }
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all $slide_speed ease-out;
+}
+
+.slide-enter-from {
+  position: fixed;
+  right: -8vh;
+}
+
+.slide-enter-to {
+  transform: translateX(100%);
+}
+.slide-leave-to {
+  animation: swipeRight $slide_speed forwards;
+}
+
+.slide-leave-from {
+  position: fixed;
+  right: 8vh;
 }
 </style>

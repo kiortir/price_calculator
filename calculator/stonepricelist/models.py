@@ -314,7 +314,7 @@ class AcrylicConfiguration(models.Model):
 class AcrylicStone(Stone):
 
     manufacturer = models.ForeignKey(
-        AcrylicManufacturer, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='производитель')
+        AcrylicManufacturer, on_delete=models.SET_NULL, null=True, blank=True, related_name="stones", verbose_name='производитель')
     collection = ChainedForeignKey(
         AcrylicCollection, chained_field="manufacturer", chained_model_field="manufacturer", related_name="stones", show_all=False, auto_choose=True, sort=True, verbose_name='коллекция')
 

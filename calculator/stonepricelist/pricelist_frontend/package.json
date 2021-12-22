@@ -19,11 +19,14 @@
     "sass-loader": "^10",
     "vue": "^3.0.0",
     "vue-axios": "^3.4.0",
-    "vue-fontawesome": "^0.0.2"
+    "vue-fontawesome": "^0.0.2",
+    "vue3-touch-events": "^4.1.0",
+    "vuex": "^4.0.0-0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
