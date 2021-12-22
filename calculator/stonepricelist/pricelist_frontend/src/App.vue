@@ -107,9 +107,6 @@ export default {
 <style lang="scss">
 $slide_speed: 0.5s;
 
-body {
-  font-family: "Roboto Mono", monospace !important;
-}
 
 @media screen and (min-width: 1280px) {
   .wide {
