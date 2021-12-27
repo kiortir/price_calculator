@@ -51,7 +51,7 @@ def webhook(lead_webhook):
                     field_value = field_value['value']
 
                 lead_dict[field_name] = field_value
-
+    print(lead_dict)
     return {
         'hook_type': hook_type,
         'status_id': lead_fields['status_id'],
