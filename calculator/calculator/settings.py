@@ -116,10 +116,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'calculation',
-            'USER': 'admin',
-            'PASSWORD': 'avalon11',
-            'HOST': 'localhost',
+            'NAME': env('DB_NAME'),
+            'USER': env('DB_USER'),
+            'PASSWORD': env('DB_PASSWORD'),
+            'HOST': env('DB_HOST'),
             'PORT': '',
         }
     }
@@ -173,6 +173,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 USE_DJANGO_JQUERY = True
 
-AMO_CLIENT_SECRET = 'ce3XkciW74EYPWBoFLDbBKjTqsOixwEpDoZvgG5oZJjgYOkJD4FWaSsHaGU3LDMJ'
-
-AMO_CLIENT_ID = '435f43b4-3760-4a8b-8799-5e7d413ca7e6'
+AMO_CLIENT_SECRET = env('AMO_CLIENT_SECRET')
+AMO_CLIENT_ID = env('AMO_CLIENT_ID')

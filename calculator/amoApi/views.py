@@ -36,6 +36,7 @@ class AmoWebhookEndpoint(APIView):
     renderer_classes = [JSONRenderer]
 
     def post(self, request):
+        print(request.data)
         handle_webhook(deserialize.webhook(request.data))
         return HttpResponse(status=204)
 

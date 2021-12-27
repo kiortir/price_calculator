@@ -25,7 +25,7 @@ def response(lead_response: dict) -> Lead:
     return lead_dict
 
 
-def webhook(lead_webhook: SimpleNamespace):
+def webhook(lead_webhook):
 
     custom_fields_entries = CustomFields.objects.all()
     custom_fields_dict = {field.field_id: {'name': field.field_name, 'type': field.field_type} for field in
