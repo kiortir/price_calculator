@@ -43,7 +43,7 @@ def webhook(lead_webhook):
 
     custom_fields = lead_fields['custom_fields']
     for field in custom_fields:
-        field_id = field['id']
+        field_id = int(field['id'])
         field_info = custom_fields_dict.get(field_id, None)
         if field_info:
             field_name = field_info.get('name', '')
