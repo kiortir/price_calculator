@@ -27,7 +27,7 @@ class AmoParser(BaseParser):
     media_type = '*/*'
 
     def parse(self, stream, media_type=None, parser_context=None):
-        print(stream.read())
+        print(qs_parser(stream.read(), normalized=True))
         return qs_parser(stream.read(), normalized=True)
 
 
