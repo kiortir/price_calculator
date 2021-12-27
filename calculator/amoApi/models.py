@@ -19,11 +19,11 @@ class Lead(models.Model):
         max_length=10, null=True, blank=True, verbose_name='номер договора')
     contract_start_date = models.IntegerField(
         verbose_name='дата начала')
-    contract_duration = models.IntegerField(null=True,
+    contract_duration = models.IntegerField(null=True, default=0,
                                             verbose_name='срок по договору')
-    work_duration = models.IntegerField(null=True,
+    work_duration = models.IntegerField(null=True, default=0,
                                         verbose_name='срок изготовления')
-    work_start_date = models.IntegerField(null=True,
+    work_start_date = models.IntegerField(null=True, default=0,
                                           verbose_name='дата передачи в работу')
 
     status_id = models.IntegerField(
