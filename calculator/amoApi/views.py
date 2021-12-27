@@ -24,24 +24,16 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
 
 
 class AmoParser(BaseParser):
+    media_type = 'application/hal+json'
 
     def parse(self, stream, media_type=None, parser_context=None):
-        parser_context = parser_context or {}
-        encoding = parser_context.get('encoding', settings.DEFAULT_CHARSET)
-        request = parser_context.get('request')
-        try:
-            data = stream.read().decode(encoding)
-            # setting a 'body' alike custom attr with raw POST content
-            setattr(request, 'raw_body', data)
-            return qs_parser(data, normalized=True)
-        except ValueError as exc:
-            raise ParseError('JSON parse error - %s' % 'zzz')
+
+        return qs_parser(stream.read(), normalized=True)
 
 
 class AmoWebhookEndpoint(APIView):
     authentication_classes = (
         CsrfExemptSessionAuthentication, BasicAuthentication)
-    renderer_classes = [JSONRenderer]
     parser_classes = [AmoParser]
 
     def post(self, request):
