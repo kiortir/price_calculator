@@ -1,10 +1,11 @@
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from querystring_parser import parser as qs_parser
 # from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authentication import (BasicAuthentication,
                                            SessionAuthentication)
 from rest_framework.decorators import api_view, authentication_classes
-from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import FormParser
+from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 
 import amoApi.deserializers as deserialize
@@ -38,8 +39,9 @@ class AmoWebhookEndpoint(APIView):
     # parser_classes = [FormParser]
 
     def post(self, request):
-        print(request.QueryDict)
-        handle_webhook(deserialize.webhook(request.data))
+        data = qs_parser.parse(request.data, normalized=True)
+        print(data)
+        handle_webhook(deserialize.webhook(data))
         return HttpResponse(status=204)
 
 
