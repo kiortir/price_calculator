@@ -1,8 +1,6 @@
-import collections
-from django.db.models import fields
-from rest_framework.relations import SlugRelatedField
-from .models import *
 from rest_framework import serializers
+
+from .models import *
 
 
 class CurrencySerializer(serializers.ModelSerializer):

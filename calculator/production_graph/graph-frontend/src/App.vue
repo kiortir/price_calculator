@@ -1,17 +1,23 @@
 <template>
   <div id="chart">
-    {{ dealdata }}
+    <apexchart
+      :options="chartOptions"
+      :series="leads"
+      @click="clickHandler"
+    ></apexchart>
+
+    {{ leads }}
   </div>
 </template>
 
 <script>
 // import axios from "axios";
-// <apexchart
-//   type="rangeBar"
-//   height="350"
-//   :options="chartOptions"
-//   :series="series"
-// ></apexchart>
+Date.prototype.addDays = function (days) {
+  var date = new Date(this.valueOf());
+  date.setDate(date.getDate() + days);
+  return date;
+};
+
 export default {
   name: "app",
   data() {
@@ -22,33 +28,365 @@ export default {
       dayoffs: null,
       status: null,
       pollInterval: null,
+      specialists_count: 9,
+      series: [
+        // George Washington
+        {
+          name: "George Washington",
+          data: [
+            {
+              x: "President",
+              y: [
+                new Date(1789, 3, 30).getTime(),
+                new Date(1797, 2, 4).getTime(),
+              ],
+            },
+          ],
+        },
+        // John Adams
+        {
+          name: "John Adams",
+          data: [
+            {
+              x: "President",
+              y: [
+                new Date(1797, 2, 4).getTime(),
+                new Date(1801, 2, 4).getTime(),
+              ],
+            },
+            {
+              x: "Vice President",
+              y: [
+                new Date(1789, 3, 21).getTime(),
+                new Date(1797, 2, 4).getTime(),
+              ],
+            },
+          ],
+        },
+        // Thomas Jefferson
+        {
+          name: "Thomas Jefferson",
+          data: [
+            {
+              x: "President",
+              y: [
+                new Date(1801, 2, 4).getTime(),
+                new Date(1809, 2, 4).getTime(),
+              ],
+            },
+            {
+              x: "Vice President",
+              y: [
+                new Date(1797, 2, 4).getTime(),
+                new Date(1801, 2, 4).getTime(),
+              ],
+            },
+            {
+              x: "Secretary of State",
+              y: [
+                new Date(1790, 2, 22).getTime(),
+                new Date(1793, 11, 31).getTime(),
+              ],
+            },
+          ],
+        },
+        // Aaron Burr
+        {
+          name: "Aaron Burr",
+          data: [
+            {
+              x: "Vice President",
+              y: [
+                new Date(1801, 2, 4).getTime(),
+                new Date(1805, 2, 4).getTime(),
+              ],
+            },
+          ],
+        },
+        // George Clinton
+        {
+          name: "George Clinton",
+          data: [
+            {
+              x: "Vice President",
+              y: [
+                new Date(1805, 2, 4).getTime(),
+                new Date(1812, 3, 20).getTime(),
+              ],
+            },
+          ],
+        },
+        // John Jay
+        {
+          name: "John Jay",
+          data: [
+            {
+              x: "Secretary of State",
+              y: [
+                new Date(1789, 8, 25).getTime(),
+                new Date(1790, 2, 22).getTime(),
+              ],
+            },
+          ],
+        },
+        // Edmund Randolph
+        {
+          name: "Edmund Randolph",
+          data: [
+            {
+              x: "Secretary of State",
+              y: [
+                new Date(1794, 0, 2).getTime(),
+                new Date(1795, 7, 20).getTime(),
+              ],
+            },
+          ],
+        },
+        // Timothy Pickering
+        {
+          name: "Timothy Pickering",
+          data: [
+            {
+              x: "Secretary of State",
+              y: [
+                new Date(1795, 7, 20).getTime(),
+                new Date(1800, 4, 12).getTime(),
+              ],
+            },
+          ],
+        },
+        // Charles Lee
+        {
+          name: "Charles Lee",
+          data: [
+            {
+              x: "Secretary of State",
+              y: [
+                new Date(1800, 4, 13).getTime(),
+                new Date(1800, 5, 5).getTime(),
+              ],
+            },
+          ],
+        },
+        // John Marshall
+        {
+          name: "John Marshall",
+          data: [
+            {
+              x: "Secretary of State",
+              y: [
+                new Date(1800, 5, 13).getTime(),
+                new Date(1801, 2, 4).getTime(),
+              ],
+            },
+          ],
+        },
+        // Levi Lincoln
+        {
+          name: "Levi Lincoln",
+          data: [
+            {
+              x: "Secretary of State",
+              y: [
+                new Date(1801, 2, 5).getTime(),
+                new Date(1801, 4, 1).getTime(),
+              ],
+            },
+          ],
+        },
+        // James Madison
+        {
+          name: "James Madison",
+          data: [
+            {
+              x: "Secretary of State",
+              y: [
+                new Date(1801, 4, 2).getTime(),
+                new Date(1809, 2, 3).getTime(),
+              ],
+            },
+          ],
+        },
+      ],
+      chartOptions: {
+        chart: {
+          height: 500,
+          type: "rangeBar",
+          zoom: {
+            enabled: true,
+            type: "x",
+            autoScaleYaxis: false,
+            zoomedArea: {
+              fill: {
+                color: "#90CAF9",
+                opacity: 0.4,
+              },
+              stroke: {
+                color: "#0D47A1",
+                opacity: 0.4,
+                width: 1,
+              },
+            },
+          },
+        },
+
+        dataLabels: {
+          enabled: true,
+          formatter: function (val, { seriesIndex, w }) {
+            return w.config.series[seriesIndex].name;
+          },
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            barHeight: "50%",
+            rangeBarGroupRows: true,
+          },
+        },
+        colors: [
+          "#008FFB",
+          "#00E396",
+          "#FEB019",
+          "#FF4560",
+          "#775DD0",
+          "#3F51B5",
+          "#546E7A",
+          "#D4526E",
+          "#8D5B4C",
+          "#F86624",
+          "#D7263D",
+          "#1B998B",
+          "#2E294E",
+          "#F46036",
+          "#E2C044",
+        ],
+        fill: {
+          type: "solid",
+        },
+        xaxis: {
+          type: "datetime",
+        },
+        grid: {
+          show: true,
+          borderColor: "#90A4AE",
+          strokeDashArray: 0,
+          position: "back",
+          xaxis: {
+            lines: {
+              show: true,
+            },
+          },
+          yaxis: {
+            lines: {
+              show: false,
+            },
+          },
+        },
+        legend: {
+          show: false,
+          position: "right",
+        },
+        tooltip: {
+          enabled: true,
+          enabledOnSeries: undefined,
+        },
+      },
     };
   },
   methods: {
-    async fetchData() {
-      const response = await fetch(
-        "http://xmlcalendar.ru/data/ru/2021/calendar.json",
-        {
-          method: "GET",
-          "referer-policy": "strict-origin-when-cross-origin",
-          headers: {
-            "Accept-Language": "ru,ru-RU;q=0.5",
-            Accept: "*",
-          },
+    clickHandler(event, chartContext, config) {
+      alert(
+        "https://unirock.amocrm.ru/leads/detail/" +
+          config.config.series[config.seriesIndex].data[0].lead
+      );
+      console.log(config.config.series[config.seriesIndex]);
+      console.log(config.config.series[config.seriesIndex].name);
+      console.log(
+        config.config.series[config.seriesIndex].data[config.dataPointIndex]
+      );
+    },
+    getFirstToFree(arr) {
+      let min = Infinity;
+      let index = 0;
+      for (let el in arr) {
+        if (arr[el] < min) {
+          min = arr[el];
+          index = el;
         }
-      ).then((response) => {
-        console.log(response);
-      });
-      return await response.json();
+      }
+      return { end_date: min, index };
     },
   },
-  mounted() {
-    this.fetchData().then((data) => {
-      // console.log("zzz");
-      // console.log(data);
-      this.dayoffs = data;
-    });
-    //check if the status is completed, if not fetch data every 10minutes.
+  computed: {
+    leads() {
+      let Leads = [];
+
+      let sorted = [
+        ...this.dealdata.filter(
+          (deal) => deal.start_date != null && deal.work_duration != null
+        ),
+      ].sort((x, y) => {
+        return (
+          new Date(x.start_date).getTime() - new Date(y.start_date).getTime()
+        );
+      });
+      // console.log([this.dealdata.slice(1, 5), sorted.slice(1, 5)]);
+      let specialist_array = sorted
+        .slice(0, 5)
+        .map((el) => new Date(el.start_date));
+      for (let lead of sorted) {
+        let last_spec = this.getFirstToFree(specialist_array);
+
+        let flead = {
+          name: lead.deal_number,
+
+          data: [
+            {
+              lead: lead.lead_id,
+              x: "Мастер" + last_spec.index,
+              y: [
+                last_spec.end_date,
+                new Date(lead.start_date).addDays(lead.work_duration).getTime(),
+              ],
+            },
+          ],
+        };
+        specialist_array[last_spec.index] = new Date(lead.start_date)
+          .addDays(lead.work_duration)
+          .getTime();
+        Leads.push(flead);
+      }
+      return Leads;
+    },
+
+    // fLeads() {
+    //   return this.leads.map((lead) => {
+    //     // let start = new Date(lead.start_date).getTime();
+    //     return {
+    //       name: lead.deal_number,
+    //       data: [
+    //         {
+    //           x: lead.lead_id,
+    //           y: [new Date(lead.start_date).getTime(), new Date().getTime()],
+    //         },
+    //       ],
+    //     };
+    //   });
+    // },
   },
+  mounted() {
+    console.log([new Date(), new Date().addDays(15)]);
+  },
+  // mounted() {
+  //   this.fetchData().then((data) => {
+  //     // console.log("zzz");
+  //     // console.log(data);
+  //     this.dayoffs = data;
+  //   });
+  //check if the status is completed, if not fetch data every 10minutes.
+  // },
+  // components: {
+  //   apexchart: VueApexCharts,
+  // },
 };
 </script>

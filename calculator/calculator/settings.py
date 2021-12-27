@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 import os
 from pathlib import Path
 
@@ -66,7 +67,8 @@ INSTALLED_APPS = [
     'smart_selects',
     'rest_framework',
     'main',
-    'stonepricelist'
+    'stonepricelist',
+    'amoApi',
 ]
 
 MIDDLEWARE = [
@@ -157,7 +159,7 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-    ]
+    ],
 }
 
 # Static files (CSS, JavaScript, Images)
@@ -170,3 +172,7 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 USE_DJANGO_JQUERY = True
+
+AMO_CLIENT_SECRET = 'ce3XkciW74EYPWBoFLDbBKjTqsOixwEpDoZvgG5oZJjgYOkJD4FWaSsHaGU3LDMJ'
+
+AMO_CLIENT_ID = '435f43b4-3760-4a8b-8799-5e7d413ca7e6'

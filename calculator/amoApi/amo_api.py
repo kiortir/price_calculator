@@ -5,7 +5,7 @@ from .models import Lead
 
 QUERY_URL = 'https://unirock.amocrm.ru/api/v4/leads?limit=250&?filter[tags_logic]=or&filter[pipe][946942][]=18032857&filter[pipe][946942][]=18032860&filter[pipe][946942][]=18032863&filter[pipe][946942][]=18033010&filter[pipe][946942][]=18062053'
 IMPORTANT_STATUS = ['18032857', '18062053',
-                    '18032860', '18032863', '39719170', '18033010']
+                    '18032860', '18032863', '18033010']
 
 
 def getLeads(a_token: str, page=1):
@@ -20,7 +20,7 @@ def getLeads(a_token: str, page=1):
         return []
 
     leads = response.json().get('_embedded', {}).get('leads', [])
-    if len(leads < 250):
+    if len(leads) < 250:
         return leads
     next_page = getLeads(a_token, page + 1)
 
@@ -31,21 +31,27 @@ def getLeads(a_token: str, page=1):
 
 
 def handle_webhook(webhook_data: dict):
-    hook_type = webhook_data.get('hook_type', None)
-    status_id = webhook_data.get('status_code', 0)
-    hook_data = webhook_data.get('hook_data', None)
-
+    hook_type: str = webhook_data.get('hook_type', None)
+    status_id: int = webhook_data.get('status_id', 0)
+    hook_data: dict = webhook_data.get('hook_data', None)
     try:
-        lead = Lead.objects.get(lead_id=hook_data.lead_id)
+        lead: Lead = Lead.objects.get(lead_id=hook_data['lead_id'])
     except Lead.DoesNotExist:
         lead = None
-        hook_data.delete()
 
     if lead:
         if hook_type == 'delete' or status_id not in IMPORTANT_STATUS:
             lead.delete()
-            hook_data.delete()
         else:
-            hook_data.save()
+            for field, value in hook_data.items():
+                setattr(lead, field, value)
+            lead.save()
     elif hook_type != 'delete' and status_id in IMPORTANT_STATUS:
-        hook_data.save()
+        lead = Lead.objects.update_or_create(
+            lead_id=hook_data['lead_id'], defaults=hook_data)
+
+
+def handle_query_response(response: list):
+    for lead in response:
+        Lead.objects.update_or_create(
+            lead_id=lead.get('lead_id', 0), defaults=lead)
