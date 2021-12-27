@@ -36,12 +36,12 @@ class AmoWebhookEndpoint(APIView):
     authentication_classes = (
         CsrfExemptSessionAuthentication, BasicAuthentication)
     renderer_classes = [JSONRenderer]
-    # parser_classes = [FormParser]
+    parser_classes = [FormParser]
 
     def post(self, request):
-        data = qs_parser.parse(request.data, normalized=True)
-        print(data)
-        handle_webhook(deserialize.webhook(data))
+        # data = qs_parser.parse(request.data, normalized=True)
+        # print(data)
+        handle_webhook(deserialize.webhook(request.data))
         return HttpResponse(status=204)
 
 
