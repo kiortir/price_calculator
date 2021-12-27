@@ -4,6 +4,7 @@ from rest_framework.authentication import (BasicAuthentication,
                                            SessionAuthentication)
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import FormParser
 from rest_framework.views import APIView
 
 import amoApi.deserializers as deserialize
@@ -34,6 +35,7 @@ class AmoWebhookEndpoint(APIView):
     authentication_classes = (
         CsrfExemptSessionAuthentication, BasicAuthentication)
     renderer_classes = [JSONRenderer]
+    parser_classes = [FormParser]
 
     def post(self, request):
         print(request.data)
