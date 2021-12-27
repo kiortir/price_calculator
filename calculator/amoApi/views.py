@@ -24,7 +24,7 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
 
 
 class AmoParser(BaseParser):
-    media_type = 'application/hal+json'
+    media_type = '*/*'
 
     def parse(self, stream, media_type=None, parser_context=None):
         print(stream.read())
