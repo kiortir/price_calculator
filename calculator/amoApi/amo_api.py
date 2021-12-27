@@ -47,6 +47,7 @@ def handle_webhook(webhook_data: dict):
                 setattr(lead, field, value)
             lead.save()
     elif hook_type != 'delete' and status_id in IMPORTANT_STATUS:
+        print('trying(')
         lead = Lead.objects.update_or_create(
             lead_id=hook_data['lead_id'], defaults=hook_data)
 
