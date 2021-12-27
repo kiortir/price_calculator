@@ -41,7 +41,7 @@ def webhook(lead_webhook):
     lead_dict['status_id'] = lead_fields['status_id']
     if hook_type != 'delete':
         print(hook_type)
-        custom_fields = lead_fields['custom_fields']
+        custom_fields = lead_fields.get('custom_fields', [])
         for field in custom_fields:
             field_id = int(field['id'])
             field_info = custom_fields_dict.get(field_id, None)
@@ -50,7 +50,6 @@ def webhook(lead_webhook):
                 field_value = field['values'][0]
                 if isinstance(field_value, dict):
                     field_value = field_value['value']
-
                 lead_dict[field_name] = field_value
     print(lead_dict)
     return {
