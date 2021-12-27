@@ -38,7 +38,7 @@ class AmoWebhookEndpoint(APIView):
 
     def post(self, request):
         # data = qs_parser.parse(request.data, normalized=True)
-        # print(data)
+        print(request.data)
         handle_webhook(deserialize.webhook(request.data))
         return HttpResponse(status=204)
 
