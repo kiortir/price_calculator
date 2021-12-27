@@ -30,13 +30,12 @@ def webhook(lead_webhook):
     custom_fields_entries = CustomFields.objects.all()
     custom_fields_dict = {field.field_id: {'name': field.field_name, 'type': field.field_type} for field in
                           custom_fields_entries}
-    print(custom_fields_dict)
+
     lead_info = lead_webhook['leads']
-    print(lead_info)
+
     hook_type = list(lead_info.keys())[0]
-    print(hook_type)
+
     lead_fields = lead_info[hook_type][0]
-    print(lead_fields)
 
     lead_dict = {'lead_id': lead_fields['id']}
     lead_dict['status_id'] = lead_fields['status_id']
@@ -52,6 +51,7 @@ def webhook(lead_webhook):
                 field_value = field_value['value']
 
             lead_dict[field_name] = field_value
+        print(field_info)
     print({
         'hook_type': hook_type,
         'status_id': lead_fields['status_id'],
