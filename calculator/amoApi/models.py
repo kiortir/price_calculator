@@ -5,8 +5,8 @@ class Token(models.Model):
 
     token_type = models.CharField(max_length=40)
     expires_in = models.IntegerField()
-    access_token = models.CharField(max_length=200, null=True, blank=True)
-    refresh_token = models.CharField(max_length=200, null=True, blank=True)
+    access_token = models.TextField(null=True, blank=True)
+    refresh_token = models.TextField(null=True, blank=True)
 
 
 class Lead(models.Model):
