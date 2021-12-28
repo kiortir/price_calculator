@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 
 import requests
 from django.conf import settings
@@ -15,8 +16,10 @@ def setTokens(tokens: dict):
     token_entry = Token.objects.get(id=1)
     for field, value in tokens.items():
         setattr(token_entry, field, value)
-    print(token_entry)
-    token_entry.save()
+    try:
+        token_entry.save()
+    except Exception:
+        logging.exception('message')
 
 
 def setTokensByAuth(authorization_code: str):
