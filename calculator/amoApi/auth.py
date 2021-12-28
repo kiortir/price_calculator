@@ -15,6 +15,7 @@ def setTokens(tokens: dict):
     token_entry = Token.objects.get(id=1)
     for field, value in tokens.items():
         setattr(token_entry, field, value)
+        print(field, value)
     token_entry.save()
 
 
