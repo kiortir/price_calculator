@@ -19,12 +19,11 @@ def setTokens(tokens: dict):
 
 
 def setTokensByAuth(authorization_code: str):
-    print(settings.AMO_CLIENT_ID, settings.AMO_CLIENT_SECRET,
-          authorization_code, AUTH_URL, AUTH_HEADERS)
     request_data = '{"client_id":"%s","client_secret":"%s","grant_type":"authorization_code","code": "%s","redirect_uri":"https://dev.unirock.ru/"}' % (
         settings.AMO_CLIENT_ID, settings.AMO_CLIENT_SECRET, authorization_code)
     tokens = requests.post(AUTH_URL, headers=AUTH_HEADERS,
                            data=request_data, timeout=5)
+    print(tokens.json())
     setTokens(tokens.json())
 
 
