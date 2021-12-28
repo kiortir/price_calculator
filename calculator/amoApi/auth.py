@@ -12,7 +12,7 @@ AUTH_HEADERS["Content-Type"] = "application/json"
 
 
 def setTokens(tokens: dict):
-    token_entry = Token.objects.get_or_create(id=1)[0]
+    token_entry = Token.objects.get(id=1)
     for field, value in tokens.items():
         setattr(token_entry, field, value)
     token_entry.save()
