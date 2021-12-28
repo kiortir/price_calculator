@@ -15,7 +15,7 @@ def setTokens(tokens: dict):
     token_entry = Token.objects.get(id=1)
     for field, value in tokens.items():
         setattr(token_entry, field, value)
-        print(field, value)
+    print(token_entry)
     token_entry.save()
 
 
@@ -24,7 +24,6 @@ def setTokensByAuth(authorization_code: str):
         settings.AMO_CLIENT_ID, settings.AMO_CLIENT_SECRET, authorization_code)
     tokens = requests.post(AUTH_URL, headers=AUTH_HEADERS,
                            data=request_data, timeout=5)
-    print(tokens.json())
     setTokens(tokens.json())
 
 
