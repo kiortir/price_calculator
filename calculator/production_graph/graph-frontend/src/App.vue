@@ -232,7 +232,7 @@ export default {
       return dayoff_array;
     },
     async getLeads() {
-      return this.axios.get("/amo/leads").then((response) => {
+      return this.axios.post("/amo/leads").then((response) => {
         let deals = response.data.leads.sort((x, y) => {
           return x.contract_start_date - y.contract_start_date;
         });
