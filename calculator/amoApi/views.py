@@ -1,11 +1,9 @@
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from querystring_parser import parser as qs_parser
-# from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authentication import (BasicAuthentication,
                                            SessionAuthentication)
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.parsers import BaseParser
-from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 
 import amoApi.deserializers as deserialize
@@ -13,8 +11,6 @@ from amoApi.amo_api import getLeads, handle_query_response, handle_webhook
 from amoApi.auth import setTokensByAuth
 from amoApi.models import Lead, Token
 from amoApi.serializers import LeadSerializer
-from django.conf import settings
-from rest_framework.exceptions import ParseError
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
@@ -27,7 +23,6 @@ class AmoParser(BaseParser):
     media_type = '*/*'
 
     def parse(self, stream, media_type=None, parser_context=None):
-        # print(qs_parser.parse(stream.read(), normalized=True))
         return qs_parser.parse(stream.read(), normalized=True)
 
 
@@ -37,8 +32,6 @@ class AmoWebhookEndpoint(APIView):
     parser_classes = [AmoParser]
 
     def post(self, request):
-        # data = qs_parser.parse(request.data, normalized=True)
-        print(request.data)
         handle_webhook(deserialize.webhook(request.data))
         return HttpResponse(status=204)
 

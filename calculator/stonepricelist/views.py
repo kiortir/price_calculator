@@ -82,8 +82,6 @@ class crossdomainData(APIView):
 
     def post(self, request):
         url = request.data.get('url', "")
-        print(url)
-        # req = urllib.request.Request(url)
         response = urllib.request.urlopen(url)
         data = json.loads(response.read().decode('utf-8'))
         return Response(data)

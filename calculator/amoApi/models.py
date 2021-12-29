@@ -30,6 +30,9 @@ class Lead(models.Model):
         null=True, default=0, verbose_name='id воронки')
     # must_be_ready = models.IntegerField(null=True,)
 
+    class Meta:
+        ordering = ['contract_start_date']
+
     def __repr__(self):
         return self.contract_number
 

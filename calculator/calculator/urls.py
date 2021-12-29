@@ -23,7 +23,8 @@ urlpatterns = [
     path('calc/', include('main.urls')),
     path('pricelist/', include('stonepricelist.urls')),
     path('chaining/', include('smart_selects.urls')),
-    path('amo/', include('amoApi.urls'))
+    path('amo/', include('amoApi.urls')),
+    path('production/', include('production_graph.urls')),
 ]
 
 if settings.DEBUG:

@@ -7,8 +7,8 @@ module.exports = {
   indexPath: '../../../../templates/production_graph/index.html',
   filenameHashing: false, // Django will hash file names, not webpack
   runtimeCompiler: true, // See: https://vuejs.org/v2/guide/installation.html#Runtime-Compiler-vs-Runtime-only
-  devServer: {
-    proxy: 'https://uvicorn-unirock-api.herokuapp.com',
-  },
+  // devServer: {
+  //   proxy: 'https://uvicorn-unirock-api.herokuapp.com',
+  // },
   // chainWebpack: (config) => config.optimization.minimize(false),
 };

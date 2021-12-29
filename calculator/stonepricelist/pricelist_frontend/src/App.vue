@@ -95,10 +95,6 @@ export default {
     },
     showSearch() {
       this.$store.commit("showSearch");
-      this.$nextTick(() => {
-        // vm.$refs.textbox.focus()
-        console.log(this.$refs);
-      });
     },
   },
 };
@@ -106,7 +102,6 @@ export default {
 
 <style lang="scss">
 $slide_speed: 0.5s;
-
 
 @media screen and (min-width: 1280px) {
   .wide {

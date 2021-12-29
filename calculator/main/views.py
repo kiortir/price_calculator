@@ -1,17 +1,11 @@
-from collections import defaultdict
 import json
-import datetime
 
 import pytz
-from django.core import exceptions
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Max
-
 from rest_framework.decorators import api_view
-
 
 from .models import Calculation, PriceList
 from .serializers import CalculationSerializer, PriceListSerializer
@@ -141,7 +135,6 @@ default_state = """{
    }
 
 }"""
-
 
 
 class CalculationView(TemplateView):
