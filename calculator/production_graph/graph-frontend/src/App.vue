@@ -2,10 +2,20 @@
   <div class="mt-3">
     <div class="qz-block">
       <div class="h3">Кварцевый агломерат</div>
+      <div class="mb-3">
+        <label for="qz_spec" class="form-label">Число мастеров</label>
+        <input
+          type="number"
+          class="form-control"
+          id="qz_spec"
+          v-model.number="qz_specialists"
+          @change="setQzData"
+        />
+      </div>
       <div id="chart" class="apex">
         <apexchart
           ref="realtimeQzChart"
-          :height="500"
+          :height="600"
           :options="chartOptions"
           :series="series"
           @click="clickHandler"
@@ -14,10 +24,20 @@
     </div>
     <div class="ac-block">
       <div class="h3">Акриловый камень</div>
+      <div class="mb-3">
+        <label for="ac_spec" class="form-label">Число мастеров</label>
+        <input
+          type="number"
+          class="form-control"
+          id="ac_spec"
+          v-model.number="acryl_specialists"
+          @change="setAcData"
+        />
+      </div>
       <div id="chart" class="apex">
         <apexchart
           ref="realtimeAcChart"
-          :height="500"
+          :height="600"
           :options="chartOptions"
           :series="series"
           @click="clickHandler"
@@ -30,7 +50,6 @@
 <script>
 Date.prototype.addDays = function (days) {
   var date = new Date(this.valueOf()).getTime();
-  console.log({ date: date + days * 86400000 });
   return new Date(date + days * 86400000);
 };
 
@@ -45,8 +64,8 @@ export default {
       dayoffs: [],
       status: null,
       pollInterval: null,
-      qz_specialists: 4,
-      acryl_specialists: 5,
+      qz_specialists: 9,
+      acryl_specialists: 7,
       series: [],
       chartOptions: {
         noData: {
@@ -109,7 +128,6 @@ export default {
               },
             },
           ],
-          height: 350,
           type: "rangeBar",
           defaultLocale: "ru",
         },
