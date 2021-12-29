@@ -44,10 +44,23 @@ def amo_update_leads(request):
     return JsonResponse({"leads": leads})
 
 
-@api_view(['GET'])
-def amo_get_leads(request):
-    leads = LeadSerializer(Lead.objects.all(), many=True).data
-    return JsonResponse({"leads": leads})
+class amo_get_leads(APIView):
+    authentication_classes = (
+        CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    def post(self, request):
+        leads = LeadSerializer(Lead.objects.all(), many=True).data
+        return JsonResponse({"leads": leads})
+
+    def get(self, request):
+        leads = LeadSerializer(Lead.objects.all(), many=True).data
+        return JsonResponse({"leads": leads})
+
+
+# @api_view(['GET', ])
+# def amo_get_leads(request):
+#     leads = LeadSerializer(Lead.objects.all(), many=True).data
+#     return JsonResponse({"leads": leads})
 
 
 @api_view(['POST'])

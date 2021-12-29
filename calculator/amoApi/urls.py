@@ -7,7 +7,7 @@ from .views import AmoWebhookEndpoint, amo_get_leads, amo_update_tokens, amo_upd
 app_name = 'amoApi'
 urlpatterns = [
     path('hook', csrf_exempt(AmoWebhookEndpoint.as_view())),
-    path('leads', amo_get_leads),
+    path('leads', amo_get_leads.as_view()),
     path('tokens', amo_update_tokens),
     path('update', amo_update_leads),
 ]
