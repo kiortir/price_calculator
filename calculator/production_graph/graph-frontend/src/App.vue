@@ -232,24 +232,27 @@ export default {
       return dayoff_array;
     },
     async getLeads() {
-      return this.axios.post("/amo/leads").then((response) => {
-        let deals = response.data.leads.sort((x, y) => {
-          return x.contract_start_date - y.contract_start_date;
+      // return this.axios.post("/amo/leads").then((response) => {
+      return this.axios
+        .post("/pricelist/prox/", { url: "https://dev.unirock.ru/amo/leads" })
+        .then((response) => {
+          let deals = response.data.leads.sort((x, y) => {
+            return x.contract_start_date - y.contract_start_date;
+          });
+          let qz = [];
+          let ac = [];
+          deals.forEach((deal) => {
+            if (deal.material == "Акрил") {
+              ac.push(deal);
+            } else {
+              qz.push(deal);
+            }
+          });
+          this.dealdata = {
+            qz,
+            ac,
+          };
         });
-        let qz = [];
-        let ac = [];
-        deals.forEach((deal) => {
-          if (deal.material == "Акрил") {
-            ac.push(deal);
-          } else {
-            qz.push(deal);
-          }
-        });
-        this.dealdata = {
-          qz,
-          ac,
-        };
-      });
     },
     async getDayoffs() {
       const prev = () =>

@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'stonepricelist',
     'amoApi',
     'production_graph',
+
 ]
 
 MIDDLEWARE = [
@@ -103,6 +104,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'calculator.wsgi.application'
+ASGI_APPLICATION = "calculator.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -178,3 +180,26 @@ USE_DJANGO_JQUERY = True
 
 AMO_CLIENT_SECRET = env('AMO_CLIENT_SECRET')
 AMO_CLIENT_ID = env('AMO_CLIENT_ID')
+
+
+CHANNEL_LAYERS = {
+    'default': {
+        # Method 1: Via redis lab
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [
+        #       'redis://h:<password>;@<redis Endpoint>:<port>'
+        #     ],
+        # },
+
+        # Method 2: Via local Redis
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #      "hosts": [('127.0.0.1', 6379)],
+        # },
+
+        # Method 3: Via In-memory channel layer
+        # Using this method.
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
+}
