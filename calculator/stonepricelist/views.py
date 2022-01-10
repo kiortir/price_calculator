@@ -10,6 +10,7 @@ from django.shortcuts import render
 from django.db.models import Q
 
 import urllib.request
+from urllib.error import HTTPError
 import json
 
 
@@ -82,6 +83,9 @@ class crossdomainData(APIView):
 
     def post(self, request):
         url = request.data.get('url', "")
-        response = urllib.request.urlopen(url)
-        data = json.loads(response.read().decode('utf-8'))
-        return Response(data)
+        try:
+            response = urllib.request.urlopen(url)
+            data = json.loads(response.read().decode('utf-8'))
+            return Response(data)
+        except HTTPError:
+            return Response(status=404)

@@ -14,11 +14,15 @@ class Command(BaseCommand):
         currencies = c.objects.all()
         response = json.loads(urllib.request.urlopen(
             'https://www.cbr-xml-daily.ru/daily_json.js').read())
-        unparsed_currency_date: str = response.get('Date', '2000-10-08:30:00+03:00')[:-6]
-        currency_date = datetime.datetime.strptime(unparsed_currency_date, '%Y-%m-%dT%X').date()
+        unparsed_currency_date: str = response.get(
+            'Date', '2000-10-08:30:00+03:00')[:-6]
+        currency_date = datetime.datetime.strptime(
+            unparsed_currency_date, '%Y-%m-%dT%X').date()
         currency_dict = response.get('Valute', {})
+        print(currency_dict)
         for currency in currencies:
-            new_value: int = math.ceil(currency_dict.get(currency.code, {}).get('Value', 0))
+            new_value: int = math.ceil(currency_dict.get(
+                currency.code, {}).get('Value', 0))
             currency.value = new_value
             currency.value_date = currency_date
             currency.save()
