@@ -42,7 +42,7 @@ def amo_update_leads(request):
     leads = getLeads(tokens.access_token)
     leads = map(deserialize.response, leads)
     handle_query_response(leads)
-    return JsonResponse({"leads": leads})
+    return JsonResponse({"leads": list(leads)})
 
 
 class amo_get_leads(APIView):
