@@ -52,6 +52,12 @@ def handle_webhook(webhook_data: dict):
 
 
 def handle_query_response(response: list):
+    active_leads = []
     for lead in response:
+        response_lead_id = lead.get('lead_id', 0)
+        active_leads.push(response_lead_id)
         Lead.objects.update_or_create(
-            lead_id=lead.get('lead_id', 0), defaults=lead)
+            lead_id=response_lead_id, defaults=lead)
+    for lead in Lead.objects.all():
+        if lead.id not in active_leads:
+            lead.delete()

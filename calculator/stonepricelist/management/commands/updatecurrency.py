@@ -19,7 +19,6 @@ class Command(BaseCommand):
         currency_date = datetime.datetime.strptime(
             unparsed_currency_date, '%Y-%m-%dT%X').date()
         currency_dict = response.get('Valute', {})
-        print(currency_dict)
         for currency in currencies:
             new_value: int = math.ceil(currency_dict.get(
                 currency.code, {}).get('Value', 0))
