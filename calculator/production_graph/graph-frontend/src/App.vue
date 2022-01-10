@@ -162,9 +162,20 @@ export default {
           enabled: true,
           y: {
             formatter: function (val, { seriesIndex, w }) {
-              return `Дата заключения: ${new Date(
-                w.config.series[seriesIndex].data[0].contract_start_date
-              ).toLocaleDateString()}`;
+              let data = w.config.series[seriesIndex].data[0];
+              let work_start = data.work_start_date;
+              let template = `<div>Дата заключения: ${new Date(
+                data.contract_start_date
+              ).toLocaleDateString()}</div>${
+                work_start > 0
+                  ? `<div>Дата передачи в производство: ${new Date(
+                      work_start
+                    ).toLocaleDateString()}</div>`
+                  : ""
+              }`;
+
+              console.log(template);
+              return template;
             },
             title: {
               formatter: (seriesName) => seriesName,
@@ -231,27 +242,41 @@ export default {
       return dayoff_array;
     },
     async getLeads() {
-      // return this.axios.post("/amo/leads").then((response) => {
-      return this.axios
-        .post("/pricelist/prox/", { url: "https://dev.unirock.ru/amo/leads" })
-        .then((response) => {
-          let deals = response.data.leads.sort((x, y) => {
-            return x.contract_start_date - y.contract_start_date;
-          });
-          let qz = [];
-          let ac = [];
-          deals.forEach((deal) => {
-            if (deal.material == "Акрил") {
-              ac.push(deal);
-            } else {
-              qz.push(deal);
-            }
-          });
-          this.dealdata = {
-            qz,
-            ac,
-          };
+      return this.axios.post("/amo/leads").then((response) => {
+        // return this.axios
+        //   .post("/pricelist/prox/", { url: "https://dev.unirock.ru/amo/leads" })
+        //   .then((response) => {
+        let deals = response.data.leads.sort((x, y) => {
+          return x.contract_start_date - y.contract_start_date;
         });
+        let qz = {
+          in_progress: [],
+          queue: [],
+        };
+        let ac = {
+          in_progress: [],
+          queue: [],
+        };
+        deals.forEach((deal) => {
+          if (deal.material == "Акрил") {
+            if (deal.status_id == 18033010) {
+              ac.in_progress.push(deal);
+            } else {
+              ac.queue.push(deal);
+            }
+          } else {
+            if (deal.status_id == 18033010) {
+              qz.in_progress.push(deal);
+            } else {
+              qz.queue.push(deal);
+            }
+          }
+        });
+        this.dealdata = {
+          qz,
+          ac,
+        };
+      });
     },
     async getDayoffs() {
       const prev = () =>
@@ -326,7 +351,31 @@ export default {
     async setQzData() {
       let lead_array = [];
       let specialists = [...Array(this.qz_specialists)].map(() => 0);
-      for (let lead of this.dealdata.qz) {
+      for (let lead of this.dealdata.qz.in_progress) {
+        let utc_start = (lead.work_start_date + 10800) * 1000;
+        let first_to_finish = this.firstToFinish(specialists);
+        let start =
+          utc_start > first_to_finish.value ? utc_start : first_to_finish.value;
+        let finish = this.addBusyDays(
+          new Date(start),
+          lead.work_duration
+        ).getTime();
+
+        lead_array.push({
+          name: lead.contract_number,
+          data: [
+            {
+              lead: lead.lead_id,
+              contract_start_date: (lead.contract_start_date + 10800) * 1000,
+              work_start_date: utc_start,
+              x: `Мастер ${first_to_finish.index}`,
+              y: [start, finish],
+            },
+          ],
+        });
+        specialists[first_to_finish.index] = finish;
+      }
+      for (let lead of this.dealdata.qz.queue) {
         let utc_start = (lead.contract_start_date + 10800) * 1000;
         let first_to_finish = this.firstToFinish(specialists);
         let start =
@@ -355,7 +404,31 @@ export default {
     async setAcData() {
       let lead_array = [];
       let specialists = [...Array(this.acryl_specialists)].map(() => 0);
-      for (let lead of this.dealdata.ac) {
+      for (let lead of this.dealdata.ac.in_progress) {
+        let utc_start = (lead.work_start_date + 10800) * 1000;
+        let first_to_finish = this.firstToFinish(specialists);
+        let start =
+          utc_start > first_to_finish.value ? utc_start : first_to_finish.value;
+        let finish = this.addBusyDays(
+          new Date(start),
+          lead.work_duration
+        ).getTime();
+
+        lead_array.push({
+          name: lead.contract_number,
+          data: [
+            {
+              lead: lead.lead_id,
+              contract_start_date: (lead.contract_start_date + 10800) * 1000,
+              work_start_date: utc_start,
+              x: `Мастер ${first_to_finish.index}`,
+              y: [start, finish],
+            },
+          ],
+        });
+        specialists[first_to_finish.index] = finish;
+      }
+      for (let lead of this.dealdata.ac.queue) {
         let utc_start = (lead.contract_start_date + 10800) * 1000;
         let first_to_finish = this.firstToFinish(specialists);
         let start =
