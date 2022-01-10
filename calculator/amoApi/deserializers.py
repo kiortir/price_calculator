@@ -1,9 +1,9 @@
 from types import SimpleNamespace
 
-from .models import CustomFields, Lead
+from .models import CustomFields
 
 
-def response(lead_response: dict) -> Lead:
+def response(lead_response: dict) -> dict:
 
     custom_fields_entries = CustomFields.objects.all()
     custom_fields_dict = {field.field_id: {'name': field.field_name, 'type': field.field_type} for field in

@@ -51,7 +51,7 @@ def handle_webhook(webhook_data: dict):
             lead_id=hook_data['lead_id'], defaults=hook_data)
 
 
-def handle_query_response(response: list):
+def handle_query_response(response):
     active_leads: list = []
     for lead in response:
         response_lead_id = lead.get('lead_id', 0)
