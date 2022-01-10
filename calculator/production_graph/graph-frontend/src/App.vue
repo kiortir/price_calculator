@@ -246,9 +246,7 @@ export default {
         // return this.axios
         //   .post("/pricelist/prox/", { url: "https://dev.unirock.ru/amo/leads" })
         //   .then((response) => {
-        let deals = response.data.leads.sort((x, y) => {
-          return x.contract_start_date - y.contract_start_date;
-        });
+        let deals = response.data.leads;
         let qz = {
           in_progress: [],
           queue: [],
@@ -272,6 +270,10 @@ export default {
             }
           }
         });
+        qz.in_progress.sort((x, y) => x.work_start_date - y.work_start_date);
+        qz.queue.sort((x, y) => x.contract_start_date - y.contract_start_date);
+        ac.in_progress.sort((x, y) => x.work_start_date - y.work_start_date);
+        ac.queue.sort((x, y) => x.contract_start_date - y.contract_start_date);
         this.dealdata = {
           qz,
           ac,
@@ -353,7 +355,11 @@ export default {
       let specialists = [...Array(this.qz_specialists)].map(() => 0);
       for (let lead of this.dealdata.qz.in_progress) {
         let utc_start = (lead.work_start_date + 10800) * 1000;
+        console.log(specialists);
         let first_to_finish = this.firstToFinish(specialists);
+        if (lead.contract_number == 9658) {
+          console.log({ utc_start, first_to_finish, specialists });
+        }
         let start =
           utc_start > first_to_finish.value ? utc_start : first_to_finish.value;
         let finish = this.addBusyDays(
