@@ -1,23 +1,25 @@
-{% extends "base.html" %} {% block content %} {% load static %}
+{% extends "base.html" %} {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    {% block head %}
+
     <title>Прайс-лист Акрил</title>
-    {% comment %} <link rel="preconnect" href="https://fonts.googleapis.com" />
+    {% comment %}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto+Mono:wght@300;400&family=Source+Code+Pro:wght@200;400&display=swap"
       rel="stylesheet"
-    /> {% endcomment %}
+    />
+    {% endcomment %}
   </head>
+  {% endblock %}
   <body>
-    <noscript>
-      <strong>Без JS не работает(</strong>
-    </noscript>
+    <noscript> <strong>Без JS не работает(</strong> </noscript>{% block content
+    %}
     <div id="app"></div>
+    {% endblock %}{% block scripts %}
     <!-- built files will be auto injected -->
   </body>
 </html>

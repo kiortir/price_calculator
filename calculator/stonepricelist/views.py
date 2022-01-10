@@ -34,7 +34,6 @@ class AcrylicCollectionView(APIView):
 
     def post(self, request):
         # try:
-        print(request.data)
         data = request.data
         manufacturer = data.get('manufacturer', '')
         collection = data.get('collection', '')

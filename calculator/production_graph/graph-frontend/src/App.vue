@@ -9,7 +9,8 @@
           class="form-control"
           id="qz_spec"
           v-model.number="qz_specialists"
-          @change="setQzData"
+          @input="setQzData"
+          @change="updateCount('qz_specialists', $event.target.value)"
         />
       </div>
       <div id="chart" class="apex">
@@ -31,7 +32,8 @@
           class="form-control"
           id="ac_spec"
           v-model.number="acryl_specialists"
-          @change="setAcData"
+          @input="setAcData"
+          @change="updateCount('acryl_specialists', $event.target.value)"
         />
       </div>
       <div id="chart" class="apex">
@@ -61,8 +63,8 @@ export default {
       dayoffs: [],
       status: null,
       pollInterval: null,
-      qz_specialists: 9,
-      acryl_specialists: 7,
+      qz_specialists: 5,
+      acryl_specialists: 5,
       series: [],
       chartOptions: {
         noData: {
@@ -213,7 +215,7 @@ export default {
       }
       return date;
     },
-    deserializeDayoffs(year) {
+    async deserializeDayoffs(year) {
       let dayoff_array = [];
       year.data.months.forEach((month) => {
         month.days.split(",").forEach((day) => {
@@ -261,7 +263,8 @@ export default {
           })
           .then((response) => {
             return this.deserializeDayoffs(response);
-          });
+          })
+          .catch(() => []);
       const next = () =>
         this.axios
           .post("/pricelist/prox/", {
@@ -270,7 +273,6 @@ export default {
             }/calendar.json`,
           })
           .then((response) => {
-            console.log(response);
             return this.deserializeDayoffs(response);
           })
           .catch(() => []);
@@ -281,10 +283,17 @@ export default {
           })
           .then((response) => {
             return this.deserializeDayoffs(response);
-          });
-      return Promise.all([prev(), next(), year()]).then((results) => {
-        this.dayoffs = [].concat.apply([], [...results]);
-      });
+          })
+          .catch(() => []);
+      return Promise.all([prev(), next(), year()])
+        .then((results) => {
+          this.dayoffs = [].concat.apply([], [...results]);
+        })
+        .then(() => {
+          if (this.dayoffs.length == 0) {
+            alert("Ошибка! Обновите страницу");
+          }
+        });
     },
     clickHandler(event, chartContext, config) {
       if (event.ctrlKey) {
@@ -342,7 +351,6 @@ export default {
         specialists[first_to_finish.index] = finish;
       }
       this.$refs.realtimeQzChart.updateSeries(lead_array);
-      console.log(lead_array);
     },
     async setAcData() {
       let lead_array = [];
@@ -373,9 +381,29 @@ export default {
       }
       this.$refs.realtimeAcChart.updateSeries(lead_array);
     },
+    updateCount(field, count) {
+      this.axios.put("/production/updatecount", {
+        [field]: count,
+      });
+    },
   },
   mounted() {
-    Promise.allSettled([this.getLeads(), this.getDayoffs()]).then(() => {
+    const setSpecialistCount = async () => {
+      return new Promise((resolve) => {
+        let specialists = JSON.parse(
+          document.getElementById("specialists").textContent
+        );
+        Object.keys(specialists).forEach((key) => {
+          this[key] = specialists[key];
+          resolve();
+        });
+      });
+    };
+    Promise.allSettled([
+      this.getLeads(),
+      this.getDayoffs(),
+      setSpecialistCount(),
+    ]).then(() => {
       Promise.all([this.setQzData(), this.setAcData()]);
     });
   },

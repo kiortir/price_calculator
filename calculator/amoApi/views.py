@@ -40,9 +40,8 @@ class AmoWebhookEndpoint(APIView):
 def amo_update_leads(request):
     tokens = Token.objects.get(id=1)
     leads = getLeads(tokens.access_token)
-    leads = list(map(deserialize.response, leads))
-    handle_query_response(leads)
-    return JsonResponse({"leads": leads})
+    handle_query_response(map(deserialize.response, leads))
+    return HttpResponse(status=204)
 
 
 class amo_get_leads(APIView):
@@ -56,12 +55,6 @@ class amo_get_leads(APIView):
     def get(self, request):
         leads = LeadSerializer(Lead.objects.all(), many=True).data
         return JsonResponse({"leads": leads})
-
-
-# @api_view(['GET', ])
-# def amo_get_leads(request):
-#     leads = LeadSerializer(Lead.objects.all(), many=True).data
-#     return JsonResponse({"leads": leads})
 
 
 @api_view(['POST'])
