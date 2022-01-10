@@ -54,6 +54,7 @@ def handle_webhook(webhook_data: dict):
 def handle_query_response(response: list):
     active_leads = []
     for lead in response:
+        print(response, lead)
         response_lead_id = lead.get('lead_id', 0)
         active_leads.push(response_lead_id)
         Lead.objects.update_or_create(
