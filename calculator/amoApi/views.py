@@ -40,7 +40,9 @@ class AmoWebhookEndpoint(APIView):
 def amo_update_leads(request):
     tokens = Token.objects.get(id=1)
     leads = getLeads(tokens.access_token)
-    handle_query_response(map(deserialize.response, leads))
+    leads = map(deserialize.response, leads)
+    print(leads)
+    handle_query_response(leads)
     return JsonResponse({"leads": leads})
 
 
