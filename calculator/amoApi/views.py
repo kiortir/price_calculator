@@ -41,7 +41,7 @@ def amo_update_leads(request):
     tokens = Token.objects.get(id=1)
     leads = getLeads(tokens.access_token)
     leads = map(deserialize.response, leads)
-    print(leads)
+    print(list(leads))
     handle_query_response(leads)
     return JsonResponse({"leads": leads})
 
