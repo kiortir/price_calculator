@@ -58,6 +58,7 @@ def handle_query_response(response: list):
         active_leads.push(response_lead_id)
         Lead.objects.update_or_create(
             lead_id=response_lead_id, defaults=lead)
+    print(active_leads)
     for lead in Lead.objects.all():
         print(lead)
         if lead.id not in active_leads:
