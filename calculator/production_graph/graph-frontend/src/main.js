@@ -23,8 +23,6 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 axios.defaults.headers.common = { 'X-CSRFToken': csrftoken };
 
-// axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
-
 let app = createApp(App);
 app.use(VueApexCharts);
 app.use(VueAxios, axios);

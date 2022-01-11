@@ -62,6 +62,7 @@ export default {
       dealdata: [],
       dayoffs: [],
       status: null,
+      updating: false,
       pollInterval: null,
       qz_specialists: 5,
       acryl_specialists: 5,
@@ -465,8 +466,27 @@ export default {
         [field]: count,
       });
     },
+    updateGraph() {
+      if (document.visibilityState == "visible") {
+        const set_update = () => {
+          this.updating = true;
+          return;
+        };
+        Promise.allSettled([set_update(), this.getLeads()]).then(() => {
+          Promise.all([this.setQzData(), this.setAcData()]).then(() => {
+            this.updating = false;
+            return;
+          });
+        });
+      }
+    },
   },
   mounted() {
+    document.addEventListener("visibilitychange", () => {
+      if (!this.updating) {
+        this.updateGraph();
+      }
+    });
     const setSpecialistCount = async () => {
       return new Promise((resolve) => {
         let specialists = JSON.parse(
