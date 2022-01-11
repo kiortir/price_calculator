@@ -63,10 +63,10 @@ export default {
       dayoffs: [],
       status: null,
       updating: false,
-      pollInterval: null,
       qz_specialists: 5,
       acryl_specialists: 5,
       series: [],
+      pollInterval: null,
       chartOptions: {
         noData: {
           text: "Загрузка...",
@@ -467,23 +467,22 @@ export default {
       });
     },
     updateGraph() {
-      if (document.visibilityState == "visible") {
-        const set_update = () => {
+      const set_update = async () =>
+        new Promise((resolve) => {
           this.updating = true;
-          return;
-        };
-        Promise.allSettled([set_update(), this.getLeads()]).then(() => {
-          Promise.all([this.setQzData(), this.setAcData()]).then(() => {
-            this.updating = false;
-            return;
-          });
+          resolve();
         });
-      }
+      Promise.allSettled([set_update(), this.getLeads()]).then(() => {
+        Promise.all([this.setQzData(), this.setAcData()]).then(() => {
+          this.updating = false;
+          return;
+        });
+      });
     },
   },
   mounted() {
     document.addEventListener("visibilitychange", () => {
-      if (!this.updating) {
+      if (document.visibilityState == "visible" && !this.updating) {
         this.updateGraph();
       }
     });
@@ -502,9 +501,17 @@ export default {
       this.getLeads(),
       this.getDayoffs(),
       setSpecialistCount(),
-    ]).then(() => {
-      Promise.all([this.setQzData(), this.setAcData()]);
-    });
+    ])
+      .then(() => {
+        Promise.all([this.setQzData(), this.setAcData()]);
+      })
+      .then(() => {
+        const update = this.updateGraph;
+        this.pollInterval = setTimeout(function tick() {
+          update();
+          this.pollInterval = setTimeout(tick, 5000);
+        }, 5000);
+      });
   },
 };
 </script>
