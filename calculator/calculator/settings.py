@@ -44,6 +44,7 @@ if DEBUG:
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
+
 else:
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
@@ -51,6 +52,10 @@ else:
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     )
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'base_template/static'),
+]
 MEDIA_URL = '/media/'
 
 # Application definition
