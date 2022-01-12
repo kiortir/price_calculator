@@ -4232,7 +4232,8 @@ store.subscribe(function () {
 });
 var app = Object(vue_esm_bundler["c" /* createApp */])(App);
 app.use(store);
-app.use(vue3_touch_events["a" /* default */], {// disableClick: true,
+app.use(vue3_touch_events["a" /* default */], {
+  disableClick: true
 });
 app.use(vue_axios_esm_min["a" /* default */], axios_default.a);
 app.mount('#app');
