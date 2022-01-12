@@ -15,7 +15,7 @@ AUTH_HEADERS["Content-Type"] = "application/json"
 def setTokens(tokens: dict):
     token_entry = Token.objects.get(id=1)
     try:
-        if len(tokens.keys) == 0:
+        if len(tokens.keys()) == 0:
             raise Exception
     except Exception:
         logging.exception('message')
