@@ -10,7 +10,7 @@
       tabindex="-1"
       id="collectioninfo"
     >
-      <component :is="active_component"></component>
+      <component :is="active_component" @showStone="showStoneCard"></component>
     </div>
     <div class="offcanvas offcanvas-end wide" tabindex="-1" id="work-pricelist">
       <div class="offcanvas-header">
@@ -52,6 +52,12 @@
         </div>
       </div>
     </transition>
+    <stone-card
+      class="stone-card position-fixed top-50 start-50 translate-middle"
+      v-if="chosenStone != null"
+      :stone="chosenStone"
+      @closeStone="chosenStone = null"
+    ></stone-card>
   </div>
 </template>
 
@@ -60,6 +66,7 @@ import DefaultPricelistLoader from "./components/DefaultPricelistLoader.vue";
 import WorkPricelist from "./components/WorkPricelist.vue";
 import CollectionContent from "./components/CollectionContent.vue";
 import StoneSearchList from "./components/StoneSearchList.vue";
+import StoneCard from "./components/StoneCard.vue";
 
 export default {
   name: "App",
@@ -67,6 +74,7 @@ export default {
     return {
       work_pricelist: {},
       showButtonBlock: true,
+      chosenStone: null,
     };
   },
   components: {
@@ -74,6 +82,7 @@ export default {
     WorkPricelist,
     CollectionContent,
     StoneSearchList,
+    StoneCard,
   },
   computed: {
     active_component() {
@@ -99,6 +108,33 @@ export default {
     },
     showSearch() {
       this.$store.commit("showSearch");
+    },
+    async showStoneCard(stone) {
+      this.axios
+        .post("/pricelist/prox/", {
+          url: `https://unirock.ru/include/popup/get-list-stone.php?popular[]=on&search=${stone.code}&nbsp;${stone.manufacturer}&sort=rat&page=1`,
+        })
+        .then((response) => {
+          response = response.data;
+          if (response.success == true && response.total == 1) {
+            this.chosenStone = {
+              pic: response.rocks[0].image,
+              name: stone.name,
+              code: stone.code,
+              manufacturer: stone.manufacturer,
+            };
+          } else {
+            this.chosenStone = {
+              pic: null,
+              name: stone.name,
+              code: stone.code,
+              info: "Не нашелся(",
+            };
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
@@ -184,5 +220,15 @@ $slide_speed: 0.5s;
 .slide-leave-from {
   position: fixed;
   right: 8vh;
+}
+
+.stone-card {
+  // position: fixed;
+  // left: 50%;
+  // transform: translate(-50%, 0);
+  // height: 40vh;
+  // width: 40vw;
+  // top: 30%;
+  z-index: 3000;
 }
 </style>

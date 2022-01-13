@@ -42,7 +42,12 @@
     <div v-if="info.stones.length > 0">
       <div class="h5">Камни в коллекции</div>
       <ul>
-        <li v-for="stone in filteredStones" :key="stone.code">
+        <li
+          type="button"
+          v-for="stone in filteredStones"
+          :key="stone.code"
+          @click="$emit('showStone', stone)"
+        >
           <span class="me-2">{{ stone.code }}</span>
           <span class="">{{ stone.name }}</span>
         </li>
@@ -60,6 +65,7 @@ export default {
   //   manufacturer: String,
   //   configurations: Object,
   // },
+  emits: ["showStone"],
   data() {
     return {
       searchinput: "",
