@@ -11,13 +11,15 @@ from .imports import toCollection
 
 
 class AcrylicStoneResource(resources.ModelResource):
-    collection = fields.Field(attribute='collection', column_name='collection', widget=toCollection())
-    manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer', widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
+    collection = fields.Field(attribute='collection',
+                              column_name='collection', widget=toCollection())
+    manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
+                                widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
 
     class Meta:
         model = AcrylicStone
         fields = ('name', 'code', 'manufacturer', 'collection')
-        import_id_fields = ('name',)
+        import_id_fields = ('code', 'manufacturer')
 
 
 class AcrylicConfigurationAdmin(nested_admin.NestedModelAdmin):
