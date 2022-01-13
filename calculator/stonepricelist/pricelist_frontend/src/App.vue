@@ -5,7 +5,11 @@
     v-touch:swipe.left="btnBlockShow"
   >
     <default-pricelist-loader> </default-pricelist-loader>
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="collectioninfo">
+    <div
+      class="offcanvas offcanvas-start main-offcanvas"
+      tabindex="-1"
+      id="collectioninfo"
+    >
       <component :is="active_component"></component>
     </div>
     <div class="offcanvas offcanvas-end wide" tabindex="-1" id="work-pricelist">
@@ -106,6 +110,9 @@ $slide_speed: 0.5s;
 @media screen and (min-width: 1280px) {
   .wide {
     width: 80vw !important;
+  }
+  .main-offcanvas {
+    width: 40vw !important;
   }
 }
 @media screen and (max-width: 540px) {

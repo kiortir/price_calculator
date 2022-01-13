@@ -66,20 +66,25 @@ export default {
       chosenStone: null,
     };
   },
+  created() {
+    setTimeout(this.serverSearch(), 1500);
+  },
   methods: {
-    serverSearch(searchStr) {
+    async serverSearch(searchStr = "") {
       this.axios
         .post("/pricelist/acryl/stones/", {
           searchStr,
         })
         .then((response) => {
-          this.searchresult = response.data;
+          if (searchStr == this.searchinput) {
+            this.searchresult = response.data;
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    showStoneCard(stone) {
+    async showStoneCard(stone) {
       this.axios
         .post("/pricelist/prox/", {
           url: `https://unirock.ru/include/popup/get-list-stone.php?popular[]=on&search=${stone.code}&nbsp;${stone.manufacturer}&sort=rat&page=1`,

@@ -75,7 +75,6 @@ export default {
       let white = [];
       let basic = [];
       for (let collection of this.manufacturer.collections) {
-        console.log(collection);
         if (collection.isWhite) {
           white.push(collection);
         } else {
