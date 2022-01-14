@@ -4,7 +4,7 @@ from django.contrib import admin
 import nested_admin
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
 from stonepricelist.models import Manufacturer, additionalWorkAcryl, AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
 from .imports import toCollection
@@ -15,10 +15,12 @@ class AcrylicStoneResource(resources.ModelResource):
                               column_name='collection', widget=toCollection())
     manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
                                 widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
+    equivalents = fields.Field(attribute='equivalents', column_name='equivalents',
+                               widget=ManyToManyWidget(AcrylicManufacturer))
 
     class Meta:
         model = AcrylicStone
-        fields = ('name', 'code', 'manufacturer', 'collection')
+        fields = ('name', 'code', 'manufacturer', 'collection', 'id')
         import_id_fields = ('code', 'manufacturer')
 
 
