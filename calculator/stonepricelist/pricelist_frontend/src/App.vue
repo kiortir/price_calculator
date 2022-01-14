@@ -132,6 +132,7 @@ export default {
               name: stone.name,
               code: stone.code,
               info: "Не нашелся(",
+              equivalents: stone.equivalents,
             };
           }
         })
