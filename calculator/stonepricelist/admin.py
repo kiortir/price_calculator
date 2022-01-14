@@ -1,4 +1,6 @@
 import collections
+from dataclasses import field
+from os import sep
 from django.contrib import admin
 
 import nested_admin
@@ -16,7 +18,7 @@ class AcrylicStoneResource(resources.ModelResource):
     manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
                                 widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
     equivalents = fields.Field(attribute='equivalents', column_name='equivalents',
-                               widget=ManyToManyWidget(AcrylicManufacturer))
+                               widget=ManyToManyWidget(model=AcrylicStone))
 
     class Meta:
         model = AcrylicStone
