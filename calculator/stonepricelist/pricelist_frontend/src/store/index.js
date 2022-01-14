@@ -26,7 +26,6 @@ export default createStore({
   },
   mutations: {
     showCollections(state, payload) {
-      console.log(payload);
       state.active_component = 'CollectionContent';
       state.component_data = payload;
     },

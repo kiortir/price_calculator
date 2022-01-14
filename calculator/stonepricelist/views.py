@@ -63,8 +63,13 @@ class AcrylPricelist(TemplateView):
     template_name = "stonepricelist/index.html"
 
     def get(self, request, *args, **kwargs):
-
-        return render(request, template_name=self.template_name)
+        configs = AcrylicManufacturer.objects.all()
+        reverse = ReverseAcrylicManufactureSerializer(
+            configs, many=True).data
+        print(reverse)
+        return render(request, template_name=self.template_name, context={
+            "manufacturers": reverse
+        })
 
 
 class AcrylicWorkView(APIView):

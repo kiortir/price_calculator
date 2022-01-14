@@ -19,7 +19,8 @@
     <noscript> <strong>Без JS не работает(</strong> </noscript>{% block content
     %}
     <div id="app"></div>
-    {% endblock %}{% block scripts %}
+    {% endblock %}{% block scripts %} {{
+    manufacturers|json_script:"manufacturers" }}
     <!-- built files will be auto injected -->
   </body>
 </html>

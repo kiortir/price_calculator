@@ -28,24 +28,36 @@ export default {
     };
   },
   mounted() {
-    this.axios
-      .post("/pricelist/acryl/default/")
-      .then((response) => {
-        this.stonelist = response.data;
-      })
-      .then(() => {
-        let row = document.querySelector("[data-masonry]");
-        new Masonry(row, {
-          // options
-          itemSelector: ".masonry-grid-item",
-          percentPosition: true,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
+    const getData = async () => {
+      this.stonelist = JSON.parse(
+        document.getElementById("manufacturers").textContent
+      );
+    };
+    getData().then(() => {
+      let row = document.querySelector("[data-masonry]");
+      new Masonry(row, {
+        // options
+        itemSelector: ".masonry-grid-item",
+        percentPosition: true,
       });
+    });
+    // this.axios
+    //   .post("/pricelist/acryl/default/")
+    //   .then((response) => {
+    //     this.stonelist = response.data;
+    //   })
+    //   .then(() => {
+    //     let row = document.querySelector("[data-masonry]");
+    //     new Masonry(row, {
+    //       // options
+    //       itemSelector: ".masonry-grid-item",
+    //       percentPosition: true,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   },
-  
 
   components: {
     ManufacturerCard,
