@@ -16,9 +16,9 @@ class toCollection(widgets.Widget):
         requested_collection = collection_list.get(name=collection)
         return requested_collection
 
-    def render(self, value, obj=None):
-        print(value.manufacturer)
-        return f'{value.manufacturer}/{value.name}'
+    # def render(self, value, obj=None):
+    #     print(value.manufacturer)
+    #     return f'{value.manufacturer}/{value.name}'
 
 
 # class Equivalents(widgets.ManyToManyWidget):
