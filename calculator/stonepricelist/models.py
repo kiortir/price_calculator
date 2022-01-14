@@ -150,8 +150,8 @@ class Stone(models.Model):
     class Meta:
         abstract = True
 
-    def __repr__(self):
-        return self.name
+    # def __repr__(self):
+    #     return self.name
 
 
 class Thickness(models.Model):
@@ -340,8 +340,8 @@ class AcrylicStone(Stone):
     # def configuratons(self):
     #     pass
 
-    def __repr__(self) -> str:
-        return self.name
+    # def __repr__(self) -> str:
+    #     return self.name
 
     def __str__(self) -> str:
         return self.name
