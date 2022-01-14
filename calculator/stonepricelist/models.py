@@ -150,6 +150,9 @@ class Stone(models.Model):
     class Meta:
         abstract = True
 
+    def __repr__(self):
+        return self.name
+
 
 class Thickness(models.Model):
 
