@@ -57,7 +57,7 @@ export default {
       chosenStone: null,
     };
   },
-  created() {
+  mounted() {
     this.serverSearch();
   },
   methods: {

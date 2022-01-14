@@ -1,5 +1,5 @@
 <template>
-  <div class="card shadow px-0">
+  <div class="card px-0">
     <div
       class="card-header manufacturer mx-0"
       :class="manufacturer.name.toLowerCase().replace(' ', '-')"
