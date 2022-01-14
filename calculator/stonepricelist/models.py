@@ -343,8 +343,8 @@ class AcrylicStone(Stone):
     # def __repr__(self) -> str:
     #     return self.name
 
-    def __str__(self) -> str:
-        return self.name
+    # def __str__(self) -> str:
+    #     return self.name
 
 
 class additionalWorkAcryl(models.Model):
@@ -352,6 +352,11 @@ class additionalWorkAcryl(models.Model):
     measurement = models.CharField(max_length=50, null=True, blank=True)
     cost = models.CharField(max_length=100, null=True, blank=True)
     spendings = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+
+        verbose_name = 'дополнительная работа'
+        verbose_name_plural = 'дополнительные работы'
 
     def __repr__(self) -> str:
         return self.name
