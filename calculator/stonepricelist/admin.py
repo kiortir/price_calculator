@@ -18,11 +18,26 @@ class AcrylicStoneResource(resources.ModelResource):
     manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
                                 widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
     equivalents = fields.Field(attribute='equivalents', column_name='equivalents',
-                               widget=ManyToManyWidget(model=AcrylicStone))
+                               widget=ManyToManyWidget(model=AcrylicStone, separator=','))
 
     class Meta:
         model = AcrylicStone
-        fields = ('name', 'code', 'manufacturer', 'collection', 'id')
+        fields = ('name', 'code', 'manufacturer', 'collection', 'equivalents')
+        import_id_fields = ('code', 'manufacturer')
+
+
+class ExportAcrylicStoneResource(resources.ModelResource):
+    collection = fields.Field(attribute='collection',
+                              column_name='collection', widget=toCollection())
+    manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
+                                widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
+    equivalents = fields.Field(attribute='equivalents', column_name='equivalents',
+                               widget=ManyToManyWidget(model=AcrylicStone, field="id", separator=','))
+
+    class Meta:
+        model = AcrylicStone
+        fields = ('name', 'code', 'manufacturer',
+                  'collection', 'equivalents', 'id')
         import_id_fields = ('code', 'manufacturer')
 
 
@@ -84,6 +99,12 @@ class additionalWorkAcrylAdmin(ImportExportModelAdmin):
 @admin.register(AcrylicStone)
 class AcrylicStoneAdmin(ImportExportModelAdmin):
     resource_class = AcrylicStoneResource
+
+    def get_export_resource_class(self):
+        """
+        Returns ResourceClass to use for export.
+        """
+        return ExportAcrylicStoneResource
 
 
 admin.site.register(AcrylicCollection, AcrylicCollectionAdmin)
