@@ -11,7 +11,8 @@
     ></button>
   </div>
   <div class="offcanvas-body pt-0 mt-3">
-    <div class="mb-4" v-if="info.configurations.length > 0">
+    <slot></slot>
+    <div class="mb-4 ms-2" v-if="info.configurations.length > 0">
       <div class="h6">Нестандартные конфигурации</div>
       <table class="table table-sm table-hover mb-4">
         <tbody>

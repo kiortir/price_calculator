@@ -15,5 +15,6 @@ urlpatterns = [
     path('acryl/', views.AcrylPricelist.as_view()),
     path('acryl/default/', views.DefaultAcrylPricelist.as_view()),
     path('acryl/work/', views.AcrylicWorkView.as_view()),
+    # path('find/', views.AcrylicWorkView.as_view()),
     path('prox/', views.crossdomainData.as_view()),
 ]

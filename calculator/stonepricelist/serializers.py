@@ -1,3 +1,4 @@
+from dataclasses import field
 from rest_framework import serializers
 
 from .models import *
@@ -80,13 +81,6 @@ class ReverseAcrylicManufactureSerializer(serializers.ModelSerializer):
         fields = ('name', 'collections', 'discount', 'additional_info')
 
 
-class AcrylicStoneSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = AcrylicStone
-        fields = ['name', 'code']
-
-
 class additionalWorkAcrylSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -94,7 +88,7 @@ class additionalWorkAcrylSerializer(serializers.ModelSerializer):
         exclude = ('id', )
 
 
-class SearchStoneSerializer(serializers.ModelSerializer):
+class BaseStoneSerializer(serializers.ModelSerializer):
 
     manufacturer = serializers.StringRelatedField()
     collection = serializers.StringRelatedField()
@@ -102,6 +96,25 @@ class SearchStoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = AcrylicStone
         fields = ['name', 'code', 'manufacturer', 'collection']
+
+
+class SearchStoneSerializer(serializers.ModelSerializer):
+
+    manufacturer = serializers.StringRelatedField()
+    collection = serializers.StringRelatedField()
+    equivalents = BaseStoneSerializer(many=True)
+
+    class Meta:
+        model = AcrylicStone
+        fields = ['name', 'code', 'manufacturer', 'collection', "equivalents"]
+
+
+class AcrylicStoneSerializer(serializers.ModelSerializer):
+    equivalents = BaseStoneSerializer(many=True)
+
+    class Meta:
+        model = AcrylicStone
+        fields = ['name', 'code', "id", "equivalents"]
 
 
 class ManufacturersToStoneSerializer(serializers.ModelSerializer):

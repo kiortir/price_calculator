@@ -318,7 +318,7 @@ class AcrylicStone(Stone):
     collection = ChainedForeignKey(
         AcrylicCollection, chained_field="manufacturer", chained_model_field="manufacturer", related_name="stones", show_all=False, auto_choose=True, sort=True, verbose_name='коллекция')
 
-    same_textures = models.ManyToManyField(
+    equivalents = models.ManyToManyField(
         'self', blank=True, verbose_name='аналогичные текстуры')
 
     # configurations = ChainedManyToManyField(

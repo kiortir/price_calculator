@@ -88,3 +88,22 @@ class crossdomainData(APIView):
             return Response(data)
         except HTTPError:
             return Response(status=404)
+
+
+# class stoneFind(APIView):
+#     renderer_classes = [JSONRenderer]
+
+#     def post(self, request):
+#         stone_id = request.data.get('stone_id', "")
+#         stone: AcrylicStone = AcrylicStone.objects.get(id=stone_id)
+#         try:
+#             response = urllib.request.urlopen(
+#                 f'https://unirock.ru/include/popup/get-list-stone.php?popular[]=on&search={stone.code}&nbsp;{stone.manufacturer}&sort=rat&page=1')
+#             data = json.loads(response.read().decode('utf-8'))
+#             content = {
+#                 "pic": data['rocks'][0]['image'],
+#                 "equivalents": stone.same_textures,
+#             }
+#             return Response(data)
+#         except HTTPError:
+#             return Response(status=404)

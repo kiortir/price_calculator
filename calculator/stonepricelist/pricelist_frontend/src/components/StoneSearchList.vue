@@ -9,6 +9,7 @@
     ></button>
   </div>
   <div class="offcanvas-body pt-0 mt-3">
+    <slot></slot>
     <input
       type="search"
       class="form-control mb-3 mt-0 sticky-top"

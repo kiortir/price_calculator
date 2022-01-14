@@ -10,7 +10,14 @@
       tabindex="-1"
       id="collectioninfo"
     >
-      <component :is="active_component" @showStone="showStoneCard"></component>
+      <component :is="active_component" @showStone="showStoneCard">
+        <stone-card
+          class="stone-card"
+          v-if="chosenStone != null"
+          :stone="chosenStone"
+          @closeStone="chosenStone = null"
+        ></stone-card
+      ></component>
     </div>
     <div class="offcanvas offcanvas-end wide" tabindex="-1" id="work-pricelist">
       <div class="offcanvas-header">
@@ -52,12 +59,6 @@
         </div>
       </div>
     </transition>
-    <stone-card
-      class="stone-card position-fixed top-50 start-50 translate-middle"
-      v-if="chosenStone != null"
-      :stone="chosenStone"
-      @closeStone="chosenStone = null"
-    ></stone-card>
   </div>
 </template>
 
@@ -89,6 +90,7 @@ export default {
       return this.$store.state.active_component;
     },
   },
+
   methods: {
     refreshWorkPricelist() {
       this.axios
@@ -122,6 +124,7 @@ export default {
               name: stone.name,
               code: stone.code,
               manufacturer: stone.manufacturer,
+              equivalents: stone.equivalents,
             };
           } else {
             this.chosenStone = {
@@ -223,12 +226,11 @@ $slide_speed: 0.5s;
 }
 
 .stone-card {
-  // position: fixed;
-  // left: 50%;
-  // transform: translate(-50%, 0);
-  // height: 40vh;
-  // width: 40vw;
-  // top: 30%;
+  position: absolute !important;
+  margin-left: 0% !important;
+  height: 100%;
+  width: 100%;
+  left: 0rem;
   z-index: 3000;
 }
 </style>
