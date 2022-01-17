@@ -3,7 +3,7 @@ import json
 import requests
 from requests.structures import CaseInsensitiveDict
 
-import amo_logger
+from . import amo_logger
 
 from .models import Lead
 
