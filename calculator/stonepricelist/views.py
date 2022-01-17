@@ -101,10 +101,10 @@ class FindStone(APIView):
     def post(self, request):
         stone_id = request.data.get('stone_id', "")
         stone: AcrylicStone = AcrylicStone.objects.select_related(
-            "equivalents_group").get(id=stone_id)
+            "equivalents_group", 'manufacturer').get(id=stone_id)
         try:
             response = urllib.request.urlopen(
-                f'https://unirock.ru/include/popup/get-list-stone.php?popular[]=on&search={stone.code}&nbsp;{stone.manufacturer}&sort=rat&page=1')
+                f'https://unirock.ru/include/popup/get-list-stone.php?popular[]=on&search={stone.code}&nbsp;{stone.manufacturer.name}&sort=rat&page=1'.replace(" ", "&nbsp;"))
             data = json.loads(response.read().decode('utf-8'))
             try:
                 equivalents = BaseStoneSerializer(stone.equivalents_group.stones.exclude(
