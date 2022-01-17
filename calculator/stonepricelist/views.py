@@ -111,8 +111,12 @@ class FindStone(APIView):
                     id=stone.id), many=True).data
             except AttributeError:
                 equivalents = []
+            try:
+                pic = data['rocks'][0]['image']
+            except IndexError:
+                pic = None
             content = {
-                "pic": data['rocks'][0]['image'],
+                "pic": pic,
                 "equivalents": equivalents,
             }
             return Response(content)
