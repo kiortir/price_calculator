@@ -7,7 +7,7 @@ from .amo_logger import get_logger
 
 from .models import Lead
 
-logger = get_logger(__name__)
+# logger = get_logger(__name__)
 # FILTER_STRING = '?filter[tags_logic]=or&filter[pipe][946942][]=18032857&filter[pipe][946942][]=18032860&filter[pipe][946942][]=18032863&filter[pipe][946942][]=18033010&filter[pipe][946942][]=18062053'
 
 QUERY_URL = 'https://unirock.amocrm.ru/api/v4/leads?limit=250&?filter[tags_logic]=or&filter[pipe][946942][]=18032857&filter[pipe][946942][]=18032860&filter[pipe][946942][]=18032863&filter[pipe][946942][]=18033010&filter[pipe][946942][]=18062053'
@@ -45,7 +45,7 @@ def handle_webhook(webhook_data: dict):
         lead: Lead = Lead.objects.get(lead_id=hook_data['lead_id'])
     except Lead.DoesNotExist:
         lead = None
-    logger.info(json.dumps(webhook_data))
+    # logger.info(json.dumps(webhook_data))
     if lead:
         if hook_type == 'delete' or status_id not in IMPORTANT_STATUS:
             lead.delete()
