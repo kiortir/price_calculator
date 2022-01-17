@@ -3,11 +3,11 @@ import json
 import requests
 from requests.structures import CaseInsensitiveDict
 
-from . import amo_logger
+from .amo_logger import get_logger
 
 from .models import Lead
 
-logger = amo_logger.get_logger(__name__)
+logger = get_logger(__name__)
 # FILTER_STRING = '?filter[tags_logic]=or&filter[pipe][946942][]=18032857&filter[pipe][946942][]=18032860&filter[pipe][946942][]=18032863&filter[pipe][946942][]=18033010&filter[pipe][946942][]=18062053'
 
 QUERY_URL = 'https://unirock.amocrm.ru/api/v4/leads?limit=250&?filter[tags_logic]=or&filter[pipe][946942][]=18032857&filter[pipe][946942][]=18032860&filter[pipe][946942][]=18032863&filter[pipe][946942][]=18033010&filter[pipe][946942][]=18062053'
