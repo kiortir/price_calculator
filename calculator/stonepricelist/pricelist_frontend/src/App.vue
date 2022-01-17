@@ -111,30 +111,50 @@ export default {
     showSearch() {
       this.$store.commit("showSearch");
     },
+    // async showStoneCard(stone) {
+    //   this.axios
+    //     .post("/pricelist/prox/", {
+    //       url: `https://unirock.ru/include/popup/get-list-stone.php?popular[]=on&search=${stone.code}&nbsp;${stone.manufacturer}&sort=rat&page=1`,
+    //     })
+    //     .then((response) => {
+    //       response = response.data;
+    //       if (response.success == true && response.total == 1) {
+    //         this.chosenStone = {
+    //           pic: response.rocks[0].image,
+    //           name: stone.name,
+    //           code: stone.code,
+    //           manufacturer: stone.manufacturer,
+    //           equivalents: stone.equivalents,
+    //         };
+    //       } else {
+    //         this.chosenStone = {
+    //           pic: null,
+    //           name: stone.name,
+    //           code: stone.code,
+    //           info: "Не нашелся(",
+    //           equivalents: stone.equivalents,
+    //         };
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
     async showStoneCard(stone) {
       this.axios
-        .post("/pricelist/prox/", {
-          url: `https://unirock.ru/include/popup/get-list-stone.php?popular[]=on&search=${stone.code}&nbsp;${stone.manufacturer}&sort=rat&page=1`,
+        .post("/pricelist/find/", {
+          stone_id: stone.id,
         })
         .then((response) => {
           response = response.data;
-          if (response.success == true && response.total == 1) {
-            this.chosenStone = {
-              pic: response.rocks[0].image,
-              name: stone.name,
-              code: stone.code,
-              manufacturer: stone.manufacturer,
-              equivalents: stone.equivalents,
-            };
-          } else {
-            this.chosenStone = {
-              pic: null,
-              name: stone.name,
-              code: stone.code,
-              info: "Не нашелся(",
-              equivalents: stone.equivalents,
-            };
-          }
+          this.chosenStone = {
+            pic: response.pic,
+            name: stone.name,
+            code: stone.code,
+            manufacturer: stone.manufacturer,
+            equivalents: response.equivalents,
+            info: response.pic == null ? "Не нашелся(" : "",
+          };
         })
         .catch((err) => {
           console.log(err);

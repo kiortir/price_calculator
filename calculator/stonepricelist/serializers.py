@@ -95,30 +95,30 @@ class BaseStoneSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AcrylicStone
-        fields = ['name', 'code', 'manufacturer', 'collection']
+        fields = ['id', 'name', 'code', 'manufacturer', 'collection']
 
 
-class SearchStoneSerializer(serializers.ModelSerializer):
+# class SearchStoneSerializer(serializers.ModelSerializer):
 
-    manufacturer = serializers.StringRelatedField()
-    collection = serializers.StringRelatedField()
-    equivalents = BaseStoneSerializer(many=True)
+#     manufacturer = serializers.StringRelatedField()
+#     collection = serializers.StringRelatedField()
+#     equivalents = BaseStoneSerializer(many=True)
 
-    class Meta:
-        model = AcrylicStone
-        fields = ['name', 'code', 'manufacturer', 'collection', "equivalents"]
+#     class Meta:
+#         model = AcrylicStone
+#         fields = ['name', 'code', 'manufacturer', 'collection', "equivalents"]
 
 
-class AcrylicStoneSerializer(serializers.ModelSerializer):
-    equivalents = BaseStoneSerializer(many=True)
+# class AcrylicStoneSerializer(serializers.ModelSerializer):
+#     equivalents = BaseStoneSerializer(many=True)
 
-    class Meta:
-        model = AcrylicStone
-        fields = ['name', 'code', "id", "equivalents"]
+#     class Meta:
+#         model = AcrylicStone
+#         fields = ['name', 'code', "id", "equivalents"]
 
 
 class ManufacturersToStoneSerializer(serializers.ModelSerializer):
-    stones = AcrylicStoneSerializer(many=True)
+    stones = BaseStoneSerializer(many=True)
 
     class Meta:
         model = AcrylicManufacturer

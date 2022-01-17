@@ -10,6 +10,7 @@ from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
 from stonepricelist.models import Manufacturer, additionalWorkAcryl, AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
 from .imports import toCollection
+from .forms import AddEquivalentsForm
 
 
 class AcrylicStoneResource(resources.ModelResource):
@@ -105,6 +106,24 @@ class AcrylicStoneAdmin(ImportExportModelAdmin):
         Returns ResourceClass to use for export.
         """
         return ExportAcrylicStoneResource
+
+    exclude = ("id", "equivalents_group", "similar_textures")
+    list_filter = ('manufacturer',)
+    list_display = ("name", "code", 'manufacturer')
+    search_fields = ('name', 'collection__name', 'code', 'manufacturer__name',)
+    ordering = ('name', 'code')
+    form = AddEquivalentsForm
+
+    # def change_view(self, request, object_id, form_url='', extra_context=None):
+    #     extra_context = extra_context or {}
+    #     extra_context['stones'] = AcrylicStone.objects.exclude(id=object_id)
+    #     return super().change_view(
+    #         request, object_id, form_url, extra_context=extra_context,
+    #     )
+
+    # def save_model(self, request, obj, form, change):
+    #     print(change)
+    #     super().save_model(request, obj, form, change)
 
 
 admin.site.register(AcrylicCollection, AcrylicCollectionAdmin)

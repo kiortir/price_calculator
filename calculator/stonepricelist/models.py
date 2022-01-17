@@ -314,6 +314,11 @@ class AcrylicConfiguration(models.Model):
         return f'{self.collection.manufacturer.name}, {self.collection.name} {self.alias}, {self.thickness}'
 
 
+class EquivalentGroup(models.Model):
+    # group_id = models.PositiveBigIntegerField()
+    pass
+
+
 class AcrylicStone(Stone):
 
     manufacturer = models.ForeignKey(
@@ -321,14 +326,10 @@ class AcrylicStone(Stone):
     collection = ChainedForeignKey(
         AcrylicCollection, chained_field="manufacturer", chained_model_field="manufacturer", related_name="stones", show_all=False, auto_choose=True, sort=True, verbose_name='коллекция')
 
-    equivalents = models.ManyToManyField(
-        'self', blank=True, verbose_name='аналогичные текстуры')
-
-    # configurations = ChainedManyToManyField(
-    #     AcrylicConfiguration, chained_field="collection", chained_model_field="collection", null=True, blank=True, verbose_name='конфигурации')
-
-    # notStandart = models.BooleanField(default=False)
-    # isWhite = models.BooleanField(default=False)
+    # equivalents = models.ManyToManyField(
+    #     'self', blank=True, verbose_name='аналогичные текстуры')
+    equivalents_group = models.ForeignKey(
+        EquivalentGroup, on_delete=models.SET_NULL, null=True, related_name='stones')
 
     class Meta:
 
@@ -336,15 +337,20 @@ class AcrylicStone(Stone):
         verbose_name = 'акриловая текстура'
         verbose_name_plural = 'акриловые текстуры'
 
-    # @property
-    # def configuratons(self):
-    #     pass
+    def __repr__(self) -> str:
+        if self.name:
+            return self.name
 
-    # def __repr__(self) -> str:
-    #     return self.name
+        return super().__repr__()
 
-    # def __str__(self) -> str:
-    #     return self.name
+    def __str__(self) -> str:
+        try:
+            manufacturer = self.manufacturer.name or ""
+            code = self.code or ""
+            name = self.name or ""
+            return " ".join([manufacturer, code, name])
+        except Exception:
+            return super().__str__()
 
 
 class additionalWorkAcryl(models.Model):
