@@ -1,17 +1,26 @@
-import inspect
 import collections
+import inspect
 from dataclasses import field
 from os import sep
-from django.contrib import admin
 
 import nested_admin
-from import_export import resources, fields, widgets
+import tablib
+from django.contrib import admin
+from django.db.models import Q
+from import_export import fields, resources, widgets
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
+from import_export.results import Result
 
-from stonepricelist.models import EquivalentGroup, additionalWorkAcryl, AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
-from .imports import toCollection
+from stonepricelist.models import (AcrylicCollection, AcrylicConfiguration,
+                                   AcrylicManufacturer, AcrylicStone, Colors,
+                                   ConfigurationDiscount, Currency,
+                                   EquivalentGroup, Material, SlabSize,
+                                   SurfaceType, Texture, Thickness,
+                                   additionalWorkAcryl)
+
 from .forms import AddEquivalentsForm
+from .imports import toCollection
 
 
 class AcrylicStoneResource(resources.ModelResource):
@@ -116,10 +125,41 @@ def addManufacturers(cls):
     return cls
 
 
+class EquivalentGroupResource(resources.ModelResource):
+
+    def import_data(self, dataset: tablib.Dataset, *args, **kwargs):
+        result = Result()
+        header = dataset.headers
+        for row in dataset:
+            stones = []
+            groups = []
+            for index, column in enumerate(header):
+                try:
+                    stone = AcrylicManufacturer.objects.prefetch_related('stones').get(name__iexact=column).stones.get(
+                        Q(name__iexact=row[index]) | Q(code__iexact=row[index]))
+                    stones.append(stone.id)
+                    if stone.equivalents_group:
+                        groups.append(stone.equivalents_group)
+                except AcrylicStone.DoesNotExist:
+                    continue
+            if len(stones) > 1:
+                if len(groups) > 1:
+                    union_group = EquivalentGroup.objects.create()
+                    EquivalentGroup.objects.filter(id__in=set(
+                        map(lambda x: x.id, groups))).delete()
+                elif len(groups) == 1:
+                    union_group = groups[0]
+                else:
+                    union_group = EquivalentGroup.objects.create()
+                AcrylicStone.objects.filter(id__in=stones).update(
+                    equivalents_group=union_group)
+        return result
+
+
 @admin.register(EquivalentGroup)
 @addManufacturers
-class EquivalentGroupAdmin(admin.ModelAdmin):
-    pass
+class EquivalentGroupAdmin(ImportExportModelAdmin):
+    resource_class = EquivalentGroupResource
 
 
 admin.site.register(AcrylicCollection, AcrylicCollectionAdmin)

@@ -66,7 +66,6 @@ class AcrylPricelist(TemplateView):
         configs = AcrylicManufacturer.objects.all()
         reverse = ReverseAcrylicManufactureSerializer(
             configs, many=True).data
-        print(reverse)
         return render(request, template_name=self.template_name, context={
             "manufacturers": reverse
         })
