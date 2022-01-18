@@ -112,15 +112,15 @@ def addManufacturers(cls):
         return dummyManufacturerFunctionCurried
     fields = ['id']
 
-    try:
-        manufacturers = AcrylicManufacturer.objects.all()
+    # try:
+    #     manufacturers = AcrylicManufacturer.objects.all()
 
-        for manufacturer in manufacturers:
-            setattr(cls, manufacturer.name, dummyManufacturerFunction(
-                manufacturer=manufacturer.name))
-            fields.append(manufacturer.name)
-    except OperationalError or ProgrammingError:
-        pass
+    #     for manufacturer in manufacturers:
+    #         setattr(cls, manufacturer.name, dummyManufacturerFunction(
+    #             manufacturer=manufacturer.name))
+    #         fields.append(manufacturer.name)
+    # except OperationalError or ProgrammingError:
+    #     pass
 
     cls.list_display = fields
     return cls
