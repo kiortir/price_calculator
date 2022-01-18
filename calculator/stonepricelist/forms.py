@@ -1,6 +1,7 @@
 
 import django.forms as forms
-from .models import AcrylicStone, EquivalentGroup
+from .models import AcrylicStone, EquivalentGroup, AcrylicManufacturer
+from django.forms.widgets import TextInput
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
 
@@ -61,3 +62,11 @@ class AddEquivalentsForm(forms.ModelForm):
     class Meta:
         model = AcrylicStone
         fields = ('__all__')
+
+
+class AcrylicManufacturerForm(forms.ModelForm):
+    class Meta:
+        model = AcrylicManufacturer
+        fields = '__all__'
+        widgets = {
+            'card_color': TextInput(attrs={'type': 'color'}), }

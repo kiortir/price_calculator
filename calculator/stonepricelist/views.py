@@ -64,10 +64,10 @@ class AcrylPricelist(TemplateView):
 
     def get(self, request, *args, **kwargs):
         configs = AcrylicManufacturer.objects.all()
-        reverse = ReverseAcrylicManufactureSerializer(
-            configs, many=True).data
+        # reverse = ReverseAcrylicManufactureSerializer(
+        #     configs, many=True).data
         return render(request, template_name=self.template_name, context={
-            "manufacturers": reverse
+            "manufacturers": configs
         })
 
 

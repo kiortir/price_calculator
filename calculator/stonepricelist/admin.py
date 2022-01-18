@@ -1,7 +1,4 @@
-import collections
-import inspect
-from dataclasses import field
-from os import sep
+from django.db.utils import OperationalError
 
 import nested_admin
 import tablib
@@ -19,7 +16,7 @@ from stonepricelist.models import (AcrylicCollection, AcrylicConfiguration,
                                    SurfaceType, Texture, Thickness,
                                    additionalWorkAcryl)
 
-from .forms import AddEquivalentsForm
+from .forms import AddEquivalentsForm, AcrylicManufacturerForm
 from .imports import toCollection
 
 
@@ -72,6 +69,7 @@ class AcrylicCollectionInline(nested_admin.NestedStackedInline):
 
 class AcrylicManufaturerAdmin(nested_admin.NestedModelAdmin):
     inlines = [AcrylicCollectionInline]
+    form = AcrylicManufacturerForm
 
 
 class additionalWorkAcrylResource(resources.ModelResource):
@@ -112,14 +110,17 @@ def addManufacturers(cls):
 
         dummyManufacturerFunctionCurried.__name__ = manufacturer
         return dummyManufacturerFunctionCurried
-
-    manufacturers = AcrylicManufacturer.objects.all()
     fields = ['id']
 
-    for manufacturer in manufacturers:
-        setattr(cls, manufacturer.name, dummyManufacturerFunction(
-            manufacturer=manufacturer.name))
-        fields.append(manufacturer.name)
+    try:
+        manufacturers = AcrylicManufacturer.objects.all()
+
+        for manufacturer in manufacturers:
+            setattr(cls, manufacturer.name, dummyManufacturerFunction(
+                manufacturer=manufacturer.name))
+            fields.append(manufacturer.name)
+    except OperationalError:
+        pass
 
     cls.list_display = fields
     return cls

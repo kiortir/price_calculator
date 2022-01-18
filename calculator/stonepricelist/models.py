@@ -218,6 +218,13 @@ class AcrylicManufacturer(Manufacturer):
 
     additional_info = models.TextField(null=True, blank=True)
 
+    card_color = models.CharField(
+        max_length=7, default="#ffffff", verbose_name='цвет карточки')
+
+    @property
+    def f_name(self):
+        return self.name.lower().replace(' ', '-')
+
     class Meta:
 
         verbose_name = 'производитель акрила'

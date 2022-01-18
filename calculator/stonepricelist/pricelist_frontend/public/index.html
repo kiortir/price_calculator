@@ -5,6 +5,18 @@
     {% block head %}
 
     <title>Прайс-лист Акрил</title>
+    <style>
+      {% comment %} :root {
+      {% for manufacturer in manufacturers %}
+      --{{ manufacturer.name }}: {{ manufacturer.card_color }};
+      {% endfor %}
+      } {% endcomment %}
+      {% for manufacturer in manufacturers %}
+      .{{ manufacturer.f_name }} {
+        background-color: {{ manufacturer.card_color }} !important;
+      }
+      {% endfor %}
+    </style>
     {% comment %}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,8 +31,7 @@
     <noscript> <strong>Без JS не работает(</strong> </noscript>{% block content
     %}
     <div id="app"></div>
-    {% endblock %}{% block scripts %} {{
-    manufacturers|json_script:"manufacturers" }}
+    {% endblock %}{% block scripts %}
     <!-- built files will be auto injected -->
   </body>
 </html>

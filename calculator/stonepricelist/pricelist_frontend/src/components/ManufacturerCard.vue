@@ -108,7 +108,7 @@ $grandex: #ced1ff;
 $lg_hi_macs: #fddef9;
 $corian_dupont: #ffcdcd;
 $akrilika: #e6fffb;
-$montelli: #ffceef;
+$montelli: #50424b;
 $neomarm: #feffd6;
 
 .card-header.manufacturer {
@@ -124,34 +124,6 @@ tbody tr:last-child {
 
 tbody tr {
   border-bottom: solid rgb(187, 183, 183) 0.03rem;
-}
-
-.hanex {
-  background-color: $hanex !important;
-}
-.grandex {
-  background-color: $grandex !important;
-}
-.lg-hi-macs {
-  background-color: $lg_hi_macs !important;
-}
-.tristone {
-  background-color: $tristone !important;
-}
-.staron {
-  background-color: $staron !important;
-}
-.corian-dupont {
-  background-color: $corian_dupont !important;
-}
-.akrilika {
-  background-color: $akrilika !important;
-}
-.montelli {
-  background-color: $montelli !important;
-}
-.neomarm {
-  background-color: $neomarm !important;
 }
 
 header tr:hover {
