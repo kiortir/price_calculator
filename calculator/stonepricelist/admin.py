@@ -1,4 +1,4 @@
-from django.db.utils import OperationalError
+from django.db.utils import OperationalError, ProgrammingError
 
 import nested_admin
 import tablib
@@ -119,7 +119,7 @@ def addManufacturers(cls):
             setattr(cls, manufacturer.name, dummyManufacturerFunction(
                 manufacturer=manufacturer.name))
             fields.append(manufacturer.name)
-    except OperationalError:
+    except OperationalError or ProgrammingError:
         pass
 
     cls.list_display = fields
