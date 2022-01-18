@@ -6,14 +6,15 @@ from collections import defaultdict
 class toCollection(widgets.Widget):
 
     def clean(self, value: str, row=None, *args, **kwargs):
-        manufacturer, collection = value.split('/')
-
-        collection_list = AcrylicCollection.objects.filter(
-            manufacturer__name=manufacturer)
-        print(collection, collection in list(
-            map(lambda x: x.name, collection_list)))
-        requested_collection = collection_list.get(name=collection)
-        return requested_collection
+        try:
+            manufacturer = row['manufacturer']
+            if not manufacturer:
+                raise KeyError
+            return AcrylicCollection.objects.filter(
+                manufacturer__name=manufacturer).get(name__iexact=value)
+        except KeyError:
+            return AcrylicCollection.objects.get(
+                name__iexact=value)
 
     # def render(self, value, obj=None):
     #     print(value.manufacturer)

@@ -47,7 +47,7 @@ class AddEquivalentsForm(forms.ModelForm):
 
             if len(groups) > 1:
                 union_group = EquivalentGroup.objects.create()
-                EquivalentGroup.objects.filter(id__in=list(
+                EquivalentGroup.objects.filter(id__in=set(
                     map(lambda x: x.id, groups))).delete()
             elif len(groups) == 1:
                 union_group = groups[0]

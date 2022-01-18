@@ -316,7 +316,10 @@ class AcrylicConfiguration(models.Model):
 
 class EquivalentGroup(models.Model):
     # group_id = models.PositiveBigIntegerField()
-    pass
+    class Meta:
+
+        verbose_name = 'группа аналогов'
+        verbose_name_plural = 'группы аналогов'
 
 
 class AcrylicStone(Stone):
@@ -326,8 +329,6 @@ class AcrylicStone(Stone):
     collection = ChainedForeignKey(
         AcrylicCollection, chained_field="manufacturer", chained_model_field="manufacturer", related_name="stones", show_all=False, auto_choose=True, sort=True, verbose_name='коллекция')
 
-    # equivalents = models.ManyToManyField(
-    #     'self', blank=True, verbose_name='аналогичные текстуры')
     equivalents_group = models.ForeignKey(
         EquivalentGroup, on_delete=models.SET_NULL, null=True, related_name='stones')
 
@@ -349,6 +350,14 @@ class AcrylicStone(Stone):
             code = self.code or ""
             name = self.name or ""
             return " ".join([manufacturer, code, name])
+        except Exception:
+            return super().__str__()
+
+    def to_table(self) -> str:
+        try:
+            code = self.code or ""
+            name = self.name or ""
+            return " ".join([code, name])
         except Exception:
             return super().__str__()
 

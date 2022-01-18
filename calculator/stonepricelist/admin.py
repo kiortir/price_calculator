@@ -1,3 +1,4 @@
+import inspect
 import collections
 from dataclasses import field
 from os import sep
@@ -8,7 +9,7 @@ from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
-from stonepricelist.models import Manufacturer, additionalWorkAcryl, AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
+from stonepricelist.models import EquivalentGroup, additionalWorkAcryl, AcrylicCollection, AcrylicManufacturer, Colors, Currency, Texture, Thickness, AcrylicStone, AcrylicConfiguration, SurfaceType, SlabSize, ConfigurationDiscount, Material
 from .imports import toCollection
 from .forms import AddEquivalentsForm
 
@@ -18,12 +19,10 @@ class AcrylicStoneResource(resources.ModelResource):
                               column_name='collection', widget=toCollection())
     manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
                                 widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
-    equivalents = fields.Field(attribute='equivalents', column_name='equivalents',
-                               widget=ManyToManyWidget(model=AcrylicStone, separator=','))
 
     class Meta:
         model = AcrylicStone
-        fields = ('name', 'code', 'manufacturer', 'collection', 'equivalents')
+        fields = ('name', 'code', 'manufacturer', 'collection')
         import_id_fields = ('code', 'manufacturer')
 
 
@@ -32,13 +31,11 @@ class ExportAcrylicStoneResource(resources.ModelResource):
                               column_name='collection', widget=toCollection())
     manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
                                 widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
-    equivalents = fields.Field(attribute='equivalents', column_name='equivalents',
-                               widget=ManyToManyWidget(model=AcrylicStone, field="id", separator=','))
 
     class Meta:
         model = AcrylicStone
         fields = ('name', 'code', 'manufacturer',
-                  'collection', 'equivalents', 'id')
+                  'collection',  'id')
         import_id_fields = ('code', 'manufacturer')
 
 
@@ -46,14 +43,12 @@ class AcrylicConfigurationAdmin(nested_admin.NestedModelAdmin):
     model = AcrylicConfiguration
     list_display = ('__str__', 'thickness', 'price', 'material_discount')
     list_filter = ('collection__manufacturer',)
-    # fields = ('price',)
 
 
-# class AcrylicStoneAdmin(admin.ModelAdmin):
-#     inlines = [AcrylicConfigurationInline]
-
-class AcrylicConfigurationInline(nested_admin.NestedStackedInline):
+class AcrylicConfigurationInline(nested_admin.NestedTabularInline):
     model = AcrylicConfiguration
+    initial_num = 1
+    extra = 1
 
 
 class AcrylicCollectionAdmin(nested_admin.NestedModelAdmin):
@@ -71,25 +66,12 @@ class AcrylicManufaturerAdmin(nested_admin.NestedModelAdmin):
 
 
 class additionalWorkAcrylResource(resources.ModelResource):
-    # name = fields.Field(column_name='название', attribute="name")
-    # measurement = fields.Field(
-    #     column_name='ед. измерения', attribute="measurement")
-    # cost = fields.Field(column_name='стоимость', attribute="cost")
-    # spendings = fields.Field(column_name='затраты', attribute="spendings")
 
     class Meta:
         model = additionalWorkAcryl
-        # skip_unchanged = True
         report_skipped = True
         fields = ('name', 'measurement', 'cost', 'spendings')
         import_id_fields = ('name',)
-
-
-# class AcrylicStoneResource(resources.ModelResource):
-
-#     class Meta:
-#         model = AcrylicStone
-#         exclude = ('id', )
 
 
 @admin.register(additionalWorkAcryl)
@@ -102,28 +84,42 @@ class AcrylicStoneAdmin(ImportExportModelAdmin):
     resource_class = AcrylicStoneResource
 
     def get_export_resource_class(self):
-        """
-        Returns ResourceClass to use for export.
-        """
         return ExportAcrylicStoneResource
 
     exclude = ("id", "equivalents_group", "similar_textures")
     list_filter = ('manufacturer',)
     list_display = ("name", "code", 'manufacturer')
     search_fields = ('name', 'collection__name', 'code', 'manufacturer__name',)
-    ordering = ('name', 'code')
+    ordering = ('manufacturer__name', 'name', 'code')
     form = AddEquivalentsForm
 
-    # def change_view(self, request, object_id, form_url='', extra_context=None):
-    #     extra_context = extra_context or {}
-    #     extra_context['stones'] = AcrylicStone.objects.exclude(id=object_id)
-    #     return super().change_view(
-    #         request, object_id, form_url, extra_context=extra_context,
-    #     )
 
-    # def save_model(self, request, obj, form, change):
-    #     print(change)
-    #     super().save_model(request, obj, form, change)
+def addManufacturers(cls):
+
+    def dummyManufacturerFunction(manufacturer=None):
+
+        def dummyManufacturerFunctionCurried(self, obj):
+            return ", ".join([stone.to_table() for stone in obj.stones.filter(manufacturer__name=manufacturer)])
+
+        dummyManufacturerFunctionCurried.__name__ = manufacturer
+        return dummyManufacturerFunctionCurried
+
+    manufacturers = AcrylicManufacturer.objects.all()
+    fields = ['id']
+
+    for manufacturer in manufacturers:
+        setattr(cls, manufacturer.name, dummyManufacturerFunction(
+            manufacturer=manufacturer.name))
+        fields.append(manufacturer.name)
+
+    cls.list_display = fields
+    return cls
+
+
+@admin.register(EquivalentGroup)
+@addManufacturers
+class EquivalentGroupAdmin(admin.ModelAdmin):
+    pass
 
 
 admin.site.register(AcrylicCollection, AcrylicCollectionAdmin)
@@ -133,7 +129,7 @@ admin.site.register(Currency)
 admin.site.register(Thickness)
 admin.site.register(Texture)
 admin.site.register(Material)
-# admin.site.register(AcrylicStone)
+# admin.site.register(EquivalentGroup)
 admin.site.register(AcrylicConfiguration, AcrylicConfigurationAdmin)
 admin.site.register(SurfaceType)
 admin.site.register(SlabSize)
