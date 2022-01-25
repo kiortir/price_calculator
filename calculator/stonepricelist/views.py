@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from .models import AcrylicConfiguration, AcrylicManufacturer, AcrylicCollection, AcrylicStone, additionalWorkAcryl
 from .serializers import AcrylicConfigurationSerializer, BaseStoneSerializer, ReverseAcrylicManufactureSerializer, additionalWorkAcrylSerializer
 

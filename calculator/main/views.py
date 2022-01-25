@@ -1,14 +1,18 @@
 import json
 
 import pytz
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
+from rest_framework.authentication import (BasicAuthentication,
+                                           SessionAuthentication)
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 
-from .models import Calculation, PriceList
-from .serializers import CalculationSerializer, PriceListSerializer
+from .models import Calculation, PriceList, CalculationTemplate
+from .serializers import CalculationSerializer, PriceListSerializer, CalculationTemplateSerializer
 
 utc = pytz.UTC
 
@@ -137,33 +141,53 @@ default_state = """{
 }"""
 
 
+class CalculationTemplateEditor(TemplateView):
+    template_name = 'main/calulationTemplate.html'
+
+    def get(self, request, *args, **kwargs):
+        template_id = kwargs.get('template_id', None)
+        if template_id is None:
+            template_data = json.loads(default_state)
+        else:
+            try:
+                template: CalculationTemplate = CalculationTemplate.objects.get(
+                    id=template_id)
+                if template.owner != request.user:
+                    raise PermissionDenied
+                template_data = CalculationTemplateSerializer(template).data
+                print(template_data)
+            except ObjectDoesNotExist or PermissionDenied:
+                return HttpResponseRedirect('new')
+        context = {
+            "server_state": template_data,
+        }
+        return render(request, template_name=self.template_name, context=context)
+
+
 class CalculationView(TemplateView):
-    login_url = '/calc/login'
     template_name = "main/index.html"
     notfound_template = "main/notfound.html"
 
     def get(self, request, *args, **kwargs):
-        calc_id = int(kwargs.get('calc_id', 0))
+        calc_id = kwargs.get('calc_id', 0)
         try:
             calculation = Calculation.objects.get(id=calc_id)
-            print(calculation)
             priceList = PriceList.objects.get(id=calculation.pricelist_id)
 
             context = {
                 "server_state": CalculationSerializer(calculation).data,
                 "priceList": PriceListSerializer(priceList).data
             }
-            print(context["server_state"])
             return render(request, template_name=self.template_name, context=context)
         except ObjectDoesNotExist:
             return render(request, template_name=self.notfound_template)
 
 
 class NewCalc(TemplateView):
-    login_url = '/calc/login'
     template_name = "main/index.html"
 
     def get(self, request, *args, **kwargs):
+
         pricelist = PriceList.objects.latest('id')
         context = {
             "server_state": json.loads(default_state),
@@ -171,6 +195,35 @@ class NewCalc(TemplateView):
         }
 
         return render(request, template_name=self.template_name, context=context)
+
+
+@api_view(['PUT'])
+def SaveTemplate(request):
+
+    current_id = request.data.get('id', None)
+    userTemplates = request.user.calculation_templates.all()
+
+    values = request.data.get("state", {})
+    name = request.data.get(
+        "name", f'Шаблон рассчета №{len(userTemplates) + 1}')
+
+    if current_id is None:
+
+        new_template = CalculationTemplate.objects.create(
+            name=name,
+            values=values)
+        new_id = new_template.id
+
+    else:
+        template = CalculationTemplate.get(id=current_id)
+        template.values = values
+        template.name = name
+        template.save()
+
+    return JsonResponse({
+        "new": current_id is None,
+        "id": current_id or new_id
+    })
 
 
 @api_view(['PUT'])
@@ -182,22 +235,22 @@ def SaveCalc(request):
 
     values = calc_storage.get('values', {})
 
-    calc_storage['values'] = json.dumps(values, ensure_ascii=False)
+    calc_storage['values'] = values
 
     if calc_id is None:
         calc_storage['pricelist_id'] = 1
         new_calc = Calculation.objects.create(**calc_storage)
         return JsonResponse({"new": True, "id": new_calc.id})
 
-    calculation = Calculation.objects.get(id=calc_id)
-
-    front_update_time = int(data.get('updateTime', 0)) / 1000
+    calculation: Calculation = Calculation.objects.get(id=calc_id)
+    front_update_time = int(data.get('updateTime', 0) or 0) / 1000
     back_update_time = calculation.updated_at.timestamp()
     force_update = data.get('force_update', False)
 
-    if front_update_time > back_update_time or force_update:
+    if (front_update_time > back_update_time) or force_update:
         calculation.values = calc_storage.get('values', {})
         calculation.related_lead = data.get('related_lead', None)
+        calculation.updated_by = request.user
         calculation.save()
         updated = True
     return JsonResponse({"new": False, "updated": updated})

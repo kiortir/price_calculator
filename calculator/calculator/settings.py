@@ -14,6 +14,8 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 import os
 from pathlib import Path
 
+from calculator.custom_middleware import LoginRequiredMiddleware
+
 import environ
 
 env = environ.Env()
@@ -71,6 +73,7 @@ INSTALLED_APPS = [
     'import_export',
     'nested_admin',
     'smart_selects',
+    'django_json_widget',
     'rest_framework',
     'main',
     'stonepricelist',
@@ -88,6 +91,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'calculator.custom_middleware.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'calculator.urls'
@@ -170,6 +174,10 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
 }
 
 # Static files (CSS, JavaScript, Images)
@@ -208,3 +216,6 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
+
+
+LOGIN_URL = '/admin/login/'

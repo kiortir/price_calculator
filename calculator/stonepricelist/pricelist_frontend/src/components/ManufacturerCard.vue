@@ -101,16 +101,6 @@ export default {
 
 
 <style lang="scss">
-$hanex: #bdfff8;
-$tristone: #c1ffdb;
-$staron: #ffdace;
-$grandex: #ced1ff;
-$lg_hi_macs: #fddef9;
-$corian_dupont: #ffcdcd;
-$akrilika: #e6fffb;
-$montelli: #50424b;
-$neomarm: #feffd6;
-
 .card-header.manufacturer {
   filter: brightness(96%) saturate(150%);
 }
@@ -140,3 +130,4 @@ header tr:hover {
   border-top: solid gray 0.07em;
 }
 </style>
+

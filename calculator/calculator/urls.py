@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('calc/', include('main.urls')),
+    path('estimation/', include('main.urls')),
     path('pricelist/', include('stonepricelist.urls')),
     path('chaining/', include('smart_selects.urls')),
     path('amo/', include('amoApi.urls')),

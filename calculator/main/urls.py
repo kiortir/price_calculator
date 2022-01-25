@@ -1,17 +1,13 @@
-from django.urls import path, include
-# from django.urls.conf import include
-from django.views.generic import TemplateView
-
-from .views import CalculationView, NewCalc, SaveCalc
+from django.urls import path
+from .views import (CalculationTemplateEditor, CalculationView, NewCalc,
+                    SaveCalc, SaveTemplate)
 
 app_name = 'main'
 urlpatterns = [
-    path("test",
-         TemplateView.as_view(template_name="main\index.html"),
-         name="app",
-         ),
+    path('template/new', CalculationTemplateEditor.as_view()),
+    path('template/<int:template_id>', CalculationTemplateEditor.as_view()),
+    path('template/save', SaveTemplate),
+    path('new', NewCalc.as_view()),
     path('<int:calc_id>', CalculationView.as_view()),
-    path('newcalc', NewCalc.as_view()),
-    path('save', SaveCalc)
+    path('save', SaveCalc),
 ]
-# urlpatterns += staticfiles_urlpatterns

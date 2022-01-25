@@ -1,12 +1,30 @@
 from django.contrib import admin
-
+import json
 from .models import PriceList, Calculation
 
 
-# Register your models here.
+from django.db.models import JSONField
+from django.contrib import admin
+from django.forms import widgets
 
-class ProductTypeAdmin(admin.ModelAdmin):
-    pass
+from django.db import models
+from django_json_widget.widgets import JSONEditorWidget
+
+
+@admin.register(Calculation)
+class CalculationAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        # fields.JSONField: {'widget': JSONEditorWidget}, # if django < 3.1
+        models.JSONField: {'widget': JSONEditorWidget},
+    }
+
+
+@admin.register(PriceList)
+class PriceListAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        # fields.JSONField: {'widget': JSONEditorWidget}, # if django < 3.1
+        models.JSONField: {'widget': JSONEditorWidget},
+    }
 
 
 class HideModel(admin.ModelAdmin):
@@ -15,7 +33,3 @@ class HideModel(admin.ModelAdmin):
         Return empty perms dict thus hiding the model from admin index.
         """
         return {}
-
-
-admin.site.register(PriceList)
-admin.site.register(Calculation)
