@@ -25,3 +25,22 @@ class CalculationTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CalculationTemplate
         fields = '__all__'
+
+
+class CalculationTemplateNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CalculationTemplate
+        fields = ("name", "id")
+
+
+class CalculationReprSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Calculation
+        fields = ('id', 'related_lead', 'updated_at',
+                  'created_at', 'created_by')
+
+
+# class BasicTemplateListSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CalculationTemplate
+#         fields = '__all__'

@@ -1,6 +1,6 @@
 from django.contrib import admin
 import json
-from .models import PriceList, Calculation
+from .models import PriceList, Calculation, CalculationTemplate
 
 
 from django.db.models import JSONField
@@ -21,6 +21,14 @@ class CalculationAdmin(admin.ModelAdmin):
 
 @admin.register(PriceList)
 class PriceListAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        # fields.JSONField: {'widget': JSONEditorWidget}, # if django < 3.1
+        models.JSONField: {'widget': JSONEditorWidget},
+    }
+
+
+@admin.register(CalculationTemplate)
+class CalculationTemplateAdmin(admin.ModelAdmin):
     formfield_overrides = {
         # fields.JSONField: {'widget': JSONEditorWidget}, # if django < 3.1
         models.JSONField: {'widget': JSONEditorWidget},

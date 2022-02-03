@@ -29,6 +29,9 @@ class BaseCalculation(models.Model):
 
 class Calculation(BaseCalculation):
 
+    title = models.CharField(
+        max_length=40, default=None, null=True, blank=True)
+
     created_by = models.ForeignKey(User, null=True,
                                    on_delete=models.PROTECT, related_name='calculation_creations')
     updated_by = models.ForeignKey(User, null=True,
@@ -43,3 +46,4 @@ class CalculationTemplate(BaseCalculation):
     name = models.CharField(max_length=60, default='По умолчанию')
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True, related_name='calculation_templates')
+    is_default = models.BooleanField(default=False)
