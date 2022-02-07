@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (CalculationTemplateEditor, CalculationView,
-                    SaveCalc, SaveTemplate, GetTemplate, CalculationResults)
+                    SaveCalc, SaveTemplate, GetTemplate, CalculationResults, CheckPermissions)
 
 app_name = 'main'
 urlpatterns = [
@@ -11,5 +11,6 @@ urlpatterns = [
     path('new', CalculationView.as_view()),
     path('<int:calc_id>', CalculationView.as_view()),
     path('save', SaveCalc),
+    path('permissions', CheckPermissions),
     path('get/', CalculationResults.as_view()),
 ]

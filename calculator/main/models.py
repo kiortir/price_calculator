@@ -47,3 +47,13 @@ class CalculationTemplate(BaseCalculation):
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True, related_name='calculation_templates')
     is_default = models.BooleanField(default=False)
+
+
+class Mutation(models.Model):
+    submitted_at = models.DateTimeField()
+    submitted_by = models.ForeignKey(User, null=True,
+                                     on_delete=models.PROTECT, related_name='mutations')
+    estimation = models.ForeignKey(
+        Calculation, on_delete=models.CASCADE, related_name='mutations')
+    state_before = models.JSONField(default=defaultCalculationData)
+    mutation = models.JSONField(null=True, blank=True)

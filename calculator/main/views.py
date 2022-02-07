@@ -1,3 +1,4 @@
+from genericpath import exists
 from re import S
 from django.core.paginator import Paginator
 import datetime
@@ -16,7 +17,7 @@ from rest_framework.authentication import (BasicAuthentication,
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Calculation, PriceList, CalculationTemplate
+from .models import Calculation, PriceList, CalculationTemplate, Mutation
 from .serializers import CalculationSerializer, PriceListSerializer, CalculationTemplateSerializer, CalculationTemplateNameSerializer, CalculationReprSerializer
 
 utc = pytz.UTC
@@ -160,7 +161,6 @@ class CalculationTemplateEditor(TemplateView):
                 if template.owner != request.user:
                     raise PermissionDenied
                 template_data = CalculationTemplateSerializer(template).data
-                print(template_data)
             except ObjectDoesNotExist or PermissionDenied:
                 return HttpResponseRedirect('new')
         context = {
@@ -241,6 +241,21 @@ def SaveTemplate(request):
     })
 
 
+@api_view(['PUT'])
+def SaveMutation(request):
+
+    current_id = request.data.get('id', None)
+    time = int(request.data.get('time', 0)) / 1000
+    data = {
+        "submitted_by": request.user,
+        "submitted_at": time,
+        
+    }
+    related_estimation =
+    data['estimation'] = request.data.get('estimation_id', 0)
+    Mutation.objects.create()
+
+
 @api_view(['POST'])
 def GetTemplate(request):
 
@@ -249,6 +264,16 @@ def GetTemplate(request):
         template = request.user.calculation_templates.get(id=required_id)
         return JsonResponse(CalculationTemplateSerializer(template).data
                             )
+    except ObjectDoesNotExist:
+        return Http404
+
+
+@api_view(['POST'])
+def CheckPermissions(request):
+
+    try:
+        return JsonResponse({"isEstimator": request.user.groups.filter(name='Сметчик').exists()
+                             })
     except ObjectDoesNotExist:
         return Http404
 
