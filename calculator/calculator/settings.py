@@ -18,7 +18,7 @@ from calculator.custom_middleware import LoginRequiredMiddleware
 
 import environ
 
-OPEN_URLS = ["https://dev.unirock.ru/pricelist/currency"]
+OPEN_URLS = ["/pricelist/currency/",]
 
 env = environ.Env()
 environ.Env.read_env()
