@@ -1,4 +1,7 @@
+from main.serializers import CalculationSerializer
+from main.models import Calculation
 from genericpath import exists
+from http.client import HTTPResponse
 from re import S
 from django.core.paginator import Paginator
 import datetime
@@ -21,6 +24,16 @@ from .models import Calculation, PriceList, CalculationTemplate, Mutation
 from .serializers import CalculationSerializer, PriceListSerializer, CalculationTemplateSerializer, CalculationTemplateNameSerializer, CalculationReprSerializer
 
 utc = pytz.UTC
+
+
+def index(request):
+    return render(request, 'main/test.html')
+
+
+def room(request, room_name):
+    return render(request, 'main/test_room.html', {
+        'room_name': room_name
+    })
 
 
 default_state = """{
@@ -249,9 +262,9 @@ def SaveMutation(request):
     data = {
         "submitted_by": request.user,
         "submitted_at": time,
-        
+
     }
-    related_estimation =
+    related_estimation = 0
     data['estimation'] = request.data.get('estimation_id', 0)
     Mutation.objects.create()
 
@@ -352,3 +365,27 @@ class CalculationResults(TemplateView):
         estimations = page.object_list
         print(estimations)
         return render(request, template_name=self.template_name, context={'estimations': estimations, "has_next": page.has_next()})
+
+
+@api_view(['POST'])
+def get_estimation_page(request):
+    query = Calculation.objects.all()
+    p = Paginator(query, 20)
+    page = p.page(1)
+    estimations = CalculationReprSerializer(page.object_list, many=True).data
+    return JsonResponse(estimations, safe=False)
+
+
+@api_view(['POST'])
+def get_estimation(request):
+    estimation_id = request.data.get('id')
+    estimation = Calculation.objects.get(id=estimation_id)
+    
+    return JsonResponse(CalculationSerializer(estimation).data)
+
+
+class CalculationList(TemplateView):
+    template_name = 'main/vite.html'
+
+    def get(self, request):
+        return render(request, template_name=self.template_name)

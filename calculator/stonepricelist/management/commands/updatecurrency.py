@@ -1,10 +1,9 @@
 import math
 import datetime
-import urllib
-import json
+import requests
 from stonepricelist.models import Currency as c
-
-from django.core.management.base import BaseCommand, CommandError
+import xml.etree.ElementTree as ET
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -12,16 +11,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         currencies = c.objects.all()
-        response = json.loads(urllib.request.urlopen(
-            'https://www.cbr-xml-daily.ru/daily_json.js').read())
-        unparsed_currency_date: str = response.get(
-            'Date', '2000-10-08:30:00+03:00')[:-6]
+        response = requests.get(
+            'http://www.cbr.ru/scripts/XML_daily.asp', timeout=1).text
+        tree = ET.fromstring(response)
+        date = tree.get('Date')
         currency_date = datetime.datetime.strptime(
-            unparsed_currency_date, '%Y-%m-%dT%X').date()
-        currency_dict = response.get('Valute', {})
+            date, '%d.%m.%Y').date()
         for currency in currencies:
-            new_value: int = math.ceil(currency_dict.get(
-                currency.code, {}).get('Value', 0))
+            new_value: int = math.ceil(
+                float(tree.find(f'Valute[CharCode="{currency.code}"]/Value').text.replace(',', '.')))
             currency.value = new_value
             currency.value_date = currency_date
             currency.save()

@@ -63,6 +63,7 @@ MEDIA_URL = '/media/'
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -70,6 +71,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    # 'django_vite',
     'import_export',
     'nested_admin',
     'smart_selects',
@@ -206,16 +208,17 @@ CHANNEL_LAYERS = {
         # },
 
         # Method 2: Via local Redis
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        # 'CONFIG': {
-        #      "hosts": [('127.0.0.1', 6379)],
-        # },
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
 
         # Method 3: Via In-memory channel layer
         # Using this method.
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        # "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
 
+STREAM_SOCKET_GROUP_NAME = 'estimation_mutations'
 
 LOGIN_URL = '/admin/login/'
