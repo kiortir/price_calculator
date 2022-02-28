@@ -17,4 +17,5 @@ urlpatterns = [
     path('acryl/work/', views.AcrylicWorkView.as_view()),
     path('find/', views.FindStone.as_view()),
     path('prox/', views.crossdomainData.as_view()),
+    path('currency/', views.CurrencyCSV.as_view()),
 ]

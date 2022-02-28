@@ -1,11 +1,12 @@
 from django.http import HttpResponseRedirect
-from .models import AcrylicConfiguration, AcrylicManufacturer, AcrylicCollection, AcrylicStone, additionalWorkAcryl
+from .models import AcrylicConfiguration, AcrylicManufacturer, AcrylicCollection, AcrylicStone, Currency, additionalWorkAcryl
 from .serializers import AcrylicConfigurationSerializer, BaseStoneSerializer, ReverseAcrylicManufactureSerializer, additionalWorkAcrylSerializer
-
+from rest_framework.authentication import (BasicAuthentication,
+                                           SessionAuthentication)
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.shortcuts import render
 from django.db.models import Q
@@ -13,6 +14,35 @@ from django.db.models import Q
 import urllib.request
 from urllib.error import HTTPError
 import json
+import csv
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
+
+
+class CurrencyCSV(APIView):
+    authentication_classes = (
+        CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    def get(self, request):
+        response = HttpResponse(
+            content_type='text/csv',
+            headers={
+                'Content-Disposition': 'attachment; filename="somefilename.csv"'},
+        )
+        writer = csv.writer(response)
+        currencies = Currency.objects.all()
+        codes = []
+        values = []
+        for currency in currencies:
+            codes.append(currency.code)
+            values.append(currency.value)
+        writer.writerow(codes)
+        writer.writerow(values)
+        return response
 
 
 class DefaultAcrylPricelist(APIView):
