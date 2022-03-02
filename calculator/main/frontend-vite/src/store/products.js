@@ -101,6 +101,9 @@ export default {
         },
         updateCard(state, { id, field, value }) {
             state.values[id][field] = value
+        },
+        deleteOption(state, { id, field }) {
+            delete state.values[id][field]
         }
     },
     actions: {
@@ -119,6 +122,9 @@ export default {
             let [f, count] = field.split("__")
             let new_field = addGroup(ref, f)
             commit('extendCard', { id, new_field, field_id: `${f}__${find_max(Object.keys(state.values[id]), f) || 2}` })
+        },
+        removeOption({ commit }, { id, field }) {
+            commit('deleteOption', { id, field })
         }
     },
 }

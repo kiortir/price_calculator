@@ -65,6 +65,7 @@ export default {
                     :id="`${currentTab}-${id}-${field}`"
                     v-model.number="value"
                     class="rounded-l-lg appearance-none flex grow min-w-content w-0 max-w-full px-1"
+                    :class="[value === '' || value === undefined || value === null ? 'show-unfilled' : '']"
                 />
                 <div
                     class="measurement bg-pink-100 rounded-r-lg text-end h-full text-lg px-2"

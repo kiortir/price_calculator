@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'обновляет курс валют'
 
     def handle(self, *args, **options):
-        currencies = c.objects.all()
+        currencies = c.objects.filter(auto_update=True)
         response = requests.get(
             'http://www.cbr.ru/scripts/XML_daily.asp', timeout=1).text
         tree = ET.fromstring(response)

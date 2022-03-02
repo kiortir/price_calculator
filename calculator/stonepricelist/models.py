@@ -178,6 +178,8 @@ class Currency(models.Model):
                             default="USD", verbose_name='код валюты ЦБ')
     value = models.FloatField(default=0.0)
     value_date = models.DateField(null=True, blank=True)
+    auto_update = models.BooleanField(
+        default=True, verbose_name='обновлять автоматически')
 
     class Meta:
 
@@ -198,6 +200,8 @@ class Manufacturer(models.Model):
                             null=True, verbose_name='код поставщика')
     currency = models.ForeignKey(
         Currency, on_delete=models.PROTECT, null=True, blank=True, verbose_name='валюта распространения')
+    currency_value_override = models.SmallIntegerField(
+        verbose_name='ручной курс валют', null=True, blank=True)
 
     vendor_discount = models.FloatField(
         default=0.0, verbose_name='скидка поставщика, %')
@@ -255,7 +259,8 @@ class AcrylicCollection(models.Model):
 
     @property
     def price(self) -> int:
-        return math.ceil(self.standart_raw_price * self.manufacturer.discount * self.manufacturer.currency.value * self.manufacturer.material.overprice)
+        currency_value = self.manufacturer.currency_value_override or self.manufacturer.currency.value
+        return math.ceil(self.standart_raw_price * self.manufacturer.discount * currency_value * self.manufacturer.material.overprice)
 
     class Meta:
 

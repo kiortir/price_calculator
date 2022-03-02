@@ -30,6 +30,7 @@ export default {
         priority: 10,
         title: 'Кромка',
         type: 'option',
+        allow_multiple: true,
         content: ['edge_type', 'edge_thickness', 'edge_angle', 'edge_length']
     },
     edge_type: {
@@ -72,6 +73,7 @@ export default {
         priority: 50,
         title: 'Бортик',
         type: 'option',
+        allow_multiple: true,
         content: ['border_type', 'border_length']
     },
     border_type: {
@@ -96,6 +98,7 @@ export default {
         priority: 20,
         title: 'Мойка',
         type: 'option',
+        allow_multiple: true,
         content: ['sink_type', 'sink_count']
     },
     sink_type: {
@@ -160,6 +163,7 @@ export default {
         priority: 70,
         title: 'Опции кромки',
         type: 'option',
+        allow_multiple: true,
         content: ['edge_option_dripper', 'edge_option_tuck']
     },
     edge_option_dripper: {
@@ -199,6 +203,7 @@ export default {
         priority: 80,
         title: 'Поверхность',
         type: 'option',
+        allow_multiple: true,
         content: ['surface_option_runoff', 'surface_option_convection']
     },
     surface_option_runoff: {
@@ -253,6 +258,7 @@ export default {
     assembly: {
         title: 'Сборка',
         priority: '2',
+        allow_multiple: true,
         type: 'option',
         content: ['assembly_mounting_length', 'assembly_surface_stack',],
     },
@@ -279,5 +285,4 @@ export default {
         type: 'number',
         measurement: 'шт.'
     },
-
 }

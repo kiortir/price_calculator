@@ -48,6 +48,7 @@ export default {
             :value="content"
             @input="changeField($event.target.value)"
             class="ring-orange-400 ring-1 rounded-lg p-1 px-2 w-full"
+            :class="[value === '' || value === undefined || value === null ? 'show-unfilled' : '']"
         />
     </div>
 </template>

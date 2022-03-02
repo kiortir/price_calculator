@@ -6,6 +6,7 @@
         <ListboxButton
             as="div"
             class="p-1 ring-1 ring-slate-300 rounded-md w-full z-10 flex flex-row content-center select-none gap-1"
+            :class="[option === null ? 'show-unfilled' : '']"
         >
             <div class="pl-1 my-auto" tabindex="0">
                 <svg

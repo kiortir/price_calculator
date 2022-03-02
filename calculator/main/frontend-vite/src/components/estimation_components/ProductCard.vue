@@ -26,7 +26,8 @@ export default {
 
         deleteCard() {
             this.$emit('deleteCard')
-        }
+        },
+
     },
     components: {}
 }
@@ -86,12 +87,12 @@ export default {
                 class="content select-none bg-white h-full text-black rounded-b-lg p-3 py-5"
                 v-if="Object.keys(productProps).length"
             >
-                <!-- <ul>
+                <ul>
                     <li v-for="(value, name) in productProps">
                         <span>{{ fields[name.split('__')[0]].title }}:</span>
                         {{ value || '-' }} {{ fields[name].measurement || '' }}
                     </li>
-                </ul> -->
+                </ul>
             </div>
         </div>
     </div>

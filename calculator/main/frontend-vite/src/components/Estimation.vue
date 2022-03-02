@@ -145,7 +145,7 @@ export default {
                         <button class="w-full h-full" @mouseup="displayMobileResult()">Итог</button>
                     </div>
                     <div
-                        class="w-full h-full hover:bg-unirock/[0.6] khover:text-white bg-unirock text-white active:bg-white active:ring-1 active:text-unirock_dark ring-unirock ring-inset my-auto"
+                        class="w-full h-full hover:bg-unirock/[0.6] hover:text-white bg-unirock text-white active:bg-white active:ring-1 active:text-unirock_dark ring-unirock ring-inset my-auto"
                     >
                         <button class="new-card w-full h-full" @click="addCard()">Добавить карточку</button>
                     </div>
