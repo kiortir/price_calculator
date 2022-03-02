@@ -35,13 +35,8 @@ class CurrencyCSV(APIView):
         )
         writer = csv.writer(response)
         currencies = Currency.objects.all()
-        codes = []
-        values = []
         for currency in currencies:
-            codes.append(currency.code)
-            values.append(currency.value)
-        writer.writerow(codes)
-        writer.writerow(values)
+            writer.writerow([currency.code, currency.value])
         return response
 
 

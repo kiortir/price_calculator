@@ -119,7 +119,7 @@ def addManufacturers(cls):
             setattr(cls, manufacturer.name, dummyManufacturerFunction(
                 manufacturer=manufacturer.name))
             fields.append(manufacturer.name)
-    except OperationalError or ProgrammingError:
+    except (OperationalError, ProgrammingError) as e:
         pass
 
     cls.list_display = fields
