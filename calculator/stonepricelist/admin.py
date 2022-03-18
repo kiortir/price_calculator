@@ -1,28 +1,29 @@
+from pyexpat import model
+from django.contrib.admin.widgets import AdminFileWidget
+from django.urls import resolve
 from django.db.utils import OperationalError, ProgrammingError
 
 import nested_admin
 import tablib
 from django.contrib import admin
-from django.db.models import Q
+from django.db.models import Q, ImageField
 from import_export import fields, resources, widgets
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from import_export.results import Result
-
+import stonepricelist.models
 from stonepricelist.models import (AcrylicCollection, AcrylicConfiguration,
                                    AcrylicManufacturer, AcrylicStone, Colors,
                                    ConfigurationDiscount, Currency,
                                    EquivalentGroup, Material, SlabSize,
                                    SurfaceType, Texture, Thickness,
-                                   additionalWorkAcryl)
+                                   additionalWorkAcryl, QuartzManufacturer, QuartzStone, QuartzStoneConfiguration, quartzManufacturerInfoPictures)
 
-from .forms import AddEquivalentsForm, AcrylicManufacturerForm
-from .imports import toCollection
+from .forms import AddEquivalentsForm, AcrylicManufacturerForm, QuartzConfigurationInlineForm
+from .imports import toCollection, SlabSizeWidget, QuartzStoneNameWidget
 
 
 class AcrylicStoneResource(resources.ModelResource):
-    collection = fields.Field(attribute='collection',
-                              column_name='collection', widget=toCollection())
     manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
                                 widget=ForeignKeyWidget(AcrylicManufacturer, 'name'))
 
@@ -30,6 +31,24 @@ class AcrylicStoneResource(resources.ModelResource):
         model = AcrylicStone
         fields = ('name', 'code', 'manufacturer', 'collection')
         import_id_fields = ('code', 'manufacturer')
+
+
+class QuartzStoneConfigurationResource(resources.ModelResource):
+    stone = fields.Field(attribute='stone', column_name='name',
+                         widget=QuartzStoneNameWidget())
+    slab_size = fields.Field(attribute='slab_size',
+                             column_name='height', widget=SlabSizeWidget())
+    thickness = fields.Field(attribute='thickness', column_name='thickness',
+                             widget=ForeignKeyWidget(Thickness, 'value'))
+    surface = fields.Field(attribute='surface', column_name='surface',
+                           widget=ForeignKeyWidget(SurfaceType, 'alias'))
+    # manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
+    #                             widget=ForeignKeyWidget(QuartzManufacturer, 'name'))
+
+    class Meta:
+        model = QuartzStoneConfiguration
+        fields = ('stone', 'height', 'thickness', 'surface', 'price')
+        import_id_fields = ('stone', 'slab_size', 'thickness', 'surface')
 
 
 class ExportAcrylicStoneResource(resources.ModelResource):
@@ -57,6 +76,38 @@ class AcrylicConfigurationInline(nested_admin.NestedTabularInline):
     extra = 1
 
 
+class QuartzConfigurationInline(admin.TabularInline):
+
+    model = QuartzStoneConfiguration
+    initial_num = 1
+    extra = 1
+    # form = QuartzConfigurationInlineForm
+
+    def get_parent_object_from_request(self, request):
+        resolved = resolve(request.path_info)
+        if resolved.kwargs:
+            return self.parent_model.objects.get(pk=resolved.kwargs['object_id'])
+        return None
+
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+
+        if db_field.name in ['thickness', 'surface', 'slab_size']:
+            parent = self.get_parent_object_from_request(request)
+            try:
+                kwargs['queryset'] = getattr(
+                    parent.manufacturer, f'{db_field.name}_configurations')
+            except AttributeError:
+                pass
+            # print(kwargs['queryset'].objects.all())
+        # if db_field.name == 'inside_room':
+        #     if request._obj_ is not None:
+        #         field.queryset = field.queryset.filter(building__exact = request._obj_)
+        #     else:
+        #         field.queryset = field.queryset.none()
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
 class AcrylicCollectionAdmin(nested_admin.NestedModelAdmin):
     inlines = [AcrylicConfigurationInline]
     list_filter = ('manufacturer',)
@@ -81,12 +132,45 @@ class additionalWorkAcrylResource(resources.ModelResource):
         import_id_fields = ('name',)
 
 
-@admin.register(additionalWorkAcryl)
+class AdminImageWidget(AdminFileWidget):
+    def render(self, name, value, attrs=None, renderer=None):
+        output = []
+        if value and getattr(value, "url", None):
+            image_url = value.url
+            file_name = str(value)
+            output.append(u' <a href="%s" target="_blank"><img src="%s" alt="%s" width="150" height="150"  style="object-fit: cover;"/></a> %s ' %
+                          (image_url, image_url, file_name, ''))
+        output.append(super(AdminFileWidget, self).render(name, value, attrs))
+        return ''.join(output)
+
+
+class quartzManufacturerInfoPicturesInline(admin.TabularInline):
+    formfield_overrides = {ImageField: {'widget': AdminImageWidget}}
+
+    model = quartzManufacturerInfoPictures
+
+
+@ admin.register(QuartzStone)
+class QuartzStoneAdmin(ImportExportModelAdmin):
+    inlines = [QuartzConfigurationInline]
+
+
+@admin.register(QuartzStoneConfiguration)
+class QuartzStoneConfiguration(ImportExportModelAdmin):
+    resource_class = QuartzStoneConfigurationResource
+
+
+@ admin.register(QuartzManufacturer)
+class QuartzManufacturerAdmin(admin.ModelAdmin):
+    inlines = [quartzManufacturerInfoPicturesInline]
+
+
+@ admin.register(additionalWorkAcryl)
 class additionalWorkAcrylAdmin(ImportExportModelAdmin):
     resource_class = additionalWorkAcrylResource
 
 
-@admin.register(AcrylicStone)
+@ admin.register(AcrylicStone)
 class AcrylicStoneAdmin(ImportExportModelAdmin):
     resource_class = AcrylicStoneResource
 

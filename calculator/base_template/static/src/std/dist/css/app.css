@@ -1,0 +1,89 @@
+.nav-css {
+  height: 50px;
+  width: 100%;
+  background-color: white;
+  position: relative;
+}
+
+.nav-css > .nav-css-header {
+  display: inline;
+}
+
+.nav-css > .nav-css-header > .nav-css-title {
+  display: inline-block;
+  font-size: 22px;
+  color: black;
+  padding: 10px 10px 10px 10px;
+}
+
+.nav-css > .nav-css-btn {
+  display: none;
+}
+
+.nav-css > .nav-css-links {
+  display: inline;
+  float: right;
+  font-size: 18px;
+  z-index: 99999;
+}
+
+.nav-css > .nav-css-links > a {
+  display: inline-block;
+  padding: 13px 10px 13px 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.nav-css > .nav-css-links > a:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.nav-css > #nav-css-check {
+  display: none;
+}
+
+@media (max-width:600px) {
+  .nav-css > .nav-css-btn {
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+  }
+  .nav-css > .nav-css-btn > label {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    padding: 13px;
+  }
+  .nav-css > .nav-css-btn > label:hover,.nav-css  #nav-css-check:checked ~ .nav-css-btn > label {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  .nav-css > .nav-css-btn > label > span {
+    display: block;
+    width: 25px;
+    height: 10px;
+    border-top: 2px solid #eee;
+  }
+  .nav-css > .nav-css-links {
+    position: absolute;
+    display: block;
+    width: 100%;
+    background-color: white;
+    height: 0px;
+    transition: all 0.3s ease-in;
+    overflow-y: hidden;
+    top: 50px;
+    left: 0px;
+  }
+  .nav-css > .nav-css-links > a {
+    display: block;
+    width: 100%;
+  }
+  .nav-css > #nav-css-check:not(:checked) ~ .nav-css-links {
+    height: 0px;
+  }
+  .nav-css > #nav-css-check:checked ~ .nav-css-links {
+    height: calc(100vh - 50px);
+    overflow-y: auto;
+  }
+}

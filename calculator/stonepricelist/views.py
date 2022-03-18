@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from .models import AcrylicConfiguration, AcrylicManufacturer, AcrylicCollection, AcrylicStone, Currency, additionalWorkAcryl
+from .models import AcrylicConfiguration, AcrylicManufacturer, AcrylicCollection, AcrylicStone, Currency, QuartzManufacturer, QuartzStone, additionalWorkAcryl
 from .serializers import AcrylicConfigurationSerializer, BaseStoneSerializer, ReverseAcrylicManufactureSerializer, additionalWorkAcrylSerializer
 from rest_framework.authentication import (BasicAuthentication,
                                            SessionAuthentication)

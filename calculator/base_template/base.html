@@ -4,14 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     {% block head %}{% endblock %}
-    <link href="/static/src/base/dist/css/app.css" rel="preload" as="style" />
-    <link href="/static/src/base/dist/js/app.js" rel="preload" as="script" />
+    <link href="/static/src/base2/dist/css/app.css" rel="preload" as="style" />
+    <link href="/static/src/base2/dist/js/app.js" rel="preload" as="script" />
     <link
-      href="/static/src/base/dist/js/chunk-vendors.js"
+      href="/static/src/base2/dist/js/chunk-vendors.js"
       rel="preload"
       as="script"
     />
-    <link href="/static/src/base/dist/css/app.css" rel="stylesheet" />
+    <link href="/static/src/base2/dist/css/app.css" rel="stylesheet" />
   </head>
   <body class="override">
     <nav class="navbar navbar-expand-lg navbar-light mb-5">
@@ -36,6 +36,11 @@
               >
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="/pricelist/quartz" tabindex="-1"
+                >Прайс кварца</a
+              >
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="/production/table" tabindex="-1"
                 >График</a
               >
@@ -45,7 +50,7 @@
       </div>
     </nav>
     {% block content %}{% endblock %} {% block scripts %}{% endblock %}
-    <script src="/static/src/base/dist/js/chunk-vendors.js"></script>
-    <script src="/static/src/base/dist/js/app.js"></script>
+    <script src="/static/src/base2/dist/js/chunk-vendors.js"></script>
+    <script src="/static/src/base2/dist/js/app.js"></script>
   </body>
 </html>

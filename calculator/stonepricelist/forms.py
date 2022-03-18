@@ -70,3 +70,11 @@ class AcrylicManufacturerForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'card_color': TextInput(attrs={'type': 'color'}), }
+
+
+class QuartzConfigurationInlineForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print([f.name for f in self.instance._meta.get_fields()])
+        print(self.instance.stone)
+        # self.fields['thickness'].queryset = self.instance.stone.all()#stone.manufacturer.thickness_configurations.all()

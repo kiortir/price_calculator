@@ -1,4 +1,3 @@
-from dataclasses import field
 from rest_framework import serializers
 
 from .models import *
@@ -123,3 +122,6 @@ class ManufacturersToStoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = AcrylicManufacturer
         fields = ('name', 'stones')
+
+
+

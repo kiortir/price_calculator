@@ -12,6 +12,7 @@ axios.defaults.headers.common['X-CSRFToken'] = document.getElementsByName('csrfm
 
 const app = createApp(App)
 app.use(VueAxios, axios)
+
 app.use(store)
 app.use(router)
 app.mount('#app')
