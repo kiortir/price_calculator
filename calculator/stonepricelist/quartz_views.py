@@ -50,5 +50,4 @@ class ManufacturersBasic(APIView):
     def post(self, request):
         stones = QuartzManufacturer.objects.all()
         data = ManufacturerBasicSerializer(stones, many=True).data
-        print(stones[3].__dict__)
         return Response(data)
