@@ -92,6 +92,7 @@ const filter_string = computed(() => {
 
 
 const stones = computed(() => {
+    console.log({ header: header.value })
     const { filter, translit, reverse } = filter_string.value
 
     let filtered_stones
@@ -107,8 +108,14 @@ const stones = computed(() => {
     }
     props.source.forEach(stone => {
         const [code, name] = [(stone.code !== null) ? stone.code.toLowerCase() : '', stone.name.toLowerCase()]
-        if ([name, code].some((el) => [el,].concat(...el.split(' ')).some(el => [filter, translit, reverse].some(filter_str => el.startsWith(filter_str))))) {
-            if (!grid.xl || header.value.map.size > 10) {
+        if ([name, code].some(
+            (searchfield) => [searchfield,].concat(...searchfield.split(' ')).some(
+                (searchunit) => [filter, translit, reverse].some(
+                    (filter_str) => searchunit.startsWith(filter_str))
+            )
+        )
+        ) {
+            if (!grid.xl || header.value.map.size > 9) {
                 const new_stone = <StoneInfo>{
                     configurations: {}
                 }
