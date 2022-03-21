@@ -92,7 +92,7 @@ defineExpose({
         </div>
 
         <StoneGridVue
-            class="w-full xl:w-fit"
+            class="w-full "
             :columns="data.schema"
             :source="data.stones"
             :filter="stones_filter_q.toLowerCase()"

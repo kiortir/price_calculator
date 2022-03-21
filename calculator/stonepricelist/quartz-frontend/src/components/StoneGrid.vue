@@ -66,7 +66,9 @@ const header = computed(
             return cols
         }
         else {
-            return <HeaderMap>new Map()
+            const z = <HeaderMap>new Map()
+            z.map = new Map()
+            return z
         }
     }
 )
@@ -94,7 +96,7 @@ const stones = computed(() => {
 
     let filtered_stones
     let counter = 0
-    if (grid.xl) {
+    if (grid.xl && header.value.map.size < 10) {
         filtered_stones = []
     }
     else if (!grid.sm) {
@@ -105,8 +107,8 @@ const stones = computed(() => {
     }
     props.source.forEach(stone => {
         const [code, name] = [(stone.code !== null) ? stone.code.toLowerCase() : '', stone.name.toLowerCase()]
-        if ([name, code].some((el) => [filter, translit, reverse].some(filter_str => el.startsWith(filter_str)))) {
-            if (!grid.xl) {
+        if ([name, code].some((el) => [el,].concat(...el.split(' ')).some(el => [filter, translit, reverse].some(filter_str => el.startsWith(filter_str))))) {
+            if (!grid.xl || header.value.map.size > 10) {
                 const new_stone = <StoneInfo>{
                     configurations: {}
                 }
@@ -157,10 +159,11 @@ function getPrice(value) {
 </script>
 
 <template>
-    <div class="overflow-x-auto border-slate-300 h-full w-full" v-if="grid.xl">
-        <table
-            class="table-fixed border-separate h-content overflow-hidden xl:border-t"
-        >
+    <div
+        class="overflow-x-auto border-slate-300 h-full w-full max-w-[60vw] border-x"
+        v-if="grid.xl && header.map.size < 10"
+    >
+        <table class="table-auto border-separate h-content overflow-hidden xl:border-t">
             <thead class="sticky top-0 shadow-sm" v-if="header.keys()">
                 <tr
                     class="first:bg-[#26a69a] first:text-white text-slate-600 last:bg-white bg-[#26a69a]/10 last:text-black sticky top-0"
@@ -192,12 +195,15 @@ function getPrice(value) {
         </table>
     </div>
     <div
-        class="card-stones  px-3 gap-3 before:box-inherit after:box-inherit box-border flex flex-row"
+        class="card-stones px-3 gap-3 before:box-inherit after:box-inherit box-border flex flex-row w-full lg:max-w-[60vw]"
         v-else
     >
-        <div class="card-column" v-for="group, index in Array(grid.sm ? 2 : 1)">
+        <div
+            class="card-column flex flex-col flex-grow"
+            v-for="group, index in Array(grid.sm ? 2 : 1)"
+        >
             <div
-                class="card  font-sans ring-1 ring-unirock/30 shadow-md w-fill rounded-xl py-3 px-5 flex flex-col mb-3 last:mb-0"
+                class="card font-sans ring-1 ring-unirock/30 shadow-md w-fill rounded-xl py-3 px-5 flex flex-col mb-3 last:mb-0"
                 v-for="stone in stones[index]"
             >
                 <div class="card-header w-fit self-end">
@@ -205,14 +211,14 @@ function getPrice(value) {
                     <div class="text-right text-sm text-gray-400">{{ stone.code }}</div>
                 </div>
                 <div class="mt-1 border-t border-slate-600">
-                    <table class="table-fixed w-full ">
+                    <table class="table-fixed w-full">
                         <tbody>
                             <tr
                                 v-for="(value, key) in stone.configurations"
                                 :key="key"
                                 class="border-b last:border-b-0"
                             >
-                                <td class="text-left text-[0.7rem] font-sans py-2 ">
+                                <td class="text-left text-[0.7rem] font-sans py-2">
                                     <div
                                         v-for="spec in key.split(' ')"
                                         class="last:after:content-['мм']"
