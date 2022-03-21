@@ -195,7 +195,7 @@ function getPrice(value) {
         </table>
     </div>
     <div
-        class="card-stones px-3 gap-3 before:box-inherit after:box-inherit box-border flex flex-row w-full lg:max-w-[60vw]"
+        class="card-stones px-3 gap-3 before:box-inherit after:box-inherit box-border flex flex-row w-full xl:max-w-[60vw]"
         v-else
     >
         <div

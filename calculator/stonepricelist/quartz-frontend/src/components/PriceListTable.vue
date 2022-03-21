@@ -12,6 +12,7 @@ import DialogVue from './Dialog.vue';
 const route = useRoute()
 const router = useRouter()
 let showManufacturers = ref(false)
+let showInfo = ref(false)
 let currentTab = ref("Avant")
 
 let currentManufacturerTab = computed<string>({
@@ -39,7 +40,7 @@ const grid = useGrid('tailwind')
 </script>
 
 <template>
-  <div class="flex flex-col xl:flex-row mx-auto">
+  <div class="flex flex-col xl:flex-row mx-auto h-full">
     <div
       class="manufacturer-nav mb-2 xl:mb-0 sticky flex flex-col min-w-[250px] xl:h-screen top-0 overflow-y-auto border-slate-600 z-20"
     >
@@ -47,6 +48,25 @@ const grid = useGrid('tailwind')
         <div class="xl:hidden">
           <div class="nav flex flex-row gap-2 place-items-center border-b p-3 h-12 w-full">
             <div class="text-xl flex-grow text-left">{{ currentTab }}</div>
+            <div
+              type="button"
+              class="show-manufacturers rounded-full p-1"
+              @click="showInfo = !showManufacturers"
+            >
+              <svg
+                class="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+            </div>
             <div
               type="button"
               id="mobile-func-header"
@@ -87,10 +107,25 @@ const grid = useGrid('tailwind')
 
     <ManufacturerTableVue ref="table_c" :manufacturer="currentTab" :key="currentTab" />
     <ManufacturerInfoVue
-      class="flex-col flex-grow sticky top-0 right-0 hidden xl:flex w-fit"
+      class="info flex-col flex-grow sticky top-0 right-0 flex w-fit xl:h-screen overflow-y-auto"
       :manufacturer="currentTab"
       :key="currentTab"
-    />
+      v-if="grid.xl"
+    >
+      <p class="text-2xl font-semibold mb-5">Дополнительная информация</p>
+    </ManufacturerInfoVue>
+    <DialogVue v-else :open="showInfo" @set-is-open="(val) => showInfo = val">
+      <template #title>Дополнительная информация</template>
+      <template #body>
+        <KeepAlive>
+          <ManufacturerInfoVue
+            class="info flex-col flex-grow w-fit"
+            :manufacturer="currentTab"
+            :key="currentTab"
+          />
+        </KeepAlive>
+      </template>
+    </DialogVue>
     <a
       href="#top"
       class="xl:hidden fixed bottom-7 right-3 p-3 bg-blue-500 rounded-full"

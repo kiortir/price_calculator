@@ -24,9 +24,9 @@ const open_image_url = ref(false)
 <template>
     <div
         class="px-3 font-sans divide-y divide-slate-500"
-        v-if="(data.additional_info.images.length || data.text)"
+        v-if="(data.additional_info.images.length || data.additional_info.text)"
     >
-        <p class="text-2xl font-semibold mb-5">Дополнительная информация</p>
+        <slot></slot>
         <div v-if="data.additional_info.images.length" class="flex flex-col divide-y gap-2">
             <div
                 class="image-continer py-3 px-2 hover:bg-sky-100"
@@ -40,7 +40,7 @@ const open_image_url = ref(false)
                         @click="open_image_url = false"
                         v-if="open_image_url"
                     >
-                        <div class="flex py-10 w-full ">
+                        <div class="flex py-10 w-full">
                             <img class="mx-auto z-[200]" :src="img.image" />
                         </div>
                     </div>

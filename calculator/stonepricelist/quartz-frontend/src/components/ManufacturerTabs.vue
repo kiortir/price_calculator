@@ -56,15 +56,15 @@ let filtered_manufacturers = computed<Array<Manufacturer>>(() => {
             <div
                 v-for="manufacturer in filtered_manufacturers"
                 type="button"
-                class="last:flex last:flex-grow ring-1 xl:ring-0 rounded-xl xl:rounded-none transition-color duration-100 text-xl font-sans"
-                :class="[manufacturer.name === props.tab ? '' : 'text-gray-500 border-r-2']"
+                class="last:flex last:flex-grow ring-1 ring-inset xl:ring-0 rounded-xl xl:rounded-none transition-color duration-100 text-xl font-sans hover:shadow-md lg:shadow-none"
+                :class="[manufacturer.name === props.tab ? 'ring-unirock xl:ring-sky-400' : 'text-gray-500 border-r-2  ']"
                 :key="manufacturer.id"
                 @click="setManufacturer(manufacturer.name)"
             >
                 <div class="w-full">
                     <div
-                        class="w-full text-left pl-3 py-2 h-content hover:shadow-md hover:text-gray-700 xl:hover:bg-sky-100 active:contrast-125 xl:active:contrast-135 transition-all transition-ease duration-100"
-                        :class="[manufacturer.name === props.tab ? 'white text-black shadow-xl border-l-4 border-l-blue-400 borter-t-0 translate-x-1' : 'text-gray-500']"
+                        class="w-full text-left pl-3 py-2 h-content xl:hover:shadow-md hover:text-gray-700 xl:hover:bg-sky-100 active:contrast-135 transition-all transition-ease duration-100"
+                        :class="[manufacturer.name === props.tab ? 'white text-black xl:shadow-xl xl:border-l-4 xl:border-l-blue-400 borter-t-0 translate-x-1' : 'text-gray-500']"
                     >
                         <span class>{{ manufacturer.name }}</span>
                     </div>
