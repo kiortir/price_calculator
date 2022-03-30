@@ -1,20 +1,25 @@
-from django.http import HttpResponseRedirect
-from .models import AcrylicConfiguration, AcrylicManufacturer, AcrylicCollection, AcrylicStone, Currency, QuartzManufacturer, QuartzStone, additionalWorkAcryl
-from .serializers import AcrylicConfigurationSerializer, BaseStoneSerializer, ReverseAcrylicManufactureSerializer, additionalWorkAcrylSerializer
+import csv
+import json
+import urllib.request
+from urllib.error import HTTPError
+
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.views.generic import TemplateView
 from rest_framework.authentication import (BasicAuthentication,
                                            SessionAuthentication)
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.http import HttpResponse
-from django.views.generic import TemplateView
-from django.shortcuts import render
-from django.db.models import Q
 
-import urllib.request
-from urllib.error import HTTPError
-import json
-import csv
+from .models import (AcrylicCollection, AcrylicConfiguration,
+                     AcrylicManufacturer, AcrylicStone, Currency,
+                     additionalWorkAcryl)
+from .quartz_models import (QuartzManufacturer, QuartzStone)
+from .serializers import (AcrylicConfigurationSerializer, BaseStoneSerializer,
+                          ReverseAcrylicManufactureSerializer,
+                          additionalWorkAcrylSerializer)
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):

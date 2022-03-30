@@ -2,12 +2,12 @@ import math
 import datetime
 import requests
 from stonepricelist.models import Currency as c
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = 'обновляет курс валют'
+    help = 'обновляет курс валют относительно рубля'
 
     def handle(self, *args, **options):
         currencies = c.objects.filter(auto_update=True)
@@ -18,8 +18,12 @@ class Command(BaseCommand):
         currency_date = datetime.datetime.strptime(
             date, '%d.%m.%Y').date()
         for currency in currencies:
-            new_value: int = math.ceil(
-                float(tree.find(f'Valute[CharCode="{currency.code}"]/Value').text.replace(',', '.')))
+            try:
+                new_value: int = math.ceil(
+                    float(tree.find(f'Valute[CharCode="{currency.code}"]/Value').text.replace(',', '.')))
+            except AttributeError:
+                continue
+
             currency.value = new_value
             currency.value_date = currency_date
             currency.save()

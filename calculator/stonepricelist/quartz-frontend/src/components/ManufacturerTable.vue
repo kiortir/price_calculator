@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, } from 'vue'
+import { ref, computed, onMounted, Ref } from 'vue'
 import { useStore } from 'vuex'
-import ColMap from '../interfaces/ColMap';
 import Manufacturer from '../interfaces/Manufacturer';
-import Stone from '../interfaces/Stone';
 import StoneGridVue from './StoneGrid.vue';
-
-
 
 const store = useStore()
 const props = defineProps<{
@@ -16,23 +12,14 @@ const props = defineProps<{
 
 let data = computed<Manufacturer>(
     () => store.state.manufacturers[props.manufacturer]
-        || <Manufacturer>{
-            stones: <Array<Stone>>[],
-            schema: <Array<ColMap>>[],
-            applied_currency: {
-                source: '',
-                value: 1
-            },
-            additional_info: {},
-            multipliers: 1
-        })
+)
 
 
 
+let stones_filter_q: Ref<string> = ref("")
 
-let stones_filter_q = ref("")
+const stonesearch = ref<HTMLElement>(document.body)
 
-const stonesearch = ref()
 function searchHandler(e: KeyboardEvent) {
     if (e.key == "F3" || (e.ctrlKey && e.code == "KeyF")) {
         e.preventDefault();
@@ -48,6 +35,7 @@ function searchHandler(e: KeyboardEvent) {
     }
 }
 
+
 onMounted(() => {
     window.addEventListener('keydown', searchHandler)
 })
@@ -60,8 +48,8 @@ defineExpose({
 
 
 <template>
-    <div class="relative flex flex-col gap-y-3 w-full xl:px-3 mb-10">
-        <div class="searchcontainer px-3 flex flex-col xl:flex-row gap-5">
+    <div class="relative flex flex-col px-3 gap-y-3 w-full mb-10" v-if="store.state.loaded">
+        <div class="searchcontainer flex flex-col xl:flex-row gap-5">
             <div
                 class="search-tab mt-4 relative w-full xl:w-80 mx-auto xl:mx-0 max-w-80 h-100 flex"
             >
@@ -79,26 +67,30 @@ defineExpose({
                     ref="stonesearch"
                     placeholder="введите название камня"
                     type="search"
-                    class="font-sans block w-full pl-10 py-2 ring-1 rounded-lg accent-palette_accent"
-                    :value="stones_filter_q"
-                    @input="event => stones_filter_q = event.target.value"
+                    class="font-sans block w-full pl-10 py-2 ring-1 rounded-xl accent-palette_accent"
+                    v-model="stones_filter_q"
+                    
                 />
             </div>
+
             <div class="currency-data flex self-end place-self-end">
                 <div
                     class="currency-source font-sans"
                 >Источник курса: {{ data.applied_currency.source }}</div>
             </div>
         </div>
-
+        
         <StoneGridVue
-            class="w-full "
+            class="w-full"
             :columns="data.schema"
             :source="data.stones"
             :filter="stones_filter_q.toLowerCase()"
             :currency="data.applied_currency.value"
             :multiplier="data.multipliers"
+            :thickness_configurations="data.thickness_configurations"
+            :surface_configurations="data.surface_configurations"
             :key="manufacturer"
+            :manufacturer="manufacturer"
         />
     </div>
 </template>

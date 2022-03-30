@@ -24,7 +24,7 @@ const open_image_url = ref(false)
 <template>
     <div
         class="px-3 font-sans divide-y divide-slate-500"
-        v-if="(data.additional_info.images.length || data.additional_info.text)"
+        v-if="store.state.loaded && (data.additional_info.images.length || data.additional_info.text)"
     >
         <slot></slot>
         <div v-if="data.additional_info.images.length" class="flex flex-col divide-y gap-2">

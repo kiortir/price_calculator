@@ -3,7 +3,8 @@ import axios from 'axios'
 
 export default createStore({
   state: {
-    manufacturers: []
+    loaded: false,
+    manufacturers: {}
   },
   mutations: {
     setManufacturers(state, value) {
@@ -15,32 +16,23 @@ export default createStore({
       manufacturers.forEach((manufacturer) => {
         state.manufacturers[manufacturer.name] = { ...state.manufacturers[manufacturer.name], ...manufacturer }
       })
+      state.loaded = true
     }
   },
   actions: {
     async hydrate({ commit, dispatch }) {
       axios
-        .post("manufacturers/")
+        .get("manufacturers/")
         .then(response => {
           commit('setManufacturers', response.data);
-          return response.data
         })
-        .then((manufacturers) => manufacturers.forEach(manufacturer => dispatch('loadManufacturer', manufacturer.name)))
+        .then(() => dispatch('loadManufacturers'))
     },
-    async loadManufacturer({ state, commit }, manufacturers) {
-      if (!Array.isArray(manufacturers)) {
-        manufacturers = [manufacturers,]
-      }
-      manufacturers = manufacturers.filter(manufacturer => !state.manufacturers[manufacturer].stones.length)
-
-      if (manufacturers.length) {
-        axios
-          .post("manufacturer/", {
-            manufacturers: manufacturers
-          }).then(response => {
-            commit('addManufacturers', response.data);
-          })
-      }
+    async loadManufacturers({ commit },) {
+      axios
+        .get('manufacturer/').then(response => {
+          commit('addManufacturers', response.data);
+        })
     }
   },
 

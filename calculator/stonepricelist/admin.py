@@ -1,4 +1,4 @@
-from pyexpat import model
+
 from django.contrib.admin.widgets import AdminFileWidget
 from django.urls import resolve
 from django.db.utils import OperationalError, ProgrammingError
@@ -17,7 +17,9 @@ from stonepricelist.models import (AcrylicCollection, AcrylicConfiguration,
                                    ConfigurationDiscount, Currency,
                                    EquivalentGroup, Material, SlabSize,
                                    SurfaceType, Texture, Thickness,
-                                   additionalWorkAcryl, QuartzManufacturer, QuartzStone, QuartzStoneConfiguration, quartzManufacturerInfoPictures)
+                                   additionalWorkAcryl)
+from stonepricelist.quartz_models import (
+    QuartzManufacturer, QuartzStone, QuartzStoneConfiguration, quartzManufacturerInfoPictures)
 
 from .forms import AddEquivalentsForm, AcrylicManufacturerForm, QuartzConfigurationInlineForm
 from .imports import toCollection, SlabSizeWidget, QuartzStoneNameWidget
@@ -247,14 +249,17 @@ class EquivalentGroupAdmin(ImportExportModelAdmin):
     resource_class = EquivalentGroupResource
 
 
+@ admin.register(Currency)
+class CurrencyAdmin(admin.ModelAdmin):
+    readonly_fields = ('update_time',)
+
+
 admin.site.register(AcrylicCollection, AcrylicCollectionAdmin)
 admin.site.register(AcrylicManufacturer, AcrylicManufaturerAdmin)
 admin.site.register(Colors)
-admin.site.register(Currency)
 admin.site.register(Thickness)
 admin.site.register(Texture)
 admin.site.register(Material)
-# admin.site.register(EquivalentGroup)
 admin.site.register(AcrylicConfiguration, AcrylicConfigurationAdmin)
 admin.site.register(SurfaceType)
 admin.site.register(SlabSize)

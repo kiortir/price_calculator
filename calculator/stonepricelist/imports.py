@@ -5,7 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from import_export import widgets
 
-from .models import AcrylicCollection, QuartzStone, SlabSize, Thickness, QuartzManufacturer
+from .models import AcrylicCollection,  SlabSize, Thickness
+from .quartz_models import QuartzStone, QuartzManufacturer
 
 
 class toCollection(widgets.Widget):

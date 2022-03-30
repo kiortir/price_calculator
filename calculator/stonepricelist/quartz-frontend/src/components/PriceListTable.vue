@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-
+import { ref, computed, Ref } from 'vue'
+import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router'
 import { useGrid } from 'vue-screen'
 import ManufacturerTabs from './ManufacturerTabs.vue';
@@ -8,14 +8,18 @@ import ManufacturerTableVue from './ManufacturerTable.vue';
 import ManufacturerInfoVue from './ManufacturerInfo.vue';
 import DialogVue from './Dialog.vue';
 
+import Component from '../interfaces/Component';
 
+const store = useStore()
 const route = useRoute()
 const router = useRouter()
 let showManufacturers = ref(false)
 let showInfo = ref(false)
-let currentTab = ref("Avant")
 
-let currentManufacturerTab = computed<string>({
+const loaded = computed<Boolean>(() => store.state.loaded)
+
+
+let currentTab = computed<string>({
   get() {
     return <string>route.query.manufacturer || 'Avant'
   },
@@ -24,16 +28,12 @@ let currentManufacturerTab = computed<string>({
     router.push({ query: new_query })
   }
 })
-const table_c = ref({})
+
+const table_c: Ref<Component> = ref({})
+
 function search_focus() {
-  console.log(table_c.value)
   table_c.value.stonesearch.focus()
 }
-// onMounted(() => {
-//   let search_focus = () => {
-//     console.log(table_c.value)
-//   }
-// })
 
 const grid = useGrid('tailwind')
 
@@ -48,6 +48,7 @@ const grid = useGrid('tailwind')
         <div class="xl:hidden">
           <div class="nav flex flex-row gap-2 place-items-center border-b p-3 h-12 w-full">
             <div class="text-xl flex-grow text-left">{{ currentTab }}</div>
+            <div id="header-settings"></div>
             <div
               type="button"
               class="show-manufacturers rounded-full p-1"
@@ -104,17 +105,23 @@ const grid = useGrid('tailwind')
         </DialogVue>
       </div>
     </div>
-
-    <ManufacturerTableVue ref="table_c" :manufacturer="currentTab" :key="currentTab" />
+    <KeepAlive>
+      <ManufacturerTableVue
+        ref="table_c"
+        :manufacturer="currentTab"
+        :key="currentTab"
+        v-if="loaded"
+      />
+    </KeepAlive>
     <ManufacturerInfoVue
       class="info flex-col flex-grow sticky top-0 right-0 flex w-fit xl:h-screen overflow-y-auto"
       :manufacturer="currentTab"
       :key="currentTab"
-      v-if="grid.xl"
+      v-if="grid.xl && loaded"
     >
       <p class="text-2xl font-semibold mb-5">Дополнительная информация</p>
     </ManufacturerInfoVue>
-    <DialogVue v-else :open="showInfo" @set-is-open="(val) => showInfo = val">
+    <DialogVue v-else-if="loaded" :open="showInfo" @set-is-open="(val) => showInfo = val">
       <template #title>Дополнительная информация</template>
       <template #body>
         <KeepAlive>
