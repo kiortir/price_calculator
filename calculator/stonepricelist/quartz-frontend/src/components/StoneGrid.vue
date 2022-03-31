@@ -137,7 +137,7 @@ function getValue(stone: StoneInfo, row: string, format = true) {
 }
 
 function getPrice(value: number | string) {
-    return currency_formatter.format(Math.ceil(Number(value) * props.currency * props.multiplier))
+    return currency_formatter.format(Math.ceil(Number(value)))
 }
 function getRawPrice(value: number | string) {
     return Math.ceil(Number(value) * props.currency * props.multiplier)

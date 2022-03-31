@@ -89,7 +89,7 @@ class QuartzManufacturer(Manufacturer):
             }
         return currency_used
 
-    @cached_property
+    @property
     def schema(self):
         keys = []
         stones = self.stones.prefetch_related('configurations')
@@ -488,8 +488,9 @@ class QuartzStoneConfiguration(models.Model):
 
     @ property
     def rub_price(self) -> int:
-        currency_value = self.stone.manufacturer.currency_value_override or self.stone.manufacturer.currency.value
-        return math.ceil(self.price * self.stone.manufacturer.discount * currency_value * self.stone.manufacturer.material.overprice)
+        currency_value = self.stone.manufacturer.applied_currency["value"]
+        mul = self.stone.manufacturer.multipliers
+        return math.ceil(self.price * mul * currency_value)
 
 
 @receiver([post_save, post_delete, ], sender=QuartzStone)

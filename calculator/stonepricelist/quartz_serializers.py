@@ -23,7 +23,7 @@ class ManufacturerBasicSerializer(serializers.ModelSerializer):
     stones = serializers.SerializerMethodField('get_stones')
     thickness_configurations = serializers.StringRelatedField(many=True)
     surface_configurations = serializers.StringRelatedField(many=True)
-    
+
     # table = ManufacturerSchemaSerializer()
 
     def get_stones(self, obj):
@@ -57,7 +57,7 @@ class QuartzStoneConfigurationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuartzStoneConfiguration
-        fields = '__all__'
+        fields = ('thickness', 'slab_size', 'surface', 'rub_price')
 
 
 # class flatQuartzStoneConfigurationsSerializer(serializers.ModelSerializer):
@@ -96,7 +96,7 @@ class reverseQuartzStoneSerializer(serializers.ModelSerializer):
             # configuration_price = QuartzStoneConfiguration.objects.get(
             #     id=configuration["id"]).rub_price
             # print(configuration)
-            representation[f'{surface}|{slab}|{thickness}'] = configuration["price"]
+            representation[f'{surface}|{slab}|{thickness}'] = configuration["rub_price"]
 
         return representation
 
@@ -119,4 +119,4 @@ class reverseQuartzManufacturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuartzManufacturer
         fields = ('id', 'name', 'card_color', 'priority', 'stones',
-                  'modified','schema', 'info_images', 'additional_info')
+                  'modified', 'schema', 'info_images', 'additional_info')
