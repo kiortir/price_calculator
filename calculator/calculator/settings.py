@@ -18,7 +18,7 @@ from calculator.custom_middleware import LoginRequiredMiddleware
 
 import environ
 
-OPEN_URLS = ["/pricelist/currency/",]
+OPEN_URLS = ["/pricelist/currency/", ]
 
 env = environ.Env()
 environ.Env.read_env()
@@ -226,3 +226,11 @@ CHANNEL_LAYERS = {
 STREAM_SOCKET_GROUP_NAME = 'estimation_mutations'
 
 LOGIN_URL = '/admin/login/'
+
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': '/var/tmp/django_cache',
+        }
+    }
