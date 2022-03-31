@@ -22,9 +22,11 @@ function setManufacturer(val: string) {
 
 let filter_q: Ref<string> = ref("")
 let filtered_manufacturers = computed<Array<Manufacturer>>(() => {
-    return <Array<Manufacturer>>Object.values(store.state.manufacturers).filter((m: Manufacturer) => {
-        return m.name.toLowerCase().startsWith(filter_q.value.toLowerCase())
+    const manufacturers: Manufacturer[] = Object.values(store.state.manufacturers)
+    const filtered_manufacturers: Manufacturer[] = manufacturers.filter((m: Manufacturer) => {
+        return <boolean>m.name.toLowerCase().startsWith(filter_q.value.toLowerCase())
     })
+    return filtered_manufacturers
 })
 
 </script>

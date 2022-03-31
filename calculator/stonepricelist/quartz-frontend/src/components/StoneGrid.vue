@@ -119,30 +119,37 @@ let currency_formatter = new Intl.NumberFormat('ru-RU', {
 });
 
 
-function getValue(stone: StoneInfo, row) {
+function getValue(stone: StoneInfo, row: string, format = true) {
     console.log({ thickness })
     if (row == '_price') {
 
         const kw = [surface.value, stone['_slab_size'], thickness.value.replace('мм', '')].join('|')
-        return stone[kw] ? getPrice(stone[kw]) : '-'
+        return stone[kw] ? format ? getPrice(stone[kw]) : getRawPrice(stone[kw]) : '-'
     }
     else if (!row.startsWith('_')) {
         const kw = [surface.value, row, thickness.value.replace('мм', '')].join('|')
         console.log({ kw })
-        return stone[kw] ? getPrice(stone[kw]) : '-'
+        return stone[kw] ? format ? getPrice(stone[kw]) : getRawPrice(stone[kw]) : '-'
     }
     else {
         return stone[row] || '-'
     }
 }
 
-function getPrice(value: number) {
-    return currency_formatter.format(Number(value) * props.currency * props.multiplier)
+function getPrice(value: number | string) {
+    return currency_formatter.format(Math.ceil(Number(value) * props.currency * props.multiplier))
+}
+function getRawPrice(value: number | string) {
+    return Math.ceil(Number(value) * props.currency * props.multiplier)
 }
 
 const settings = ref(false)
 function setSettings(value: boolean) {
     settings.value = value
+}
+
+function copyText(value: string | number) {
+    navigator.clipboard.writeText(String(value));
 }
 </script>
 
@@ -247,9 +254,7 @@ function setSettings(value: boolean) {
                                                 @click="surface = surface_v"
                                                 :class="[surface === surface_v ? 'bg-sky-100' : '']"
                                             >
-                                             
-                                                    <span class="align-middle">{{ surface_v }}</span>
-                                             
+                                                <span class="align-middle">{{ surface_v }}</span>
                                             </div>
                                         </div>
                                         <div
@@ -261,11 +266,15 @@ function setSettings(value: boolean) {
                                                 @click="thickness = thickness_v"
                                                 :class="[thickness === thickness_v ? 'bg-sky-100' : '']"
                                             >
-                                                <span class="align-middle ">{{ thickness_v }}</span>
+                                                <span class="align-middle">{{ thickness_v }}</span>
                                             </div>
                                         </div>
                                         <div class="p-1 px-2 rounded-md ring-1 active:bg-sky-100">
-                                            <input v-model="hide_excessive" type="checkbox" id="hideexcessive" />
+                                            <input
+                                                v-model="hide_excessive"
+                                                type="checkbox"
+                                                id="hideexcessive"
+                                            />
                                             <label
                                                 for="hideexcessive"
                                                 class="px-2 select-none"
@@ -281,17 +290,17 @@ function setSettings(value: boolean) {
         </Teleport>
     </Teleport>
     <div
-        class="overflow-x-auto border-slate-300 h-full w-full max-w-[60vw] border-x sticky"
+        class="overflow-x-auto border-slate-300 w-full max-w-[60vw] border-x"
         v-if="grid.xl"
     >
-        <table class="table-fixed border-separate h-content overflow-hidden xl:border-t w-full">
+        <table class="table-fixed border-separate overflow-hidden xl:border-t w-full h-fit">
             <thead class="shadow-sm">
                 <tr
                     class="first:bg-[#26a69a] first:text-white text-slate-600 last:bg-white bg-[#26a69a]/10 last:text-black only:bg-[#26a69a] only:text-white"
                 >
                     <td
                         v-for="column in columns"
-                        class="border-r last:border-r-0 border-b text-inherit bg-inherit px-5 font-sans border-slate-400/[0.8] font-semibold sticky top-0"
+                        class="py-1 border-r last:border-r-0 border-b text-inherit bg-inherit px-5 font-sans border-slate-400/[0.8] font-semibold"
                     >{{ column.title }}</td>
                 </tr>
             </thead>
@@ -302,11 +311,18 @@ function setSettings(value: boolean) {
                     :key="stone._name"
                 >
                     <td
-                        class="bg-inherit border-r last:border-r-0 px-5 font-sans border-t border-[#e2e3e3]"
+                        class="bg-inherit border-r last:border-r-0 mx-5 font-sans border-t border-[#e2e3e3] group"
                         v-for="row in columns"
                         :key="row.title + stone._name"
                         :style="style_ref[row.key]"
-                    >{{ getValue(stone, row.key) }}</td>
+                        @click="copyText(getValue(stone, row.key, false))"
+                    >
+                        <div
+                            class="px-2 flex flex-row gap-2 select-none group-active:text-white group-active:bg-teal-400"
+                        >
+                            <span class="flex-grow">{{ getValue(stone, row.key) }}</span>
+                        </div>
+                    </td>
                 </tr>
             </TransitionGroup>
         </table>
@@ -316,7 +332,7 @@ function setSettings(value: boolean) {
         v-else
     >
         <div
-            class="card font-sans ring-1 ring-unirock/30 shadow-md w-fill rounded-xl py-3 px-5 mb-3 last:mb-0"
+            class="card font-sans ring-1 ring-unirock/30 shadow-md w-fill rounded-xl py-3 px-5 mb-3 last:mb-0 flex flex-col"
             v-for="stone in stones"
         >
             <div class="card-header w-fit self-end">
