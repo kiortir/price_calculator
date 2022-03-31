@@ -30,7 +30,11 @@ export default createStore({
     },
     async loadManufacturers({ commit },) {
       axios
-        .get('manufacturer/').then(response => {
+        .get('manufacturer/', {
+          headers: {
+            'Cache-Control': 'max-age=0'
+          }
+        }).then(response => {
           commit('addManufacturers', response.data);
         })
     }
