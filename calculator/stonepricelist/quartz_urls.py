@@ -5,6 +5,7 @@ app_name = 'stonepricelist'
 
 urlpatterns = [
     path('', views.QuartzPricelist.as_view()),
+    path('flush/', views.FlushCache.as_view()),
     path('stones/', views.QuartzData.as_view()),
     path('manufacturer/', views.ManufacturerData.as_view()),
     path('update_schema', views.OptimizeSchema.as_view()),

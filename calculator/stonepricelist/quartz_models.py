@@ -1,3 +1,6 @@
+from django.core.cache import cache
+from django.db.models.signals import post_save, post_delete, post_init
+from django.dispatch import receiver
 from django.db.models import Count
 import numpy
 import json
@@ -487,3 +490,15 @@ class QuartzStoneConfiguration(models.Model):
     def rub_price(self) -> int:
         currency_value = self.stone.manufacturer.currency_value_override or self.stone.manufacturer.currency.value
         return math.ceil(self.price * self.stone.manufacturer.discount * currency_value * self.stone.manufacturer.material.overprice)
+
+
+@receiver([post_save, post_delete, ], sender=QuartzStone)
+@receiver([post_save, post_delete, ], sender=QuartzStoneConfiguration)
+@receiver([post_save, post_delete, ], sender=QuartzManufacturer)
+@receiver([post_save, post_delete, ], sender=Currency)
+@receiver([post_save, post_delete, ], sender=SlabSize)
+@receiver([post_save, post_delete, ], sender=Thickness)
+@receiver([post_save, post_delete, ], sender=SurfaceType)
+def flushCache(sender, **kwargs):
+    print('signal; cache cleared')
+    cache.clear()

@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.http import HttpResponse
 from django.views.decorators.cache import cache_control
 from rest_framework.renderers import JSONRenderer
@@ -40,7 +41,8 @@ class ManufacturerData(APIView):
     @method_decorator(cache_page(60*60*24))
     @method_decorator(cache_control(public=True, max_age=0), name='manufacturers')
     def get(self, request):
-        manufacturer_names = request.query_params.get('manufacturers', '').split(',')
+        manufacturer_names = request.query_params.get(
+            'manufacturers', '').split(',')
         print(manufacturer_names)
         if not manufacturer_names[0]:
             manufacturers = QuartzManufacturer.objects.all()
@@ -61,6 +63,18 @@ class ManufacturersBasic(APIView):
         stones = QuartzManufacturer.objects.all()
         data = ManufacturerBasicSerializer(stones, many=True).data
         return Response(data)
+
+
+class FlushCache(APIView):
+    authentication_classes = (
+        CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    def post(self, request):
+        print('Cache clear!')
+        cache.clear()
+        return Response({
+            "ok": True
+        })
 
 
 class OptimizeSchema(APIView):
