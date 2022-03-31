@@ -227,7 +227,7 @@ STREAM_SOCKET_GROUP_NAME = 'estimation_mutations'
 
 LOGIN_URL = '/admin/login/'
 
-if DEBUG:
+if not DEBUG:
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
