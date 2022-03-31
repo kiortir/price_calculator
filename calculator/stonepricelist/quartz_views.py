@@ -39,7 +39,7 @@ class ManufacturerData(APIView):
         CsrfExemptSessionAuthentication, BasicAuthentication)
 
     @method_decorator(cache_page(60*60*24))
-    @method_decorator(cache_control(public=True, max_age=0), name='manufacturers')
+    @method_decorator(cache_control(public=True, max_age=0), name='manufacturer')
     def get(self, request):
         manufacturer_names = request.query_params.get(
             'manufacturers', '').split(',')
