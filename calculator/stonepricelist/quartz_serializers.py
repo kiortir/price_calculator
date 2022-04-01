@@ -57,7 +57,8 @@ class QuartzStoneConfigurationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuartzStoneConfiguration
-        fields = ('thickness', 'slab_size', 'surface', 'rub_price')
+        fields = ('thickness', 'slab_size', 'surface',
+                  'rub_price', 'is_on_order')
 
 
 # class flatQuartzStoneConfigurationsSerializer(serializers.ModelSerializer):
@@ -92,11 +93,19 @@ class reverseQuartzStoneSerializer(serializers.ModelSerializer):
                 "slab_size"], configuration["thickness"]
             representation["_slab_size"] = configuration[
                 "slab_size"]
-            representation[f'_{surface}'] = 'Y'
-            # configuration_price = QuartzStoneConfiguration.objects.get(
-            #     id=configuration["id"]).rub_price
-            # print(configuration)
-            representation[f'{surface}|{slab}|{thickness}'] = configuration["rub_price"]
+            try:
+                representation[surface]
+            except KeyError:
+                representation[surface] = {}
+            try:
+                representation[surface][thickness]
+            except KeyError:
+                representation[surface][thickness] = {}
+
+            representation[surface][thickness][slab] = {
+                "price": configuration["rub_price"], "is_on_order": configuration["is_on_order"]}
+            # representation[f'{surface}|{slab}|{thickness}'] = {
+            #     "price": configuration["rub_price"], "is_on_order": configuration["is_on_order"]}
 
         return representation
 

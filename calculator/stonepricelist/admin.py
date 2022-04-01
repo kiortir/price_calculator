@@ -9,7 +9,7 @@ from django.contrib import admin
 from django.db.models import Q, ImageField
 from import_export import fields, resources, widgets
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget, BooleanWidget
 from import_export.results import Result
 import stonepricelist.models
 from stonepricelist.models import (AcrylicCollection, AcrylicConfiguration,
@@ -44,12 +44,13 @@ class QuartzStoneConfigurationResource(resources.ModelResource):
                              widget=ForeignKeyWidget(Thickness, 'value'))
     surface = fields.Field(attribute='surface', column_name='surface',
                            widget=ForeignKeyWidget(SurfaceType, 'alias'))
+    is_on_order = fields.Field(attribute='is_on_order', widget=BooleanWidget())
     # manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
     #                             widget=ForeignKeyWidget(QuartzManufacturer, 'name'))
 
     class Meta:
         model = QuartzStoneConfiguration
-        fields = ('stone', 'height', 'thickness', 'surface', 'price')
+        fields = ('stone', 'height', 'thickness', 'surface', 'price', 'is_on_order')
         import_id_fields = ('stone', 'slab_size', 'thickness', 'surface')
 
 

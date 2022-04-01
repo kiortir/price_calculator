@@ -112,6 +112,10 @@ const stones = computed(() => {
     return filtered_stones
 })
 
+const values = computed(() => {
+    stones.value
+})
+
 let currency_formatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
@@ -119,28 +123,32 @@ let currency_formatter = new Intl.NumberFormat('ru-RU', {
 });
 
 
-function getValue(stone: StoneInfo, row: string, format = true) {
-    console.log({ thickness })
+function getValue(stone: StoneInfo, row: string) {
+    console.log('count')
+    const t = thickness.value.replace('мм', '')
     if (row == '_price') {
+        try {
+            const s = stone[surface.value][t][stone._slab_size]
+            return { value: currency_formatter.format(s.price), raw: Math.ceil(s.price), is_on_order: s.is_on_order }
+        }
+        catch (e) { return { value: '-', raw: stone[row] || '-', is_on_order: false } }
 
-        const kw = [surface.value, stone['_slab_size'], thickness.value.replace('мм', '')].join('|')
-        return stone[kw] ? format ? getPrice(stone[kw]) : getRawPrice(stone[kw]) : '-'
     }
     else if (!row.startsWith('_')) {
-        const kw = [surface.value, row, thickness.value.replace('мм', '')].join('|')
-        console.log({ kw })
-        return stone[kw] ? format ? getPrice(stone[kw]) : getRawPrice(stone[kw]) : '-'
+        try {
+            const s = stone[surface.value][t][row]
+            return { value: currency_formatter.format(s.price), raw: Math.ceil(s.price), is_on_order: s.is_on_order }
+        }
+        catch (e) { return { value: '-', raw: stone[row] || '-', is_on_order: false } }
+
     }
     else {
-        return stone[row] || '-'
+        return { value: stone[row] || '-', raw: stone[row] || '-', is_on_order: false }
     }
 }
 
 function getPrice(value: number | string) {
     return currency_formatter.format(Math.ceil(Number(value)))
-}
-function getRawPrice(value: number | string) {
-    return Math.ceil(Number(value))
 }
 
 const settings = ref(false)
@@ -289,10 +297,7 @@ function copyText(value: string | number) {
             </Dialog>
         </Teleport>
     </Teleport>
-    <div
-        class="overflow-x-auto border-slate-300 w-full max-w-[60vw] border-x"
-        v-if="grid.xl"
-    >
+    <div class="overflow-x-auto border-slate-300 w-full max-w-[60vw] border-x" v-if="grid.xl">
         <table class="table-fixed border-separate overflow-hidden xl:border-t w-full h-fit">
             <thead class="shadow-sm">
                 <tr
@@ -312,15 +317,18 @@ function copyText(value: string | number) {
                 >
                     <td
                         class="bg-inherit border-r last:border-r-0 mx-5 font-sans border-t border-[#e2e3e3] group"
-                        v-for="row in columns"
-                        :key="row.title + stone._name"
-                        :style="style_ref[row.key]"
-                        @click="copyText(getValue(stone, row.key, false))"
+                        v-for="col in columns"
+                        :key="col.title + stone._name"
+                        :style="style_ref[col.key]"
+                        @click="copyText(getValue(stone, col.key).raw)"
                     >
                         <div
                             class="px-2 flex flex-row gap-2 select-none group-active:text-white group-active:bg-teal-400"
                         >
-                            <span class="flex-grow">{{ getValue(stone, row.key) }}</span>
+                            <span
+                                class="flex-grow"
+                                :class="getValue(stone, col.key).is_on_order ? `text-gray-500 after:content-['*']` : ''"
+                            >{{ getValue(stone, col.key).value }}</span>
                         </div>
                     </td>
                 </tr>
@@ -350,7 +358,7 @@ function copyText(value: string | number) {
                             <td class="text-left font-sans py-2">
                                 <div class="last:after:content-['мм']">{{ key }}</div>
                             </td>
-                            <td class="text-right">{{ getPrice(value) }}</td>
+                            <td class="text-right">{{ getPrice(value.price) }}</td>
                         </tr>
                     </tbody>
                 </table>
