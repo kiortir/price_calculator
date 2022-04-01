@@ -70,6 +70,7 @@ const stones = computed(() => {
     const { filter, translit, reverse } = filter_string.value
     const empty_filter = (filter === "" && translit === "_" && reverse === "_")
     let filtered_stones: StoneInfo[] = []
+    const t = thickness.value.replace('мм', '')
     props.source.forEach(stone => {
         const [code, name] = [stone._code ? stone._code.toLowerCase() : '', stone._name.toLowerCase()]
         if (empty_filter || ([name, code].some(
@@ -91,10 +92,7 @@ const stones = computed(() => {
                         new_stone[key] = value
                     }
                     else {
-                        const [surface_v, slab, thickness_v] = key.split('|')
-                        if (surface_v === surface.value && thickness_v + 'мм' === thickness.value) {
-                            new_stone['configurations'][slab] = value
-                        }
+                        if (key === surface.value) { new_stone.configurations = value[t] || {} }
                     }
 
                 })
@@ -112,9 +110,6 @@ const stones = computed(() => {
     return filtered_stones
 })
 
-const values = computed(() => {
-    stones.value
-})
 
 let currency_formatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -327,7 +322,7 @@ function copyText(value: string | number) {
                         >
                             <span
                                 class="flex-grow"
-                                :class="getValue(stone, col.key).is_on_order ? `text-gray-500 after:content-['*']` : ''"
+                                :class="getValue(stone, col.key).is_on_order ? `text-gray-500 after:content-['*_под_заказ']` : ''"
                             >{{ getValue(stone, col.key).value }}</span>
                         </div>
                     </td>
