@@ -53,11 +53,13 @@ class QuartzStoneNameWidget(widgets.Widget):
         except ObjectDoesNotExist:
             code = row.get('code')
             collection = row.get('collection')
+            info = row.get('info')
             return QuartzStone.objects.create(
                 name=value,
                 manufacturer=QuartzManufacturer.objects.get(name=manufacturer),
                 code=code,
                 collection=collection
+                info=info
             )
 
 # class Equivalents(widgets.ManyToManyWidget):
