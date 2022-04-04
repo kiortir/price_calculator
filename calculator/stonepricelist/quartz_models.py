@@ -146,7 +146,7 @@ class quartzManufacturerInfoPictures(models.Model):
                     base64.b64encode(data_img.getvalue()).decode("utf-8")
                 )
             except UnicodeDecodeError:
-                self.blurred_image = None
+                self.thumbnail = None
 
         super(quartzManufacturerInfoPictures, self).save(
             force_insert, force_update, using, update_fields)
