@@ -1,18 +1,14 @@
-from django.core.cache import cache
-from django.db.models.signals import post_save, post_delete, post_init
-from django.dispatch import receiver
-from django.db.models import Count
-import numpy
-import json
 import base64
 import math
-from collections import defaultdict
-from functools import cached_property, reduce
+from functools import reduce
 from io import BytesIO
 
 from django.conf import settings
+from django.core.cache import cache
 from django.db import models
-from django.db.models import Max
+from django.db.models import Count, Max
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
 from django.utils import timezone
 from PIL import Image
 

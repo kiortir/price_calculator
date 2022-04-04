@@ -40,10 +40,13 @@ const style_ref: StyleRef = {
     _name: {
         "text-align": "left",
         "font-weight": 550,
-
     },
     _slab_size: {
         "font-weight": 300,
+    },
+    _code: {
+        "text-align": "center",
+        "font-weight": 400,
     }
 }
 
@@ -293,7 +296,7 @@ function copyText(value: string | number) {
         </Teleport>
     </Teleport>
     <div class="overflow-x-auto border-slate-300 w-full max-w-[60vw] border-x" v-if="grid.xl">
-        <table class="table-fixed border-separate overflow-hidden xl:border-t w-full h-fit">
+        <table class="table-auto border-separate overflow-hidden xl:border-t w-full h-fit">
             <thead class="shadow-sm">
                 <tr
                     class="first:bg-[#26a69a] first:text-white text-slate-600 last:bg-white bg-[#26a69a]/10 last:text-black only:bg-[#26a69a] only:text-white"
@@ -320,10 +323,16 @@ function copyText(value: string | number) {
                         <div
                             class="px-2 flex flex-row gap-2 select-none group-active:text-white group-active:bg-teal-400"
                         >
-                            <span
-                                class="flex-grow"
-                                :class="getValue(stone, col.key).is_on_order ? `text-gray-500 after:content-['*_под_заказ']` : ''"
-                            >{{ getValue(stone, col.key).value }}</span>
+                            <div class="flex-grow">
+                                <span
+                                    class="flex-grow"
+                                    :class="getValue(stone, col.key).is_on_order ? `text-gray-500 after:content-['*_под_заказ']` : ''"
+                                >{{ getValue(stone, col.key).value }}</span>
+                                <span
+                                    v-if="col.key === '_name' && stone._info"
+                                    class="text-gray-500 text-sm ml-2"
+                                >*{{ stone._info }}</span>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -358,6 +367,7 @@ function copyText(value: string | number) {
                     </tbody>
                 </table>
             </div>
+            <div class="text-left mt-1 border-t text-gray-500" v-if="stone._info">{{ stone._info }}</div>
         </div>
     </div>
 </template>

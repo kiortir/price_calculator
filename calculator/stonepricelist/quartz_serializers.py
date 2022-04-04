@@ -81,13 +81,14 @@ class reverseQuartzStoneSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuartzStone
-        fields = ('name', 'code', 'configurations')
+        fields = ('name', 'code', 'configurations', 'info')
 
     def to_representation(self, obj):
         representation = super().to_representation(obj)
         configurations_representation = representation.pop('configurations')
         representation['_code'] = representation.pop('code')
         representation['_name'] = representation.pop('name')
+        representation['_info'] = representation.pop('info')
         for configuration in configurations_representation:
             surface, slab, thickness = configuration["surface"], configuration[
                 "slab_size"], configuration["thickness"]

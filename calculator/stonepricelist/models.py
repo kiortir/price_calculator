@@ -154,6 +154,7 @@ class Stone(models.Model):
         Texture, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='текстура')
     similar_textures = models.ManyToManyField(
         'self', blank=True, verbose_name='похожие текстуры')
+    info = models.TextField(default=None, null=True, blank=True)
 
     class Meta:
         abstract = True
