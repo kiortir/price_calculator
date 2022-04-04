@@ -58,7 +58,7 @@ class QuartzStoneNameWidget(widgets.Widget):
                 name=value,
                 manufacturer=QuartzManufacturer.objects.get(name=manufacturer),
                 code=code,
-                collection=collection
+                collection=collection,
                 info=info
             )
 
