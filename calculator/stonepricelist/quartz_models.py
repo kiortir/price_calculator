@@ -462,6 +462,8 @@ class QuartzStoneConfiguration(models.Model):
                                   verbose_name='размер листа', related_name='configurations')
 
     price = models.IntegerField(verbose_name='стоимость конфигурации')
+    overprice = models.IntegerField(
+        verbose_name='наценка к стоимости', default=0, null=True, blank=True)
 
     discount = models.SmallIntegerField(
         default=0, verbose_name='скидка на конфигурацию')
@@ -490,7 +492,7 @@ class QuartzStoneConfiguration(models.Model):
     def rub_price(self) -> int:
         currency_value = self.stone.manufacturer.applied_currency["value"]
         mul = self.stone.manufacturer.multipliers
-        return math.ceil(self.price * mul * currency_value)
+        return math.ceil(self.price * mul * currency_value + (self.overprice or 0))
 
 
 @receiver([post_save, post_delete, ], sender=QuartzStone)
