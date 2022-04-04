@@ -45,12 +45,13 @@ class QuartzStoneConfigurationResource(resources.ModelResource):
     surface = fields.Field(attribute='surface', column_name='surface',
                            widget=ForeignKeyWidget(SurfaceType, 'alias'))
     is_on_order = fields.Field(attribute='is_on_order', widget=BooleanWidget())
+    
     # manufacturer = fields.Field(attribute='manufacturer', column_name='manufacturer',
     #                             widget=ForeignKeyWidget(QuartzManufacturer, 'name'))
 
     class Meta:
         model = QuartzStoneConfiguration
-        fields = ('stone', 'height', 'thickness', 'surface', 'price', 'is_on_order')
+        fields = ('stone', 'height', 'thickness', 'surface', 'price', 'overprice', 'is_on_order')
         import_id_fields = ('stone', 'slab_size', 'thickness', 'surface')
 
 
