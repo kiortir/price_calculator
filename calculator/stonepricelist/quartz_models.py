@@ -492,7 +492,7 @@ class QuartzStoneConfiguration(models.Model):
     def rub_price(self) -> int:
         currency_value = self.stone.manufacturer.applied_currency["value"]
         mul = self.stone.manufacturer.multipliers
-        return math.ceil(self.price * mul * currency_value + (self.overprice or 0))
+        return math.ceil((self.price * mul + (self.overprice or 0)) * currency_value)
 
 
 @receiver([post_save, post_delete, ], sender=QuartzStone)
