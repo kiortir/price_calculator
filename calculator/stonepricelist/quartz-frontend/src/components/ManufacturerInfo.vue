@@ -41,7 +41,7 @@ const open_image_url = ref(false)
                         v-if="open_image_url"
                     >
                         <div class="flex py-10 w-full">
-                            <img class="mx-auto z-[200]" :src="img.image" />
+                            <img class="mx-auto z-[200] object-contain" :src="img.image" />
                         </div>
                     </div>
                 </Teleport>

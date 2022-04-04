@@ -47,6 +47,9 @@ else:
 if DEBUG:
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 else:
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
@@ -55,12 +58,13 @@ else:
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     )
 
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = '/usr/public/unirock/media/'
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'base_template/static'),
 ]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Application definition
 
