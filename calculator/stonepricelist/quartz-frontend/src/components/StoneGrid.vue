@@ -349,8 +349,9 @@ function copyText(value: string | number) {
                         <div
                             class="px-2 flex flex-row gap-2 select-none group-active:text-white group-active:bg-teal-400"
                         >
-                            <div class="flex-grow">
+                            <div class="flex-grow" :class="col.is_on_order ? 'text-gray-500' : ''">
                                 <span class="flex-grow">{{ col.value }}</span>
+                                <span class="ml-1" v-if="col.is_on_order">*под заказ</span>
                             </div>
                         </div>
                     </td>
