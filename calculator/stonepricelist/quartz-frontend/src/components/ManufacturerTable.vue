@@ -48,7 +48,7 @@ defineExpose({
 
 
 <template>
-    <div class="flex flex-col px-3 gap-y-3 w-full mb-10" v-if="store.state.loaded">
+    <div class="flex flex-col px-3 gap-y-3 w-full mb-10">
         <div class="searchcontainer flex flex-col xl:flex-row gap-5">
             <div
                 class="search-tab mt-4 relative w-full xl:w-80 mx-auto xl:mx-0 max-w-80 h-100 flex"

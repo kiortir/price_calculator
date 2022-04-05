@@ -58,7 +58,7 @@ class QuartzStoneConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuartzStoneConfiguration
         fields = ('thickness', 'slab_size', 'surface',
-                  'rub_price', 'is_on_order')
+                  'rub_price', 'is_on_order', 'code')
 
 
 # class flatQuartzStoneConfigurationsSerializer(serializers.ModelSerializer):
@@ -104,7 +104,7 @@ class reverseQuartzStoneSerializer(serializers.ModelSerializer):
                 representation[surface][thickness] = {}
 
             representation[surface][thickness][slab] = {
-                "price": configuration["rub_price"], "is_on_order": configuration["is_on_order"]}
+                "price": configuration["rub_price"], "is_on_order": configuration["is_on_order"], "code": configuration["code"]}
             # representation[f'{surface}|{slab}|{thickness}'] = {
             #     "price": configuration["rub_price"], "is_on_order": configuration["is_on_order"]}
 

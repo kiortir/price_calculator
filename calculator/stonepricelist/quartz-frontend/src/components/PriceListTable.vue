@@ -105,34 +105,48 @@ const grid = useGrid('tailwind')
         </DialogVue>
       </div>
     </div>
-    <KeepAlive>
-      <ManufacturerTableVue
-        ref="table_c"
+    <div class="flex flex-row w-full" v-if="loaded">
+      <KeepAlive>
+        <ManufacturerTableVue ref="table_c" :manufacturer="currentTab" :key="currentTab" />
+      </KeepAlive>
+      <ManufacturerInfoVue
+        class="info flex-col sticky top-0 right-0 flex w-fit xl:h-screen overflow-y-auto"
         :manufacturer="currentTab"
         :key="currentTab"
-        v-if="loaded"
-      />
-    </KeepAlive>
-    <ManufacturerInfoVue
-      class="info flex-col flex-grow sticky top-0 right-0 flex w-fit xl:h-screen overflow-y-auto"
-      :manufacturer="currentTab"
-      :key="currentTab"
-      v-if="grid.xl && loaded"
-    >
-      <p class="text-2xl font-semibold mb-5">Дополнительная информация</p>
-    </ManufacturerInfoVue>
-    <DialogVue v-else-if="loaded" :open="showInfo" @set-is-open="(val) => showInfo = val">
-      <template #title>Дополнительная информация</template>
-      <template #body>
-        <KeepAlive>
-          <ManufacturerInfoVue
-            class="info flex-col flex-grow w-fit"
-            :manufacturer="currentTab"
-            :key="currentTab"
+        v-if="grid.xl"
+      >
+        <p class="text-2xl font-semibold mb-5">Дополнительная информация</p>
+      </ManufacturerInfoVue>
+      <DialogVue v-else :open="showInfo" @set-is-open="(val) => showInfo = val">
+        <template #title>Дополнительная информация</template>
+        <template #body>
+          <KeepAlive>
+            <ManufacturerInfoVue
+              class="info flex-col flex-grow w-fit"
+              :manufacturer="currentTab"
+              :key="currentTab"
+            />
+          </KeepAlive>
+        </template>
+      </DialogVue>
+    </div>
+    <div class="w-full h-screen flex absolute top-0" v-else>
+      <p class="self-center mx-auto flex flex-row">
+        <svg
+          class="animate-spin -ml-1 mr-3 h-5 w-5"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           />
-        </KeepAlive>
-      </template>
-    </DialogVue>
+        </svg>Загрузка...
+      </p>
+    </div>
     <a
       href="#top"
       class="xl:hidden fixed bottom-7 right-3 p-3 bg-blue-500 rounded-full"

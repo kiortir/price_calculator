@@ -43,7 +43,6 @@ class ManufacturerData(APIView):
     def get(self, request):
         manufacturer_names = request.query_params.get(
             'manufacturers', '').split(',')
-        print(manufacturer_names)
         if not manufacturer_names[0]:
             manufacturers = QuartzManufacturer.objects.all()
         else:

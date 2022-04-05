@@ -448,6 +448,8 @@ class QuartzStone(Stone):
 
 
 class QuartzStoneConfiguration(models.Model):
+    code = models.CharField(max_length=20, default=None, blank=True,
+                            null=True, verbose_name='артикул')
     stone = models.ForeignKey(
         QuartzStone, on_delete=models.CASCADE, related_name='configurations')
     thickness = models.ForeignKey(Thickness, on_delete=models.PROTECT, related_name='configurations',

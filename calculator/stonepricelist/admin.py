@@ -7,11 +7,10 @@ import nested_admin
 import tablib
 from django.contrib import admin
 from django.db.models import Q, ImageField
-from import_export import fields, resources, widgets
+from import_export import fields, resources
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import ForeignKeyWidget, ManyToManyWidget, BooleanWidget
+from import_export.widgets import ForeignKeyWidget, BooleanWidget
 from import_export.results import Result
-import stonepricelist.models
 from stonepricelist.models import (AcrylicCollection, AcrylicConfiguration,
                                    AcrylicManufacturer, AcrylicStone, Colors,
                                    ConfigurationDiscount, Currency,
@@ -52,7 +51,7 @@ class QuartzStoneConfigurationResource(resources.ModelResource):
     class Meta:
         model = QuartzStoneConfiguration
         fields = ('stone', 'height', 'thickness', 'surface',
-                  'price', 'overprice', 'is_on_order')
+                  'price', 'overprice', 'is_on_order', 'code')
         import_id_fields = ('stone', 'slab_size', 'thickness', 'surface')
 
 

@@ -3,20 +3,20 @@ import {
     Dialog,
     DialogOverlay,
     DialogTitle,
-    DialogDescription,
 } from '@headlessui/vue'
 
-import { computed, ref, Ref } from 'vue'
-import StoneInfo from '../interfaces/Stone';
-import ColMap from '../interfaces/ColMap';
-import layout_switch from '../store/translit_dict.js'
 import { useRoute } from 'vue-router';
 import { useGrid } from 'vue-screen'
+import { computed, ref, Ref } from 'vue'
+
+import StoneInfo from '../interfaces/Stone';
+import ColMap from '../interfaces/ColMap';
+// @ts-ignore
+import layout_switch from '../store/translit_dict.js'
+
+
 const grid = useGrid('tailwind')
-
-
 const route = useRoute()
-
 const props = defineProps<{
     columns: Array<ColMap>,
     source: StoneInfo[],
@@ -120,30 +120,56 @@ let currency_formatter = new Intl.NumberFormat('ru-RU', {
     maximumFractionDigits: 0,
 });
 
-
+const t = computed(() => thickness.value.replace('мм', ''))
 function getValue(stone: StoneInfo, row: string) {
-    console.log('count')
-    const t = thickness.value.replace('мм', '')
-    if (row == '_price') {
-        try {
-            const s = stone[surface.value][t][stone._slab_size]
-            return { value: currency_formatter.format(s.price), raw: Math.ceil(s.price), is_on_order: s.is_on_order }
-        }
-        catch (e) { return { value: '-', raw: stone[row] || '-', is_on_order: false } }
-
+    let raw, value
+    raw = value = stone[row] || '-'
+    let is_on_order = false
+    let style = style_ref[row] || {}
+    let s = stone[surface.value]
+    if (s) {
+        s = s[t.value]
     }
-    else if (!row.startsWith('_')) {
-        try {
-            const s = stone[surface.value][t][row]
-            return { value: currency_formatter.format(s.price), raw: Math.ceil(s.price), is_on_order: s.is_on_order }
+    if (s) {
+        let configuration
+        if (row === '_price') {
+            configuration = s[stone._slab_size]
+            if (configuration) {
+                value = currency_formatter.format(configuration.price)
+                raw = Math.ceil(configuration.price)
+                is_on_order = configuration.is_on_order
+            }
         }
-        catch (e) { return { value: '-', raw: stone[row] || '-', is_on_order: false } }
-
+        else if (row === '_code') {
+            configuration = s[stone._slab_size]
+            if (configuration) {
+                raw = value = configuration.code || stone[row] || '-'
+            }
+        }
+        else if (!row.startsWith('_')) {
+            configuration = s[row]
+            if (configuration) {
+                value = currency_formatter.format(configuration.price)
+                raw = Math.ceil(configuration.price)
+                is_on_order = configuration.is_on_order
+            }
+        }
     }
-    else {
-        return { value: stone[row] || '-', raw: stone[row] || '-', is_on_order: false }
+    return {
+        value,
+        raw,
+        is_on_order,
+        style,
     }
 }
+
+const values = computed(() => {
+    return stones.value.map((stone) => {
+        return props.columns.map((column) =>
+            getValue(stone, column.key)
+        )
+    })
+})
 
 function getPrice(value: number | string) {
     return currency_formatter.format(Math.ceil(Number(value)))
@@ -310,28 +336,21 @@ function copyText(value: string | number) {
             <TransitionGroup name="list" tag="tbody" class>
                 <tr
                     class="even:bg-[#ddf2f0] odd:bg-white hover:bg-sky-200"
-                    v-for="stone in stones"
-                    :key="stone._name"
+                    v-for="stone in values"
+                    :key="stone[0].value"
                 >
                     <td
                         class="bg-inherit border-r last:border-r-0 mx-5 font-sans border-t border-[#e2e3e3] group"
-                        v-for="col in columns"
-                        :key="col.title + stone._name"
-                        :style="style_ref[col.key]"
-                        @click="copyText(getValue(stone, col.key).raw)"
+                        v-for="(col, index) in stone"
+                        :key="stone[0].value + index + stone[1].value || ''"
+                        @click="copyText(col.raw)"
+                        :style="col.style"
                     >
                         <div
                             class="px-2 flex flex-row gap-2 select-none group-active:text-white group-active:bg-teal-400"
                         >
                             <div class="flex-grow">
-                                <span
-                                    class="flex-grow"
-                                    :class="getValue(stone, col.key).is_on_order ? `text-gray-500 after:content-['*_под_заказ']` : ''"
-                                >{{ getValue(stone, col.key).value }}</span>
-                                <span
-                                    v-if="col.key === '_name' && stone._info"
-                                    class="text-gray-500 text-sm ml-2"
-                                >*{{ stone._info }}</span>
+                                <span class="flex-grow">{{ col.value }}</span>
                             </div>
                         </div>
                     </td>
