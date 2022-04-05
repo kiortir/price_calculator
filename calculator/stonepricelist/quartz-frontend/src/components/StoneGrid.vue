@@ -126,6 +126,7 @@ function getValue(stone: StoneInfo, row: string) {
     raw = value = stone[row] || '-'
     let is_on_order = false
     let style = style_ref[row] || {}
+    let info = row === '_name' ? stone._info : ''
     let s = stone[surface.value]
     if (s) {
         s = s[t.value]
@@ -160,6 +161,7 @@ function getValue(stone: StoneInfo, row: string) {
         raw,
         is_on_order,
         style,
+        info
     }
 }
 
@@ -351,6 +353,7 @@ function copyText(value: string | number) {
                         >
                             <div class="flex-grow" :class="col.is_on_order ? 'text-gray-500' : ''">
                                 <span class="flex-grow">{{ col.value }}</span>
+                                <span class="ml-1 text-gray-500" v-if="col.info">*{{ col.info }}</span>
                                 <span class="ml-1" v-if="col.is_on_order">*под заказ</span>
                             </div>
                         </div>

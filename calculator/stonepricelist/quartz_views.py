@@ -10,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
 from stonepricelist.views import BasicAuthentication, CsrfExemptSessionAuthentication
-from stonepricelist.quartz_models import QuartzManufacturer, QuartzSchema
+from stonepricelist.quartz_models import QuartzManufacturer
 from stonepricelist.quartz_serializers import reverseQuartzManufacturerSerializer, ManufacturerBasicSerializer
 
 
@@ -75,25 +75,3 @@ class FlushCache(APIView):
             "ok": True
         })
 
-
-class OptimizeSchema(APIView):
-    authentication_classes = (
-        CsrfExemptSessionAuthentication, BasicAuthentication)
-
-    def post(self, request):
-        manufacturer_name = request.data.get('manufacturer')
-        if not manufacturer_name:
-            return HttpResponse(status=400)
-
-        manufacturer = QuartzManufacturer.objects.get(name=manufacturer_name)
-        try:
-            table: QuartzSchema = manufacturer.table
-        except QuartzSchema.DoesNotExist:
-            table: QuartzSchema = QuartzSchema.objects.create(
-                manufacturer=manufacturer)
-
-        table.advanced_surface_display = request.data.get(
-            'advanced_surface_display')
-
-        table.updateSchema()
-        return Response(table.schema)

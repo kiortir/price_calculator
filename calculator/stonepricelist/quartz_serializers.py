@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from .quartz_models import QuartzStoneConfiguration, QuartzStone, QuartzManufacturer, quartzManufacturerInfoPictures, QuartzSchema
+from .quartz_models import QuartzStoneConfiguration, QuartzStone, QuartzManufacturer, quartzManufacturerInfoPictures
 from .models import SlabSize
 
 
@@ -12,19 +12,10 @@ class infoImageSerializer(serializers.ModelSerializer):
         fields = ('image', 'thumbnail', 'text')
 
 
-class ManufacturerSchemaSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = QuartzSchema
-        fields = 'schema',
-
-
 class ManufacturerBasicSerializer(serializers.ModelSerializer):
     stones = serializers.SerializerMethodField('get_stones')
     thickness_configurations = serializers.StringRelatedField(many=True)
     surface_configurations = serializers.StringRelatedField(many=True)
-
-    # table = ManufacturerSchemaSerializer()
 
     def get_stones(self, obj):
         return []
@@ -61,23 +52,8 @@ class QuartzStoneConfigurationSerializer(serializers.ModelSerializer):
                   'rub_price', 'is_on_order', 'code')
 
 
-# class flatQuartzStoneConfigurationsSerializer(serializers.ModelSerializer):
-#     def __init__(self, *args, **kwargs):
-#         super(flatQuartzStoneConfigurationsSerializer,
-#               self).__init__(*args, **kwargs)
-
-
-# class flatQuartzStoneSerializer(flatQuartzStoneConfigurationsSerializer, serializers.HyperlinkedModelSerializer):
-
-#     class Meta:
-#         model = QuartzStone
-#         fields = '__all__'
-
-
 class reverseQuartzStoneSerializer(serializers.ModelSerializer):
     configurations = QuartzStoneConfigurationSerializer(many=True)
-    # manufacturer = serializers.StringRelatedField()
-    # collection = serializers.StringRelatedField()
 
     class Meta:
         model = QuartzStone
@@ -129,5 +105,5 @@ class reverseQuartzManufacturerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuartzManufacturer
-        fields = ('id', 'name', 'card_color', 'priority', 'stones',
-                  'modified', 'schema', 'info_images', 'additional_info', 'cut_price')
+        fields = ('name', 'stones',
+                  'schema', 'info_images', 'additional_info', 'cut_price')

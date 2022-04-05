@@ -169,23 +169,23 @@ class QuartzStoneAdmin(ImportExportModelAdmin):
 class QuartzStoneConfiguration(ImportExportModelAdmin):
     resource_class = QuartzStoneConfigurationResource
     exclude = ("id",)
-    list_filter = ('stone__manufacturer','slab_size','thickness')
+    list_filter = ('stone__manufacturer', 'slab_size', 'thickness')
     list_display = ('stone', 'thickness', 'slab_size')
     search_fields = ('code',)
     ordering = ('stone__manufacturer__name',)
 
 
-@ admin.register(QuartzManufacturer)
+@admin.register(QuartzManufacturer)
 class QuartzManufacturerAdmin(admin.ModelAdmin):
     inlines = [quartzManufacturerInfoPicturesInline]
 
 
-@ admin.register(additionalWorkAcryl)
+@admin.register(additionalWorkAcryl)
 class additionalWorkAcrylAdmin(ImportExportModelAdmin):
     resource_class = additionalWorkAcrylResource
 
 
-@ admin.register(AcrylicStone)
+@admin.register(AcrylicStone)
 class AcrylicStoneAdmin(ImportExportModelAdmin):
     resource_class = AcrylicStoneResource
 
