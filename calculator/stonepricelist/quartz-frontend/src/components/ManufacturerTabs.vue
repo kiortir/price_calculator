@@ -51,14 +51,14 @@ let filtered_manufacturers = computed<Array<Manufacturer>>(() => {
             />
         </div>
         <TransitionGroup
-            class="result-tab flex flex-1 flex-col w-full mx-auto gap-3 xl:gap-0 xl:divide-y pl-1 pr-1 xl:pr-0 pt-2 overflow-x-hidden"
+            class="overflow-y-auto overscroll-contain scroll-smooth manufacturer-list result-tab flex flex-1 flex-col w-full mx-auto gap-3 xl:gap-0 xl:divide-y pl-1 pr-1 xl:pr-0 pt-2 overflow-x-hidden"
             name="list"
             tag="div"
         >
             <div
                 v-for="manufacturer in filtered_manufacturers"
                 type="button"
-                class="last:flex last:flex-grow ring-1 ring-inset xl:ring-0 rounded-xl xl:rounded-none transition-color duration-100 text-xl font-sans hover:shadow-md lg:shadow-none"
+                class="last:mb-[111px] last:flex last:flex-grow ring-1 ring-inset xl:ring-0 rounded-xl xl:rounded-none transition-color duration-100 text-xl font-sans hover:shadow-md lg:shadow-none"
                 :class="[manufacturer.name === props.tab ? 'ring-unirock xl:ring-sky-400' : 'text-gray-500 border-r-2  ']"
                 :key="manufacturer.id"
                 @click="setManufacturer(manufacturer.name)"
@@ -89,5 +89,15 @@ let filtered_manufacturers = computed<Array<Manufacturer>>(() => {
 }
 .list-leave-active {
     position: absolute;
+}
+
+.manufacturer-list {
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    overflow-y: scroll;
+}
+
+.manufacturer-list::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
 }
 </style>
