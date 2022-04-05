@@ -1,4 +1,5 @@
 
+from csv import list_dialects
 from django.contrib.admin.widgets import AdminFileWidget
 from django.urls import resolve
 from django.db.utils import OperationalError, ProgrammingError
@@ -157,11 +158,21 @@ class quartzManufacturerInfoPicturesInline(admin.TabularInline):
 @ admin.register(QuartzStone)
 class QuartzStoneAdmin(ImportExportModelAdmin):
     inlines = [QuartzConfigurationInline]
+    exclude = ("id",)
+    list_filter = ('manufacturer',)
+    list_display = ("name", "code", 'manufacturer')
+    search_fields = ('name', 'code', 'manufacturer__name',)
+    ordering = ('manufacturer__name', 'name',)
 
 
 @admin.register(QuartzStoneConfiguration)
 class QuartzStoneConfiguration(ImportExportModelAdmin):
     resource_class = QuartzStoneConfigurationResource
+    exclude = ("id",)
+    list_filter = ('stone__manufacturer','slab_size','thickness')
+    list_display = ('stone', 'thickness', 'slab_size')
+    search_fields = ('code',)
+    ordering = ('stone__manufacturer__name',)
 
 
 @ admin.register(QuartzManufacturer)
@@ -254,6 +265,8 @@ class EquivalentGroupAdmin(ImportExportModelAdmin):
 @ admin.register(Currency)
 class CurrencyAdmin(admin.ModelAdmin):
     readonly_fields = ('update_time',)
+    list_display = ('name', 'value', 'value_date')
+    list_editable = ('value', 'value_date')
 
 
 admin.site.register(AcrylicCollection, AcrylicCollectionAdmin)
