@@ -1,3 +1,6 @@
+from functools import partial
+import os
+import hashlib
 import base64
 import math
 from functools import reduce
@@ -129,10 +132,28 @@ class QuartzManufacturer(Manufacturer):
         return keys
 
 
+def hash_file(file, block_size=65536):
+    hasher = hashlib.md5()
+    for buf in iter(partial(file.read, block_size), b''):
+        hasher.update(buf)
+
+    return hasher.hexdigest()
+
+
+def upload_to(instance, filename):
+    """
+    :type instance: dolphin.models.File
+    """
+    instance.image.open()
+    filename_base, filename_ext = os.path.splitext(filename)
+
+    return os.path.join('manufacturer_info', f"{filename_base}_{hash_file(instance.image)}.{filename_ext}")
+
+
 class quartzManufacturerInfoPictures(models.Model):
     relation = models.ForeignKey(
         QuartzManufacturer, on_delete=models.CASCADE, related_name='info_images')
-    image = models.ImageField()
+    image = models.ImageField(upload_to=upload_to)
     thumbnail = models.TextField(blank=True, null=True)
     text = models.TextField(null=True, blank=True)
 
