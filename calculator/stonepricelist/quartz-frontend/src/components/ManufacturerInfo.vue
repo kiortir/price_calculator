@@ -1,20 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
+
+import Manufacturer from '../interfaces/Manufacturer';
+
 const store = useStore()
 
 const props = defineProps<{
     manufacturer: string
 }>()
 
-let data = computed<Manufacturer>(
-    () => store.state.manufacturers[props.manufacturer]
-        || <Manufacturer>{
-            additional_info: {
-                images: [],
-                text: ""
-            },
-        })
+let data = computed<Manufacturer>(() => store.state.manufacturers[props.manufacturer])
 
 const open_image_url = ref(false)
 
@@ -22,11 +18,14 @@ const open_image_url = ref(false)
 
 
 <template>
-    <div
-        class="px-3 font-sans divide-y divide-slate-500"
-        v-if="store.state.loaded && (data.additional_info.images.length || data.additional_info.text)"
-    >
+    <div class="px-3 font-sans divide-y divide-slate-500 text-left">
         <slot></slot>
+        <div class="cut py-3">
+            <p>
+                <span class="text-xl">Цена распила:</span>
+                {{ data.additional_info.cut_price }}р.
+            </p>
+        </div>
         <div v-if="data.additional_info.images.length" class="flex flex-col divide-y gap-2">
             <div
                 class="image-continer py-3 px-2 hover:bg-sky-100"

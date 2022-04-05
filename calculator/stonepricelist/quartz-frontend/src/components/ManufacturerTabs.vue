@@ -16,8 +16,6 @@ const emit = defineEmits<{
 
 function setManufacturer(val: string) {
     emit('update', val);
-    // store.dispatch('loadManufacturer', val)
-
 }
 
 let filter_q: Ref<string> = ref("")

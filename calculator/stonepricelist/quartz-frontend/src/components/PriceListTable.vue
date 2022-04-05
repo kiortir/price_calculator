@@ -110,7 +110,7 @@ const grid = useGrid('tailwind')
         <ManufacturerTableVue ref="table_c" :manufacturer="currentTab" :key="currentTab" />
       </KeepAlive>
       <ManufacturerInfoVue
-        class="info flex-col sticky top-0 right-0 flex w-fit xl:h-screen overflow-y-auto"
+        class="info flex-col sticky top-0 right-0 flex w-full max-w-[25vw] xl:h-screen overflow-y-auto"
         :manufacturer="currentTab"
         :key="currentTab"
         v-if="grid.xl"

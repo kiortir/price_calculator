@@ -5,13 +5,22 @@ export default interface Manufacturer {
     name: string,
     card_color?: string,
     stones: StoneInfo[],
-    surface_configurations: Array<string>,
-    slab_configurations: Array<string>,
-    thickness_configurations: Array<string>,
-    schema: Array<ColMap>,
+    surface_configurations: string[]
+    slab_configurations: string[]
+    thickness_configurations: string[]
+    schema: ColMap[],
     applied_currency: {
         source: string,
         value: number
     },
-    multipliers: number
+    multipliers: number,
+    additional_info: {
+        images: Array<{
+            thumbnail: string
+            image: string
+            text: string
+        }>
+        text: string
+        cut_price: number
+    }
 }

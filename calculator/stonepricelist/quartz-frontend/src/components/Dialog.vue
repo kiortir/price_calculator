@@ -75,14 +75,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import {
     TransitionRoot,
     TransitionChild,
     Dialog,
     DialogOverlay,
     DialogTitle,
-    DialogDescription,
 } from "@headlessui/vue";
 
 const props = defineProps<{

@@ -31,8 +31,8 @@ class ManufacturerBasicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuartzManufacturer
-        fields = ('id', 'name',  'priority', 'stones', 'applied_currency',
-                  'multipliers',   'thickness_configurations', 'surface_configurations')
+        fields = ('id', 'name',  'priority', 'stones', 'thickness_configurations', 'applied_currency',
+                  'surface_configurations')
 
 
 class SlabSizeSerializer(serializers.ModelSerializer):
@@ -104,9 +104,9 @@ class reverseQuartzStoneSerializer(serializers.ModelSerializer):
                 representation[surface][thickness] = {}
 
             representation[surface][thickness][slab] = {
-                "price": configuration["rub_price"], "is_on_order": configuration["is_on_order"], "code": configuration["code"]}
-            # representation[f'{surface}|{slab}|{thickness}'] = {
-            #     "price": configuration["rub_price"], "is_on_order": configuration["is_on_order"]}
+                "price": configuration["rub_price"],
+                "is_on_order": configuration["is_on_order"],
+                "code": configuration["code"]}
 
         return representation
 
@@ -119,14 +119,15 @@ class reverseQuartzManufacturerSerializer(serializers.ModelSerializer):
         representation = super().to_representation(obj)
         images = representation.pop('info_images')
         text = representation.pop('additional_info')
-
+        cut_price = representation.pop('cut_price')
         representation['additional_info'] = {
             'images': images,
-            'text': text
+            'text': text,
+            'cut_price': cut_price,
         }
         return representation
 
     class Meta:
         model = QuartzManufacturer
         fields = ('id', 'name', 'card_color', 'priority', 'stones',
-                  'modified', 'schema', 'info_images', 'additional_info')
+                  'modified', 'schema', 'info_images', 'additional_info', 'cut_price')

@@ -69,7 +69,6 @@ defineExpose({
                     type="search"
                     class="font-sans block w-full pl-10 py-2 ring-1 rounded-xl accent-palette_accent"
                     v-model="stones_filter_q"
-                    
                 />
             </div>
 
@@ -79,7 +78,7 @@ defineExpose({
                 >Источник курса: {{ data.applied_currency.source }}</div>
             </div>
         </div>
-        
+
         <StoneGridVue
             class="w-full"
             :columns="data.schema"

@@ -53,6 +53,15 @@ class QuartzManufacturer(Manufacturer):
         return self.name
 
     @property
+    def cut_price(self):
+        try:
+            currency = self.slab_cut_currency.value
+        except AttributeError:
+            return self.applied_currency.get('value', 1)
+        cut = self.slab_cut_price or 2000
+        return currency * self.slab_cut_price
+
+    @property
     def modified(self):
         return math.ceil(self.stones.aggregate(Max('modified')).get('modified__max').timestamp() * 1000)
 
