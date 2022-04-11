@@ -48,6 +48,8 @@ class CurrencyCSV(APIView):
 class DefaultAcrylPricelist(APIView):
 
     renderer_classes = [JSONRenderer]
+    authentication_classes = (
+        CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request):
         try:
