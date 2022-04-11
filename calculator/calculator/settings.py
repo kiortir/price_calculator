@@ -38,11 +38,13 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG') == 'True'
 CORS_ORIGIN_ALLOW_ALL = DEBUG
+
 if DEBUG:
-    ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ['*', 'https://dev.unirock.ru']
 else:
     ALLOWED_HOSTS = ['194.67.111.46', 'dev.unirock.ru', 'localhost']
 
+CSRF_TRUSTED_ORIGINS = ['https://*.unirock.ru','https://*.127.0.0.1']
 
 if DEBUG:
     STATIC_URL = '/static/'
