@@ -81,7 +81,7 @@ class QuartzManufacturer(Manufacturer):
                 "source": f"внутренний курс поставщика{f' на {date}' if date else ''}",
                 "value": self.currency_value_override
             }
-        elif self.currency_multiplier_percent > 0:
+        elif self.currency_multiplier_percent:
             currency_used = {
                 "source": "внутренний курс поставщика (наценка к ЦБ)",
                 "value": self.currency_multiplier_percent * self.currency.value

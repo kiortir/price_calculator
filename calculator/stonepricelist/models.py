@@ -9,8 +9,6 @@ from django.db.models.fields import (CharField, PositiveIntegerField,
                                      SmallIntegerField)
 from django.utils import timezone
 
-from smart_selects.db_fields import ChainedForeignKey
-
 
 class Material(models.Model):
     name = CharField(
@@ -360,8 +358,8 @@ class AcrylicStone(Stone):
 
     manufacturer = models.ForeignKey(
         AcrylicManufacturer, on_delete=models.SET_NULL, null=True, blank=True, related_name="stones", verbose_name='производитель')
-    collection = ChainedForeignKey(
-        AcrylicCollection, chained_field="manufacturer", chained_model_field="manufacturer", related_name="stones", show_all=False, auto_choose=True, sort=True, verbose_name='коллекция')
+    collection = models.ForeignKey(
+        AcrylicCollection, on_delete=models.CASCADE,  related_name="stones", verbose_name='коллекция')
 
     equivalents_group = models.ForeignKey(
         EquivalentGroup, on_delete=models.SET_NULL, null=True, related_name='stones')

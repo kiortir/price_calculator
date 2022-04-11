@@ -2,7 +2,7 @@
 
 from django.db import migrations
 import django.db.models.deletion
-import smart_selects.db_fields
+from django.db import models
 
 
 class Migration(migrations.Migration):
@@ -15,11 +15,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='acrylicstone',
             name='collection',
-            field=smart_selects.db_fields.ChainedForeignKey(auto_choose=True, chained_field='manufacturer', chained_model_field='manufacturer', on_delete=django.db.models.deletion.CASCADE, related_name='stones', to='stonepricelist.acryliccollection', verbose_name='коллекция'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='stones', to='stonepricelist.acryliccollection', verbose_name='коллекция'),
         ),
         migrations.AlterField(
             model_name='acrylicstone',
             name='configurations',
-            field=smart_selects.db_fields.ChainedManyToManyField(auto_choose=True, chained_field='collection', chained_model_field='collection_filter', to='stonepricelist.AcrylicConfiguration', verbose_name='конфигурации'),
+            field=models.ManyToManyField(
+                to='stonepricelist.AcrylicConfiguration', verbose_name='конфигурации'),
         ),
     ]

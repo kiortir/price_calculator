@@ -13,8 +13,8 @@
     {% block content %}<div id="app"></div>{% endblock %}
     {% block scripts %}
         {% if debug %}
-            <script type="module" src="http://10.0.0.3:3000/@vite/client"></script>
-            <script type="module" src="http://10.0.0.3:3000/src/main.ts"></script>
+            <script type="module" src="http://10.0.0.3:9000/@vite/client"></script>
+            <script type="module" src="http://10.0.0.3:9000/src/main.ts"></script>
         {% else %}
             <script type="module"
                     src="{% static 'src/pricelist/dist/quartz/js/main.js'%}"></script>

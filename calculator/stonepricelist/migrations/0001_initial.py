@@ -3,7 +3,7 @@
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import smart_selects.db_fields
+from django.db import models
 
 
 class Migration(migrations.Migration):
@@ -17,10 +17,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='AcrylicCollection',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=40, null=True, verbose_name='название')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(blank=True, max_length=40,
+                 null=True, verbose_name='название')),
                 ('priority', models.PositiveSmallIntegerField(default=500)),
-                ('standart_raw_price', models.PositiveIntegerField(default=0, null=True, verbose_name='стоимость стандартной конфигурации')),
+                ('standart_raw_price', models.PositiveIntegerField(
+                    default=0, null=True, verbose_name='стоимость стандартной конфигурации')),
             ],
             options={
                 'verbose_name': 'акриловая коллекция',
@@ -31,9 +34,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Colors',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=20, null=True, verbose_name='название')),
-                ('hex_code', models.CharField(blank=True, max_length=6, null=True, verbose_name='шестнадцатеричный код')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(blank=True, max_length=20,
+                 null=True, verbose_name='название')),
+                ('hex_code', models.CharField(blank=True, max_length=6,
+                 null=True, verbose_name='шестнадцатеричный код')),
             ],
             options={
                 'verbose_name': 'цвет',
@@ -43,9 +49,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ConfigurationDiscount',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start', models.DateTimeField(default=django.utils.timezone.now, verbose_name='время активации')),
-                ('end', models.DateTimeField(blank=True, default=None, null=True, verbose_name='время окончания')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('start', models.DateTimeField(
+                    default=django.utils.timezone.now, verbose_name='время активации')),
+                ('end', models.DateTimeField(blank=True, default=None,
+                 null=True, verbose_name='время окончания')),
                 ('value', models.PositiveSmallIntegerField(default=0)),
             ],
             options={
@@ -56,9 +65,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Currency',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, default='Доллар', max_length=30, null=True, verbose_name='название')),
-                ('code', models.CharField(default='USD', max_length=3, unique=True, verbose_name='код валюты ЦБ')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(blank=True, default='Доллар',
+                 max_length=30, null=True, verbose_name='название')),
+                ('code', models.CharField(default='USD', max_length=3,
+                 unique=True, verbose_name='код валюты ЦБ')),
                 ('value', models.FloatField(default=0.0)),
                 ('value_date', models.DateField(blank=True, null=True)),
             ],
@@ -70,8 +82,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Material',
             fields=[
-                ('name', models.CharField(default='Акриловый камень', max_length=25, primary_key=True, serialize=False)),
-                ('percentage', models.SmallIntegerField(default=0, verbose_name='наценка, %')),
+                ('name', models.CharField(default='Акриловый камень',
+                 max_length=25, primary_key=True, serialize=False)),
+                ('percentage', models.SmallIntegerField(
+                    default=0, verbose_name='наценка, %')),
             ],
             options={
                 'verbose_name': 'глобальная наценка',
@@ -81,11 +95,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SlabSize',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('width', models.PositiveSmallIntegerField(verbose_name='ширина')),
                 ('height', models.PositiveSmallIntegerField(verbose_name='высота')),
-                ('alias', models.CharField(blank=True, default=None, max_length=40, null=True, verbose_name='название')),
-                ('short_type', models.CharField(choices=[('NM', 'Normal/Standart'), ('JU', 'Jumbo'), ('NF', 'Нестандартный')], default='Normal/Standart', max_length=2, verbose_name='тип')),
+                ('alias', models.CharField(blank=True, default=None,
+                 max_length=40, null=True, verbose_name='название')),
+                ('short_type', models.CharField(choices=[('NM', 'Normal/Standart'), ('JU', 'Jumbo'), (
+                    'NF', 'Нестандартный')], default='Normal/Standart', max_length=2, verbose_name='тип')),
             ],
             options={
                 'verbose_name': 'размер слэба',
@@ -95,9 +112,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Texture',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=50, null=True, verbose_name='название')),
-                ('code', models.CharField(blank=True, max_length=5, null=True, verbose_name='код типа текстуры')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(blank=True, max_length=50,
+                 null=True, verbose_name='название')),
+                ('code', models.CharField(blank=True, max_length=5,
+                 null=True, verbose_name='код типа текстуры')),
             ],
             options={
                 'verbose_name': 'тип текстуры',
@@ -107,7 +127,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Thickness',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('value', models.PositiveSmallIntegerField()),
             ],
             options={
@@ -118,9 +139,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SurfaceType',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('alias', models.CharField(blank=True, max_length=50, null=True, verbose_name='название')),
-                ('similar', models.ManyToManyField(blank=True, related_name='_stonepricelist_surfacetype_similar_+', to='stonepricelist.SurfaceType', verbose_name='аналогичные')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('alias', models.CharField(blank=True,
+                 max_length=50, null=True, verbose_name='название')),
+                ('similar', models.ManyToManyField(blank=True, related_name='_stonepricelist_surfacetype_similar_+',
+                 to='stonepricelist.SurfaceType', verbose_name='аналогичные')),
             ],
             options={
                 'verbose_name': 'тип поверхности',
@@ -130,13 +154,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='AcrylicManufacturer',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=50, null=True, unique=True, verbose_name='название')),
-                ('code', models.CharField(blank=True, max_length=10, null=True, verbose_name='код поставщика')),
-                ('vendor_discount', models.FloatField(default=0.0, verbose_name='скидка поставщика, %')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(blank=True, max_length=50,
+                 null=True, unique=True, verbose_name='название')),
+                ('code', models.CharField(blank=True, max_length=10,
+                 null=True, verbose_name='код поставщика')),
+                ('vendor_discount', models.FloatField(
+                    default=0.0, verbose_name='скидка поставщика, %')),
                 ('priority', models.PositiveSmallIntegerField(default=500)),
-                ('currency', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='stonepricelist.currency', verbose_name='валюта распространения')),
-                ('material', models.ForeignKey(default='Акриловый камень', on_delete=django.db.models.deletion.PROTECT, related_name='manufacturers', to='stonepricelist.material')),
+                ('currency', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
+                 to='stonepricelist.currency', verbose_name='валюта распространения')),
+                ('material', models.ForeignKey(default='Акриловый камень', on_delete=django.db.models.deletion.PROTECT,
+                 related_name='manufacturers', to='stonepricelist.material')),
             ],
             options={
                 'verbose_name': 'производитель акрила',
@@ -147,12 +177,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='AcrylicConfiguration',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('alias', models.CharField(blank=True, max_length=50, null=True)),
                 ('raw_price', models.PositiveIntegerField(verbose_name='цена')),
-                ('collection', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='configurations', to='stonepricelist.acryliccollection')),
-                ('material_discount', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='configurations', to='stonepricelist.configurationdiscount', verbose_name='индивидуальная скидка конфигурации')),
-                ('thickness', models.ForeignKey(default=1, on_delete=django.db.models.deletion.SET_DEFAULT, related_name='dependant_configurations', to='stonepricelist.thickness', verbose_name='толщина камня')),
+                ('collection', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                 related_name='configurations', to='stonepricelist.acryliccollection')),
+                ('material_discount', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                 related_name='configurations', to='stonepricelist.configurationdiscount', verbose_name='индивидуальная скидка конфигурации')),
+                ('thickness', models.ForeignKey(default=1, on_delete=django.db.models.deletion.SET_DEFAULT,
+                 related_name='dependant_configurations', to='stonepricelist.thickness', verbose_name='толщина камня')),
             ],
             options={
                 'verbose_name': 'конфигурация текстуры',
@@ -164,25 +198,36 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='acryliccollection',
             name='manufacturer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='collections', to='stonepricelist.acrylicmanufacturer', verbose_name='производитель'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='collections', to='stonepricelist.acrylicmanufacturer', verbose_name='производитель'),
         ),
         migrations.AddField(
             model_name='acryliccollection',
             name='texture',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='collections', to='stonepricelist.texture', verbose_name='тип текстуры'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                    related_name='collections', to='stonepricelist.texture', verbose_name='тип текстуры'),
         ),
         migrations.CreateModel(
             name='AcrylicStone',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=100, null=True, verbose_name='название')),
-                ('code', models.CharField(default=None, max_length=20, null=True, verbose_name='артикул')),
-                ('collection', smart_selects.db_fields.ChainedForeignKey(auto_choose=True, chained_field='manufacturer', chained_model_field='manufacturer', on_delete=django.db.models.deletion.CASCADE, to='stonepricelist.acryliccollection', verbose_name='коллекция')),
-                ('color', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='stonepricelist.colors', verbose_name='цвет')),
-                ('configurations', smart_selects.db_fields.ChainedManyToManyField(auto_choose=True, chained_field='collection', chained_model_field='collection_filter', to='stonepricelist.AcrylicConfiguration', verbose_name='конфигурации')),
-                ('manufacturer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='stonepricelist.acrylicmanufacturer', verbose_name='производитель')),
-                ('same_textures', models.ManyToManyField(blank=True, related_name='_stonepricelist_acrylicstone_same_textures_+', to='stonepricelist.AcrylicStone', verbose_name='аналогичные текстуры')),
-                ('similar_textures', models.ManyToManyField(blank=True, related_name='_stonepricelist_acrylicstone_similar_textures_+', to='stonepricelist.AcrylicStone', verbose_name='похожие текстуры')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(blank=True, max_length=100,
+                 null=True, verbose_name='название')),
+                ('code', models.CharField(default=None,
+                 max_length=20, null=True, verbose_name='артикул')),
+                ('collection', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                 to='stonepricelist.acryliccollection', verbose_name='коллекция')),
+                ('color', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                 to='stonepricelist.colors', verbose_name='цвет')),
+                ('configurations', models.ManyToManyField(
+                    to='stonepricelist.AcrylicConfiguration', verbose_name='конфигурации')),
+                ('manufacturer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                 to='stonepricelist.acrylicmanufacturer', verbose_name='производитель')),
+                ('same_textures', models.ManyToManyField(blank=True, related_name='_stonepricelist_acrylicstone_same_textures_+',
+                 to='stonepricelist.AcrylicStone', verbose_name='аналогичные текстуры')),
+                ('similar_textures', models.ManyToManyField(blank=True, related_name='_stonepricelist_acrylicstone_similar_textures_+',
+                 to='stonepricelist.AcrylicStone', verbose_name='похожие текстуры')),
             ],
             options={
                 'verbose_name': 'акриловая текстура',

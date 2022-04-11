@@ -18,6 +18,7 @@ export default createStore({
       commit('materials/resetState')
     },
     async getEstimation({ commit, dispatch, state }, id) {
+      console.log({ id })
       await dispatch('toDefault').then(() => {
         axios
           .post("api/estimation/", { id }).then(r => { this.estimation = r.data; })

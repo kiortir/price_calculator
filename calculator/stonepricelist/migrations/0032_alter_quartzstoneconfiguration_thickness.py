@@ -2,7 +2,7 @@
 
 from django.db import migrations
 import django.db.models.deletion
-import smart_selects.db_fields
+from django.db import models
 
 
 class Migration(migrations.Migration):
@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='quartzstoneconfiguration',
             name='thickness',
-            field=smart_selects.db_fields.ChainedForeignKey(auto_choose=True, chained_field='stone', chained_model_field='thickness_configurations', on_delete=django.db.models.deletion.PROTECT, related_name='configurations', to='stonepricelist.thickness', verbose_name='толщина камня'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='configurations',
+                                    to='stonepricelist.thickness', verbose_name='толщина камня'),
         ),
     ]

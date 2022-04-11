@@ -1,3 +1,4 @@
+from typing import Union
 from main.serializers import CalculationSerializer
 from main.models import Calculation
 from genericpath import exists
@@ -378,14 +379,18 @@ def get_estimation_page(request):
 
 @api_view(['POST'])
 def get_estimation(request):
-    estimation_id = request.data.get('id')
-    estimation = Calculation.objects.get(id=estimation_id)
-    
-    return JsonResponse(CalculationSerializer(estimation).data)
+    estimation_id: Union[str, int] = request.data.get('id')
+    if estimation_id == 'new':
+        data = json.loads(default_state)
+    else:
+        estimation = Calculation.objects.get(id=estimation_id)
+        data = CalculationSerializer(estimation).data
+
+    return JsonResponse(data)
 
 
 class CalculationList(TemplateView):
-    template_name = 'main/vite.html'
+    template_name = 'main/index.html'
 
     def get(self, request):
         return render(request, template_name=self.template_name)

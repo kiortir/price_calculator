@@ -1,3 +1,6 @@
+from django.contrib.postgres.search import SearchQuery, TrigramWordSimilarity, SearchVector
+from django.db.models import Q
+from unicodedata import name
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.views.decorators.cache import cache_control
@@ -10,7 +13,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
 from stonepricelist.views import BasicAuthentication, CsrfExemptSessionAuthentication
-from stonepricelist.quartz_models import QuartzManufacturer
+from stonepricelist.quartz_models import QuartzManufacturer, QuartzStone
 from stonepricelist.quartz_serializers import reverseQuartzManufacturerSerializer, ManufacturerBasicSerializer
 
 
@@ -26,6 +29,17 @@ class QuartzData(APIView):
     renderer_classes = [JSONRenderer]
     authentication_classes = (
         CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    def get(self, request):
+        search_str = SearchQuery(request.GET.get('search'))
+        # stones = QuartzStone.objects.annotate(
+        #     search=SearchVector('name', 'code', 'manufacturer__name'),
+        # ).filter(search=search_str)
+        stones = QuartzStone.objects.annotate(
+            similarity=TrigramWordSimilarity(search_str, 'name'),
+        ).filter(similarity__gt=0.3)
+        print(stones)
+        return Response({"ok": True})
 
     def post(self, request):
         stones = QuartzManufacturer.objects.all()
@@ -74,4 +88,3 @@ class FlushCache(APIView):
         return Response({
             "ok": True
         })
-
