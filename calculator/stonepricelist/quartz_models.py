@@ -1,3 +1,5 @@
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
 from functools import partial
 import os
 import hashlib
@@ -188,11 +190,13 @@ class QuartzStone(Stone):
     collection = models.CharField(
         max_length=150, null=True, blank=True, verbose_name='коллекция')
     modified = models.DateTimeField(auto_now=True)
+    vector_column = SearchVectorField(null=True)
 
     class Meta:
         unique_together = [['manufacturer', 'name']]
         verbose_name = 'кварцевая текстура'
         verbose_name_plural = 'кварцевые текстуры'
+        indexes = (GinIndex(fields=["vector_column"]),)
 
     def save(self, *args, **kwargs):
         self.modified = timezone.now()

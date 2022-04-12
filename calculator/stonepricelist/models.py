@@ -404,6 +404,7 @@ class additionalWorkAcryl(models.Model):
 
         verbose_name = 'дополнительная работа'
         verbose_name_plural = 'дополнительные работы'
+        ordering = ['name']
 
     def __repr__(self) -> str:
         return self.name

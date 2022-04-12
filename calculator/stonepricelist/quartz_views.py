@@ -1,4 +1,4 @@
-from django.contrib.postgres.search import SearchQuery, TrigramWordSimilarity, SearchVector
+from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import Q
 from unicodedata import name
 from django.core.cache import cache
@@ -31,13 +31,11 @@ class QuartzData(APIView):
         CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def get(self, request):
-        search_str = SearchQuery(request.GET.get('search'))
+        search_str = request.GET.get('search')
+        stones = QuartzStone.objects.filter(vector_column=search_str)
         # stones = QuartzStone.objects.annotate(
-        #     search=SearchVector('name', 'code', 'manufacturer__name'),
-        # ).filter(search=search_str)
-        stones = QuartzStone.objects.annotate(
-            similarity=TrigramWordSimilarity(search_str, 'name'),
-        ).filter(similarity__gt=0.3)
+        #     similarity=TrigramWordSimilarity(search_str, 'name'),
+        # ).filter(similarity__gt=0.3)
         print(stones)
         return Response({"ok": True})
 
