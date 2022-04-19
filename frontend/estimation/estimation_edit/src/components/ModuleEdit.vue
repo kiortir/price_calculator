@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref, computed } from 'vue'
+import { ref, Ref, computed, onMounted } from 'vue'
 import { useStore } from '../store/modules'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import SelectorFields from './SelectorFields.vue'
@@ -26,6 +26,25 @@ const props = defineProps<{
 }>()
 const emits = defineEmits(['setEdit'])
 
+const form: Ref<Module> = ref(<Module>{})
+onMounted(() => {
+    if (props.module !== undefined) {
+        form.value = props.module
+    }
+    else {
+        form.value = {
+            name: "",
+            code: makeid(9),
+            fields: {},
+            formula: {
+                salary: [],
+                price: [],
+                consumables: [],
+            }
+        }
+    }
+})
+
 
 const isOpen = computed({
     get() {
@@ -37,15 +56,7 @@ const isOpen = computed({
 })
 
 
-const form: Ref<Module> = ref({
-    name: "",
-    fields: {},
-    formula: {
-        salary: [],
-        price: [],
-        consumables: [],
-    }
-})
+
 
 
 const ComponentFields = {
@@ -69,10 +80,10 @@ function save() {
 </script>
 
 <template>
-    <el-dialog fullscreen v-model="isOpen" :title="module.name || 'Новый модуль'">
+    <el-dialog fullscreen v-model="isOpen" :title="form.name || 'Новый модуль'">
         <div class="main container mx-auto p-30 mb-[50px] flex flex-col gap-3">
             <el-form :model="form">
-                <el-form-item v-if="!module.name" label="Название модуля">
+                <el-form-item v-if="!form.name" label="Название модуля">
                     <el-input v-model="form.name" />
                 </el-form-item>
             </el-form>

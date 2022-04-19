@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import axios from 'axios'
-import { ref, watch, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { Edit } from '@element-plus/icons-vue'
 import PriceListConstants from './PriceListConstantsBlock.vue'
 import ModuleEdit from './ModuleEdit.vue'
@@ -14,7 +14,7 @@ const store = useStore()
 const loading = ref(false)
 const error = ref()
 const pricelists = ref()
-const modules = ref([])
+const modules = computed(() => store.modules || [])
 const selected_modules = ref([])
 const editModule = ref(false)
 const edited_module = ref()
@@ -43,17 +43,18 @@ const getModules = (origin_id: number | null = null) => {
             <PriceListConstants />
         </div>
         <div class="modules w-full">
-            <el-transfer v-model="selected_modules" filterable :titles="['Source', 'Используемое']"
-                :button-texts="['Убрать', 'Добавить']" :format="{
-                    noChecked: '${total}',
-                    hasChecked: '${checked}/${total}',
-                }" :data="Object.values(store.modules || {})" :props="{
-    key: 'name',
-    label: 'name',
-    disabled: ''
-}">
-                <template #default="{ module }">
-                    <span>{{ module.name }}</span>
+            <el-transfer v-model="selected_modules" filterable :titles="['Доступные', 'Используемые']"
+                :button-texts="['Убрать', 'Добавить']" :data="store.modules" :props="{
+                    key: 'code',
+                    label: 'name',
+                    disabled: ''
+                }">
+                <template #default="{ option }">
+                    <div class="flex flex-row gap-2 items-center justify-between w-full pr-1">
+                        <span class="">{{ option.name }}</span>
+                        <el-button size="small" :icon="Edit"
+                            @click="editModule = true; edited_module = store.modules.filter(el => $el.code === $options.code)[0]" />
+                    </div>
                 </template>
                 <template #left-footer>
                     <div class="w-full h-full flex place-content-center">
@@ -67,7 +68,7 @@ const getModules = (origin_id: number | null = null) => {
                     <el-button class="transfer-footer" size="small">Operation</el-button>
                 </template>
             </el-transfer>
-            <module-edit :open="editModule" :module="edited_module || {}" :key="Math.random()"
+            <module-edit :open="editModule" :module="edited_module" :key="Math.random()"
                 @setEdit="value => { editModule = value }" />
         </div>
     </div>

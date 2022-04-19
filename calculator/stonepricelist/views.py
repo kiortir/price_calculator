@@ -62,6 +62,8 @@ class DefaultAcrylPricelist(APIView):
 
 
 class AcrylicCollectionView(APIView):
+    authentication_classes = (
+        CsrfExemptSessionAuthentication, BasicAuthentication)
 
     renderer_classes = [JSONRenderer]
 
@@ -80,6 +82,8 @@ class AcrylicCollectionView(APIView):
 
 
 class AcrylicStonesView(APIView):
+    authentication_classes = (
+        CsrfExemptSessionAuthentication, BasicAuthentication)
 
     renderer_classes = [JSONRenderer]
 
@@ -129,6 +133,8 @@ class crossdomainData(APIView):
 
 class FindStone(APIView):
     renderer_classes = [JSONRenderer]
+    authentication_classes = (
+        CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request):
         stone_id = request.data.get('stone_id', "")
