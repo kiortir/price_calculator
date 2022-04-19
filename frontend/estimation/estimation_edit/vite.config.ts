@@ -12,7 +12,7 @@ export default defineConfig({
         entryFileNames: 'js/[name].js'
       }
     },
-    outDir: '../../calculator/estimation/static/src/estimation_edit/dist/estimation_edit',
+    outDir: '../../../calculator/estimation/static/src/estimation_edit/dist/estimation_edit',
     emptyOutDir: true,
     manifest: true,
   },

@@ -25,6 +25,7 @@ export interface Field {
 
 export interface Module {
     name: string
+    code: string
     fields: {
         [id: string]: Field
     }

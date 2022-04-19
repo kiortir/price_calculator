@@ -109,6 +109,8 @@ class AcrylPricelist(TemplateView):
 
 
 class AcrylicWorkView(APIView):
+    authentication_classes = (
+        CsrfExemptSessionAuthentication, BasicAuthentication)
 
     renderer_classes = [JSONRenderer]
 

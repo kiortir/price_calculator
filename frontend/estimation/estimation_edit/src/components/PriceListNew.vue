@@ -2,7 +2,7 @@
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { ref, computed, onMounted } from 'vue'
-import { Edit } from '@element-plus/icons-vue'
+import { Edit, Delete } from '@element-plus/icons-vue'
 import PriceListConstants from './PriceListConstantsBlock.vue'
 import ModuleEdit from './ModuleEdit.vue'
 import { Module } from '../interfaces'
@@ -13,11 +13,11 @@ const route = useRoute()
 const store = useStore()
 const loading = ref(false)
 const error = ref()
-const pricelists = ref()
-const modules = computed(() => store.modules || [])
+
 const selected_modules = ref([])
+
 const editModule = ref(false)
-const edited_module = ref()
+const edited_module = ref(<Module>{})
 
 
 const getModules = (origin_id: number | null = null) => {
@@ -26,7 +26,7 @@ const getModules = (origin_id: number | null = null) => {
         params: { origin_id }
     }).
         then(response => {
-            modules.value = response.data
+
             loading.value = error.value = false
         })
 }
@@ -34,7 +34,7 @@ const getModules = (origin_id: number | null = null) => {
 </script>
 
 <template>
-    <div class="container mx-auto mt-10 flex flex-col gap-3">
+    <div class="container mx-auto mt-10 flex flex-col gap-3  mb-[100px]">
         <div class="settings">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam ut ab sunt libero fuga
             accusamus rem corrupti maiores, quo fugiat esse magni enim voluptate possimus facere deleniti doloremque
             iste eius.</div>
@@ -42,9 +42,9 @@ const getModules = (origin_id: number | null = null) => {
         <div id="material-constants" class="">
             <PriceListConstants />
         </div>
-        <div class="modules w-full">
+        <div class="modules w-fit mx-auto">
             <el-transfer v-model="selected_modules" filterable :titles="['Доступные', 'Используемые']"
-                :button-texts="['Убрать', 'Добавить']" :data="store.modules" :props="{
+                :button-texts="['Убрать', 'Добавить']" :data="Object.values(store.modules)" :props="{
                     key: 'code',
                     label: 'name',
                     disabled: ''
@@ -52,14 +52,19 @@ const getModules = (origin_id: number | null = null) => {
                 <template #default="{ option }">
                     <div class="flex flex-row gap-2 items-center justify-between w-full pr-1">
                         <span class="">{{ option.name }}</span>
-                        <el-button size="small" :icon="Edit"
-                            @click="editModule = true; edited_module = store.modules.filter(el => $el.code === $options.code)[0]" />
+                        <div class="flex flex-row">
+                            <el-button size="small" :icon="Edit"
+                                @click="editModule = true; edited_module = store.modules[option.code]" />
+                                <el-button size="small" :icon="Delete" type="danger"
+                                @click="delete store.modules[option.code]" />
+                        </div>
                     </div>
                 </template>
                 <template #left-footer>
-                    <div class="w-full h-full flex place-content-center">
+                    <div class=" w-full h-full flex place-content-center">
                         <div class="my-auto">
-                            <el-button class="transfer-footer" size="small" @click="editModule = true">Добавить опцию
+                            <el-button class="transfer-footer" size="small" @click="edited_module = {};editModule = true">Добавить
+                                опцию
                             </el-button>
                         </div>
                     </div>

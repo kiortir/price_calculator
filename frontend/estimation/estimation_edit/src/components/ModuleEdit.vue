@@ -28,8 +28,8 @@ const emits = defineEmits(['setEdit'])
 
 const form: Ref<Module> = ref(<Module>{})
 onMounted(() => {
-    if (props.module !== undefined) {
-        form.value = props.module
+    if (Object.keys(props.module).length) {
+        form.value = JSON.parse(JSON.stringify(props.module))
     }
     else {
         form.value = {
@@ -73,17 +73,17 @@ function addModuleField() {
 }
 
 function save() {
-    store.modules.push(form.value)
+    store.modules[form.value.code] = form.value
     emits('setEdit', false)
 }
 
 </script>
 
 <template>
-    <el-dialog fullscreen v-model="isOpen" :title="form.name || 'Новый модуль'">
+    <el-dialog fullscreen v-model="isOpen" :title="module.name || 'Новый модуль'">
         <div class="main container mx-auto p-30 mb-[50px] flex flex-col gap-3">
             <el-form :model="form">
-                <el-form-item v-if="!form.name" label="Название модуля">
+                <el-form-item label="Название модуля">
                     <el-input v-model="form.name" />
                 </el-form-item>
             </el-form>

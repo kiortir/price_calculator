@@ -4,7 +4,7 @@ import { Module } from '../interfaces'
 export const useStore = defineStore('modules', {
     state: () => {
         return {
-            modules: <Module[]>[]
+            modules: <{ [index: string]: Module }>{}
         }
     },
     actions: {
