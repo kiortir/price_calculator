@@ -22,7 +22,7 @@ from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('estimation/', include('main.urls')),
+    path('estimation/', include('estimation.urls')),
     path('pricelist/', include('stonepricelist.urls')),
     path('amo/', include('amoApi.urls')),
     path('production/', include('production_graph.urls')),

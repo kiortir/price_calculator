@@ -1,4 +1,5 @@
 
+from attr import field
 from rest_framework import serializers
 
 from .quartz_models import QuartzStoneConfiguration, QuartzStone, QuartzManufacturer, quartzManufacturerInfoPictures
@@ -107,3 +108,33 @@ class reverseQuartzManufacturerSerializer(serializers.ModelSerializer):
         model = QuartzManufacturer
         fields = ('name', 'stones',
                   'schema', 'info_images', 'additional_info', 'cut_price')
+
+
+class SearchQuartzRepr(serializers.ModelSerializer):
+    manufacturer = serializers.CharField(
+        source="manufacturer.name", read_only=True)
+
+    class Meta:
+        model = QuartzStone
+        fields = ('id', 'name', 'manufacturer')
+
+
+class ConfigurationSerializer(serializers.ModelSerializer):
+    thickness = serializers.CharField(source="thickness.value", read_only=True)
+    slab_size = SlabSizeSerializer()
+    surface = serializers.CharField(source="surface.alias", read_only=True)
+
+    class Meta:
+        model = QuartzStoneConfiguration
+        fields = ('id', 'thickness', 'slab_size', 'surface',
+                  'rub_price', 'code')
+
+
+class QuartzStoneSerializer(serializers.ModelSerializer):
+    configurations = ConfigurationSerializer(many=True)
+    manufacturer = serializers.CharField(
+        source="manufacturer.name", read_only=True)
+
+    class Meta:
+        model = QuartzStone
+        fields = ('id', 'name', 'code', 'manufacturer', 'configurations')

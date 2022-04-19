@@ -44,7 +44,8 @@ if DEBUG:
 else:
     ALLOWED_HOSTS = ['194.67.111.46', 'dev.unirock.ru', 'localhost']
 
-CSRF_TRUSTED_ORIGINS = ['https://*.unirock.ru','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://*.unirock.ru', 'https://*.127.0.0.1']
+CSRF_COOKIE_NAME = "XSRF-TOKEN"
 
 if DEBUG:
     STATIC_URL = '/static/'
@@ -89,6 +90,7 @@ INSTALLED_APPS = [
     'stonepricelist',
     'amoApi',
     'production_graph',
+    'estimation'
 
 ]
 

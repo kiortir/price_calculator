@@ -190,7 +190,7 @@ class QuartzStone(Stone):
     collection = models.CharField(
         max_length=150, null=True, blank=True, verbose_name='коллекция')
     modified = models.DateTimeField(auto_now=True)
-    vector_column = SearchVectorField(null=True)
+    vector_column = SearchVectorField(null=True, blank=True)
 
     class Meta:
         unique_together = [['manufacturer', 'name']]
