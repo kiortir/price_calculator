@@ -2,7 +2,6 @@
 import { ref, Ref, computed } from 'vue'
 import { Delete, Edit, InfoFilled } from '@element-plus/icons-vue'
 import { Stone } from '../interfaces';
-import { el } from 'element-plus/lib/locale';
 const props = defineProps<{
     stone: Stone
 }>()
@@ -22,24 +21,19 @@ const surface_options = computed(() => {
     return [...new Set(props.stone.configurations.map(el => el.surface))]
 })
 
-let currency_formatter = new Intl.NumberFormat('ru-RU', {
-    style: 'currency',
-    currency: 'RUB',
-    maximumFractionDigits: 0,
-});
 
-const configuration = computed(() => {
-    if (!(thickness.value && surface.value && slab_size.value)) {
-        return "Выберите опции"
-    }
-    else {
-        const config = props.stone.configurations.find(el => {
-            console.log({ el, surface: surface.value })
-            return ((el.thickness === thickness.value) && (el.slab_size === slab_size.value) && (el.surface === surface.value))
-        })
-        return "Цена: " + currency_formatter.format(config?.rub_price)
-    }
-})
+
+// const configuration = computed(() => {
+//     if (!(props.stone.settings.thickness && props.stone.settings.surface && props.stone.settings.slab_size)) {
+//         return "Выберите опции"
+//     }
+//     else {
+//         const config = props.stone.configurations.find(el => {
+//             return ((el.thickness === props.stone.settings.thickness) && (el.slab_size === props.stone.settings.slab_size) && (el.surface === props.stone.settings.surface))
+//         })
+//         return "Цена: " + currency_formatter.format(config?.rub_price)
+//     }
+// })
 
 
 </script>
@@ -69,39 +63,40 @@ const configuration = computed(() => {
         <div
             class="flex flex-col md:grid  md:grid-flow-row md:grid-rows-1 md:grid-cols-2 gap-2 divide-y-2 md:divide-y-0 md:divide-x-2">
             <div class="controls flex flex-col">
-                <div class="thickness flex flex-col">
-                    <span class="text-lg font-semibold">Толщина камня</span>
-                    <el-radio-group v-model="thickness">
-                        <el-radio-button v-for="(thickness_value, index) in thickness_options" :label="thickness_value">
-                            {{ thickness_value + 'mm' }}
-                        </el-radio-button>
-                    </el-radio-group>
-                </div>
-                <div class="surface flex flex-col">
-                    <span class="text-lg font-semibold">Поверхность</span>
-                    <el-radio-group v-model="surface">
-                        <el-radio-button v-for="(surface_value, index) in surface_options" :label="surface_value">
-                            {{ surface_value }}
-                        </el-radio-button>
-                    </el-radio-group>
-                </div>
-                <div class="slab_size flex flex-col">
-                    <span class="text-lg font-semibold">Размер плиты</span>
-                    <el-radio-group v-model="slab_size">
-                        <el-radio-button v-for="(slab_size_value, index) in slab_size_options" :label="slab_size_value">
-                            {{ slab_size_value + 'mm' }}
-                        </el-radio-button>
-                    </el-radio-group>
-                </div>
-            </div>
-            <div class="flex flex-shrink">
-                <div class="self-center mx-auto font-semibold text-2xl">{{ configuration }}</div>
+                <el-form :model="stone.settings" label-width="auto" label-position="top">
+                    <el-form-item label="Толщина камня">
+                        <el-radio-group v-model="stone.settings.thickness">
+                            <el-radio-button v-for="(thickness_value, index) in thickness_options"
+                                :label="thickness_value">
+                                {{ thickness_value + 'mm' }}
+                            </el-radio-button>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="Тип поверхности">
+                        <el-radio-group v-model="stone.settings.surface">
+                            <el-radio-button v-for="(surface_value, index) in surface_options" :label="surface_value">
+                                {{ surface_value }}
+                            </el-radio-button>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="Размер плиты">
+                        <el-radio-group v-model="stone.settings.slab_size">
+                            <el-radio-button v-for="(slab_size_value, index) in slab_size_options"
+                                :label="slab_size_value">
+                                {{ slab_size_value + 'mm' }}
+                            </el-radio-button>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="Количество листов">
+                        <el-input-number :min="0" :step="0.5" v-model="stone.count"></el-input-number>
+                    </el-form-item>
+                </el-form>
             </div>
         </div>
 
     </el-card>
 
-    <el-dialog width="70%" top="10vh" lock-scroll :fullscreen="!$grid.md" v-model="edit" title="Редактировать материал">
+    <el-dialog width="70%" top="10vh" lock-scroll :fullscreen="false" v-model="edit" title="Редактировать материал">
         <el-scrollbar height="">
 
         </el-scrollbar>
@@ -116,7 +111,7 @@ const configuration = computed(() => {
 </template>
 
 <style>
-.el-card__header {
+/* .el-card__header {
     background-color: rgb(203, 194, 255);
-}
+} */
 </style>

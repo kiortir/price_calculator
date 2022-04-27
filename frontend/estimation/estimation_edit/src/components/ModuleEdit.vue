@@ -1,13 +1,22 @@
 <script setup lang="ts">
 import { ref, Ref, computed, onMounted } from 'vue'
-import { useStore } from '../store/modules'
+import { useModuleStore } from '../store/modules'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import SelectorFields from './SelectorFields.vue'
 import FormulaBlock from './FormulaBlock.vue'
 import ConstField from './ConstField.vue'
 import { Field, Module, Option } from '../interfaces';
 
-const store = useStore()
+const store = useModuleStore()
+
+const isOpen = computed({
+    get() {
+        return props.open
+    },
+    set(value: boolean) {
+        emits('setEdit', value)
+    }
+})
 
 function makeid(length: number) {
     var result = '';
@@ -27,6 +36,7 @@ const props = defineProps<{
 const emits = defineEmits(['setEdit'])
 
 const form: Ref<Module> = ref(<Module>{})
+
 onMounted(() => {
     if (Object.keys(props.module).length) {
         form.value = JSON.parse(JSON.stringify(props.module))
@@ -36,6 +46,7 @@ onMounted(() => {
             name: "",
             code: makeid(9),
             fields: {},
+            settings: {},
             formula: {
                 salary: [],
                 price: [],
@@ -44,18 +55,6 @@ onMounted(() => {
         }
     }
 })
-
-
-const isOpen = computed({
-    get() {
-        return props.open
-    },
-    set(value: boolean) {
-        emits('setEdit', value)
-    }
-})
-
-
 
 
 
@@ -72,6 +71,9 @@ function addModuleField() {
 
 }
 
+
+const editFormulas = ref(false)
+
 function save() {
     store.modules[form.value.code] = form.value
     emits('setEdit', false)
@@ -81,7 +83,7 @@ function save() {
 
 <template>
     <el-dialog fullscreen v-model="isOpen" :title="module.name || 'Новый модуль'">
-        <div class="main container mx-auto p-30 mb-[50px] flex flex-col gap-3">
+        <div class="main container mx-auto p-30 mb-[50px] flex flex-col gap-3" v-if="!editFormulas">
             <el-form :model="form">
                 <el-form-item label="Название модуля">
                     <el-input v-model="form.name" />
@@ -92,7 +94,7 @@ function save() {
                     <div class="text-xl flex flex-row justify-between mb-2">
                         <span>
                             {{
-                                field.name || "Новое поле"
+                                    field.name || "Новое поле"
                             }}
                         </span>
                         <el-button type="danger" :icon="Delete" @click="delete form.fields[id]"></el-button>
@@ -115,10 +117,17 @@ function save() {
             </div>
             <el-button :icon="Plus" type="primary" @click="addModuleField()">Добавить поле</el-button>
         </div>
+        <div class="main container mx-auto p-30 mb-[50px] flex flex-col gap-3" v-else>
+            <formula-block :fields="form.fields" :formula=form.formula></formula-block>
+        </div>
         <template #footer>
-            <span class="dialog-footer">
-                <el-button @click="isOpen = false">Cancel</el-button>
-                <el-button type="primary" @click="save()">Confirm</el-button>
+            <span class="dialog-footer" v-if="editFormulas">
+                <el-button @click="editFormulas = false">Отменить</el-button>
+                <el-button type="primary" @click="save()">Сохранить</el-button>
+            </span>
+            <span class="dialog-footer" v-else>
+                <el-button @click="isOpen = false">Отменить</el-button>
+                <el-button type="primary" @click="editFormulas = true">К формулам</el-button>
             </span>
         </template>
     </el-dialog>

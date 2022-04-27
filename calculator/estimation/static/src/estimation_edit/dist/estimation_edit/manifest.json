@@ -1,0 +1,24 @@
+{
+  "src/main.ts": {
+    "file": "js/main.js",
+    "src": "src/main.ts",
+    "isEntry": true,
+    "dynamicImports": [
+      "src/components/PriceListNew.vue"
+    ],
+    "css": [
+      "css/main.css"
+    ]
+  },
+  "src/components/PriceListNew.vue": {
+    "file": "js/PriceListNew.js",
+    "src": "src/components/PriceListNew.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.ts"
+    ],
+    "css": [
+      "css/PriceListNew.css"
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 
-export const useStore = defineStore('constants', {
+export const useConstantStore = defineStore('constants', {
     state: () => {
         return {
             material: {
@@ -18,7 +18,8 @@ export const useStore = defineStore('constants', {
                     price: 0,
                     salary: 0,
                     consumables: 0,
-                    distance_modfier: 0,
+                    distance_modifier: 0,
+                    salary_distance_modifier: 0,
                 },
                 installation: {
                     price_const: 0,
@@ -26,13 +27,15 @@ export const useStore = defineStore('constants', {
                     salary_const: 0,
                     salary_var: 0,
                     consumables: 0,
-                    distance_modfier: 0,
+                    distance_modifier: 0,
+                    salary_distance_modifier: 0
                 },
                 measurement: {
                     price: 0,
                     salary: 0,
                     consumables: 0,
-                    distance_modfier: 0,
+                    distance_modifier: 0,
+                    salary_distance_modifier: 0,
                     template: 0,
                 },
                 manual_lift: {
@@ -40,12 +43,6 @@ export const useStore = defineStore('constants', {
                     salary: 0,
                     consumables: 0,
                 },
-                disassembly: {
-                    price: 0,
-                    salary: 0,
-                    consumables: 0,
-                },
-
             },
         }
     },

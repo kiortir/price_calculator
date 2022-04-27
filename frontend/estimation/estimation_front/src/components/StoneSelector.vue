@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref, defineEmits } from 'vue'
+import { ref, Ref } from 'vue'
 import axios from 'axios'
 import { Stone } from '../interfaces'
 
@@ -15,7 +15,7 @@ const options: Ref<Manufacturer[]> = ref([])
 
 const loading = ref(false)
 const search = (query: string) => {
-    if (query.length > 2) {
+    if (query.length) {
         loading.value = true
         axios.get('/pricelist/quartz/stones/', {
             params: { search: query }
@@ -43,8 +43,8 @@ const addStone = (value: number) => {
 
 <template>
     <el-select size="large" ref="search_bar" :model-value="stone"
-        @update:model-value="value => { stone = value; addStone(value) }" filterable :filter-method="() => true"
-        :options="options" remote :remote-method="search" placeholder="Выберите камни" :loading="loading">
+        @update:model-value="value => { stone = value; addStone(value) }" filterable :options="options" remote
+        :remote-method="search" placeholder="Выберите камни" :loading="loading">
         <el-option-group v-for="manufacturer in options" :key="manufacturer.name" :label="manufacturer.name">
             <el-option v-for="item in manufacturer.stones" :key="item.name" :label="item.name" :value="item.id" />
         </el-option-group>

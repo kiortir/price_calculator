@@ -14,13 +14,13 @@
     {% block content %}<div id="app"></div>{% endblock %}
     {% block scripts %}
         {% if debug %}
-            <script type="module" src="http://10.0.0.3:3000/@vite/client"></script>
-            <script type="module" src="http://10.0.0.3:3000/src/main.ts"></script>
+            <script type="module" src="http://10.0.0.3:4000/@vite/client"></script>
+            <script type="module" src="http://10.0.0.3:4000/src/main.ts"></script>
         {% else %}
             <script type="module"
                     src="{% static '/src/estimation_edit/dist/estimation_edit/js/main.js'%}"></script>
-            <script type="module"
-                    src="{% static '/src/estimation_edit/dist/estimation_edit/js/vendor.js'%}"></script>
+            {% comment %} <script type="module"
+                    src="{% static '/src/estimation_edit/dist/estimation_edit/js/vendor.js'%}"></script> {% endcomment %}
         {% endif %}
     </body>
 {% endblock %}

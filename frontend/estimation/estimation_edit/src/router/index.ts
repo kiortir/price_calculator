@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import PriceListHome from '/src/components/PriceListHome.vue'
-import PriceListNew from '/src/components/PriceListNew.vue'
+// import PriceListNew from '/src/components/PriceListNew.vue'
+const PriceListNew = () => import('../components/PriceListNew.vue')
 
 // 2. Define some routes
 // Each route should map to a component.

@@ -134,7 +134,9 @@ class QuartzStoneSerializer(serializers.ModelSerializer):
     configurations = ConfigurationSerializer(many=True)
     manufacturer = serializers.CharField(
         source="manufacturer.name", read_only=True)
+    cut_price = serializers.CharField(
+        source="manufacturer.slab_cut_price", read_only=True)
 
     class Meta:
         model = QuartzStone
-        fields = ('id', 'name', 'code', 'manufacturer', 'configurations')
+        fields = ('id', 'name', 'code', 'manufacturer', 'configurations', 'cut_price')

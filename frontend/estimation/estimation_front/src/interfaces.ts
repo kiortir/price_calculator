@@ -1,3 +1,8 @@
+import { Store as PiniaStore } from "pinia"
+
+export type priceField = 'price' | 'salary' | 'consumables' | 'discount'
+export type configSettings = 'thickness' | 'surface' | 'slab_size'
+
 export interface StoneConfiguration extends Object {
     id: number
     thickness: string
@@ -12,4 +17,68 @@ export interface Stone extends Object {
     code?: string
     manufacturer: string
     configurations: StoneConfiguration[]
+    count: number
+    cut_price: number
+    settings: {
+        [key in configSettings]?: string
+    }
+}
+
+export interface ProductOption {
+
+    [field_id: string]: string | number | undefined
+
+}
+
+export interface Product {
+    template: string
+    data: {
+        options: {
+            [id: string]: ProductOption
+        },
+        logistic_values: {
+            [id: string]: {}
+        }
+    }
+
+}
+export interface FormulaElement {
+    name: string
+    type: string
+    reference?: string
+    value?: string | number
+
+}
+
+export interface SelectorObject {
+    key: string
+    value: {
+        [key in priceField]: number
+    }
+}
+
+export interface ModuleField {
+    name: string
+    type: string
+    placeholder?: string
+    options?: SelectorObject[]
+}
+
+export interface Module {
+    code: string
+    name: string
+    fields: {
+        [field_code: string]: ModuleField
+    }
+    formula: {
+        [key in priceField]: FormulaElement[]
+    }
+}
+
+export interface Modules {
+    [id: string]: Module
+}
+
+export interface Store extends PiniaStore {
+    addCard: () => {}
 }

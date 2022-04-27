@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { Module } from '../interfaces'
 
-export const useStore = defineStore('modules', {
+export const useModuleStore = defineStore('modules', {
     state: () => {
         return {
             modules: <{ [index: string]: Module }>{}

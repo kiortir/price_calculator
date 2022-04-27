@@ -30,25 +30,25 @@ class DefaultPricelistSerializer(serializers.ModelSerializer):
         return super().to_representation(instance)
 
 
-class PriceListSerializer(serializers.ModelSerializer):
-    created_by = UserSerializer()
-    # is_default = DefaultPricelistSerializer()
-
-    def to_representation(self, instance):
-        # try:
-        #     instance['is_default'] = instance['is_default'].status
-        # except TypeError:
-        #     pass
-        return super().to_representation(instance)
-
-    class Meta:
-        model = ServicePricelist
-        fields = ('created_at', 'created_by', 'id')
-
-
 class ServiceModuleSerializer(serializers.ModelSerializer):
-    created_by = UserSerializer()
 
     class Meta:
         model = ServiceModule
         fields = '__all__'
+
+
+class PriceListSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer()
+    modules = ServiceModuleSerializer(many=True)
+    # is_default = DefaultPricelistSerializer()
+
+    def to_representation(self, obj):
+        representation = super().to_representation(obj)
+        modules = representation['modules']
+        modules_dict = {module['name']: module['options'] for module in modules}
+        representation['modules'] = modules_dict
+        return representation
+
+    class Meta:
+        model = ServicePricelist
+        fields = ('created_at', 'created_by', 'id', 'variables', 'modules')

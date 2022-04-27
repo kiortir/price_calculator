@@ -6,11 +6,21 @@ import { Edit, Delete } from '@element-plus/icons-vue'
 import PriceListConstants from './PriceListConstantsBlock.vue'
 import ModuleEdit from './ModuleEdit.vue'
 import { Module } from '../interfaces'
-import { useStore } from '../store/modules'
+import { useModuleStore } from '../store/modules'
+import { useConstantStore } from '../store/constants'
+import { router } from '../router'
+
+interface CSRFMeta extends Element {
+    value: string
+}
+
+const csrftoken_holder = <CSRFMeta>document.querySelector('[name=csrfmiddlewaretoken]');
+const csrftoken = csrftoken_holder.value
 
 
 const route = useRoute()
-const store = useStore()
+const moduleStore = useModuleStore()
+const constStore = useConstantStore()
 const loading = ref(false)
 const error = ref()
 
@@ -31,20 +41,34 @@ const getModules = (origin_id: number | null = null) => {
         })
 }
 
+const savePricelist = () => {
+    axios({
+        method: 'post',
+        url: '/estimation/api/pricelist/',
+        data: {
+            constants: constStore.$state,
+            modules: moduleStore.modules
+        },
+        headers: { "X-CSRFToken": csrftoken }
+    }).then(() => {
+        router.back()
+    })
+}
+
 </script>
 
 <template>
     <div class="container mx-auto mt-10 flex flex-col gap-3  mb-[100px]">
-        <div class="settings">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam ut ab sunt libero fuga
-            accusamus rem corrupti maiores, quo fugiat esse magni enim voluptate possimus facere deleniti doloremque
-            iste eius.</div>
+        <div class="settings">
+            <el-button @click="savePricelist()">Сохранить</el-button>
+        </div>
 
         <div id="material-constants" class="">
             <PriceListConstants />
         </div>
         <div class="modules w-fit mx-auto">
             <el-transfer v-model="selected_modules" filterable :titles="['Доступные', 'Используемые']"
-                :button-texts="['Убрать', 'Добавить']" :data="Object.values(store.modules)" :props="{
+                :button-texts="['Убрать', 'Добавить']" :data="Object.values(moduleStore.modules)" :props="{
                     key: 'code',
                     label: 'name',
                     disabled: ''
@@ -54,16 +78,17 @@ const getModules = (origin_id: number | null = null) => {
                         <span class="">{{ option.name }}</span>
                         <div class="flex flex-row">
                             <el-button size="small" :icon="Edit"
-                                @click="editModule = true; edited_module = store.modules[option.code]" />
-                                <el-button size="small" :icon="Delete" type="danger"
-                                @click="delete store.modules[option.code]" />
+                                @click="editModule = true; edited_module = moduleStore.modules[option.code]" />
+                            <el-button size="small" :icon="Delete" type="danger"
+                                @click="delete moduleStore.modules[option.code]" />
                         </div>
                     </div>
                 </template>
                 <template #left-footer>
                     <div class=" w-full h-full flex place-content-center">
                         <div class="my-auto">
-                            <el-button class="transfer-footer" size="small" @click="edited_module = {};editModule = true">Добавить
+                            <el-button class="transfer-footer" size="small"
+                                @click="edited_module = {}; editModule = true">Добавить
                                 опцию
                             </el-button>
                         </div>

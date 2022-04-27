@@ -19,6 +19,7 @@ export interface Option {
 export interface Field {
     type: string
     name: string
+    code: string
     options?: Option[]
     value?: number
 }

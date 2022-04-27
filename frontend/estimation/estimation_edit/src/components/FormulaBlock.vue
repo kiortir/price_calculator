@@ -3,19 +3,21 @@ import { ref, Ref, computed } from 'vue'
 import { Plus, Minus, Delete } from '@element-plus/icons-vue'
 import { Field, FormulaElement } from '../interfaces'
 
-defineProps<{
+const props = defineProps<{
     fields: {
         [id: string]: Field
+    },
+    formula: {
+        price: FormulaElement[]
+        salary: FormulaElement[]
+        consumables: FormulaElement[]
     }
 }>()
 
 
-
-
-
-const price_formula: Ref<FormulaElement[]> = ref([])
-const salary_formula = ref([])
-const consumables_formula = ref([])
+const price_formula = props.formula.price
+const salary_formula = props.formula.salary
+const consumables_formula = props.formula.consumables
 
 
 const edited_formula = ref()
@@ -49,10 +51,38 @@ const OPERATORS: OPERATOR_DICT = {
         type: 'operator',
         value: ')'
     },
+    if: {
+        type: 'operator',
+        value: 'if('
+    },
+    then: {
+        type: 'operator',
+        value: '){'
+    },
+    else: {
+        type: 'operator',
+        value: '}else{'
+    },
+    endif: {
+        type: 'operator',
+        value: '}'
+    },
+    gt: {
+        type: 'operator',
+        value: '>'
+    },
+    lt: {
+        type: 'operator',
+        value: '<'
+    },
+    eq: {
+        type: 'operator',
+        value: '==='
+    },
 }
 
 
-const addField = (field: Field) => {
+const addField = (field: Field, code: string | null = null) => {
     if (edited_formula.value) {
         const latest = edited_formula.value[edited_formula.value.length - 1] || 0
         if (!latest || latest.type === 'operator') {
@@ -68,7 +98,7 @@ const addField = (field: Field) => {
                     edited_formula.value.push(<FormulaElement>{
                         type: 'field',
                         name: field.name,
-                        reference: field.code
+                        reference: code || field.code
                     })
                 }
             }
@@ -76,13 +106,12 @@ const addField = (field: Field) => {
     }
 }
 
-const addOperator = (operator: string) => {
+const addOperator = (operator: FormulaElement) => {
     if (edited_formula.value) {
         const latest = edited_formula.value[edited_formula.value.length - 1] || 0
-        const operator_value = OPERATORS[operator]
-        if (latest && latest.type !== 'operator') {
-            edited_formula.value.push(operator_value)
-        }
+        // if (latest && (latest.type !== 'operator' || operator.value === '(' || operator.value === 'if(')) {
+        edited_formula.value.push(operator)
+        // }
     }
 }
 
@@ -91,11 +120,11 @@ const addOperator = (operator: string) => {
 
 
 <template>
-    <div class="ring-1 ring-unirock p-3 rounded-sm class flex flex-col">
-        <p class="text-2xl mb-3">Формула</p>
+    <div class="flex flex-col">
+        <p class="text-2xl mb-3">Формулы</p>
         <div class="flex flex-col md:flex-row md:divide-x gap-3">
             <div class="md:basis-9/12 order-2">
-                <div class="flex flex-col">
+                <div class="flex flex-col gap-3">
                     <div class="p-3 text-lg flex flex-row gap-5 ring-1 rounded-md"
                         :class="edited_formula === price_formula ? 'bg-sky-100' : ''"
                         @click="edited_formula = price_formula">
@@ -107,6 +136,28 @@ const addOperator = (operator: string) => {
                             </div>
                         </div>
                     </div>
+                    <div class="p-3 text-lg flex flex-row gap-5 ring-1 rounded-md"
+                        :class="edited_formula === salary_formula ? 'bg-sky-100' : ''"
+                        @click="edited_formula = salary_formula">
+                        <span>Зарплата</span>
+                        <div class="formula-price flex flex-row gap-2">
+                            <div class="bg-primary rounded-md text-white min-w-[40px] px-2 h-8 text-sm flex"
+                                v-for="element in salary_formula">
+                                <span class="place-self-center mx-auto">{{ element.name || element.value }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 text-lg flex flex-row gap-5 ring-1 rounded-md"
+                        :class="edited_formula === consumables_formula ? 'bg-sky-100' : ''"
+                        @click="edited_formula = consumables_formula">
+                        <span>Расходники</span>
+                        <div class="formula-price flex flex-row gap-2">
+                            <div class="bg-primary rounded-md text-white min-w-[40px] px-2 h-8 text-sm flex"
+                                v-for="element in consumables_formula">
+                                <span class="place-self-center mx-auto">{{ element.name || element.value }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="values order-1 md:order-3 md:basis-3/12 w-full">
@@ -114,11 +165,9 @@ const addOperator = (operator: string) => {
                     <div class="">
                         <p class="text-gray-500 text-lg">Операции</p>
                         <div class="flex flex-row">
-                            <el-button @click="addOperator('plus')" :icon="Plus" type="primary"></el-button>
-                            <el-button :icon="Minus" type="primary"></el-button>
-                            <el-button type="primary">*</el-button>
-                            <el-button type="primary">/</el-button>
-
+                            <el-button v-for="(operator_value, operator) in OPERATORS" :key="operator"
+                                @click="addOperator(operator_value)" type="primary">{{ operator_value.value }}
+                            </el-button>
                             <el-button :icon="Delete" type="danger" @click="edited_formula.pop()"></el-button>
                         </div>
                     </div>
@@ -129,8 +178,8 @@ const addOperator = (operator: string) => {
                     <div class="pl-3 md:pl-0">
                         <p class="text-gray-500 text-lg">Поля</p>
                         <div class="divide-y flex flex-col">
-                            <button @click="addField({ ...field, ...{ code: id } })" class="text-left hover:bg-sky-100"
-                                v-for="(field, id) in fields" :key="id">
+                            <button class="text-left hover:bg-sky-100" v-for="(field, code) in fields" :key="code"
+                                @click="addField(field, String(code))">
                                 {{ field.name }}
                             </button>
                         </div>

@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { useStore } from '../store/constants';
+import { useConstantStore } from '../store/constants';
 import { useGrid } from 'vue-screen'
 import { Lock } from '@element-plus/icons-vue'
 
-const store = useStore()
+const store = useConstantStore()
 const grid = useGrid('tailwind')
 
 const field_alias = {
     salary: "Зарплата",
     price: "Цена",
     consumables: "Расходники",
-    distance_modfier: "Надбавка за км от МКАД",
+    distance_modifier: "Надбавка за км от МКАД",
+    salary_distance_modifier: "Траты за км от МКАД",
     price_const: 'Цена (фикс)',
     price_var: 'Цена (п.м.|м2)',
     salary_const: 'Зарплата (фикс)',
@@ -26,7 +27,6 @@ const constant_alias = {
     installation: 'Монтаж',
     measurement: 'Замер',
     manual_lift: 'Ручной подъем',
-    disassembly: 'Демонтаж старой столешницы',
     overprice: 'Надбавка к стоимости',
 }
 

@@ -31,7 +31,12 @@ const fetch = () => {
 const set_pricelist_loading = ref()
 const setDefaultPricelist = (id: number) => {
   set_pricelist_loading.value = id
-  axios({ method: 'patch', url: '/estimation/api/pricelist/', data: { id }, headers: { "X-CSRFToken": csrftoken } }).then(response => {
+  axios({
+    method: 'patch',
+    url: '/estimation/api/pricelist/',
+    data: { id },
+    headers: { "X-CSRFToken": csrftoken }
+  }).then(response => {
     if (response.status === 200) {
       default_pricelist_id.value = id
       set_pricelist_loading.value = null

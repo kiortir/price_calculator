@@ -33,9 +33,7 @@ class NewEstimation(TemplateView):
 class EstimationView(TemplateView):
     template_name = 'estimation/index.html'
 
-    def get(self, request, parameters):
-        context = {}
-        estimation_id = parameters.get('estimation_id')
+    def get(self, request):
         try:
             # estimation: Estimation = Estimation.objects.get(pk=estimation_id)
             # context['state'] = estimation.state
@@ -43,7 +41,7 @@ class EstimationView(TemplateView):
             # context['amo_lead_id'] = estimation.amo_lead_id
             # context['iteration_group'] = estimation.iteration_group
             # context['estimation_id'] = estimation.id
-            return render(request, template_name=self.template_name, context=context)
+            return render(request, template_name=self.template_name)
         except Estimation.DoesNotExist:
             # redirect
             return redirect('/new')
@@ -59,12 +57,20 @@ class PricelistListView(TemplateView):
 class PricelistAPIView(APIView):
     def get(self, request):
         pricelist_id = request.GET.get('id')
+        latest = request.GET.get('latest')
         try:
-            default_id_entry = DefaultPricelist.objects.first()
-            default_id = default_id_entry.pricelist.id
+            default_pricelist = DefaultPricelist.objects.first()
+            default_id = default_pricelist.pricelist.id
         except (DefaultPricelist.DoesNotExist, AttributeError):
+            default_pricelist = None
             default_id = None
-        if pricelist_id:
+        if latest:
+            try:
+                data = PriceListSerializer(
+                    default_pricelist.pricelist or ServicePricelist.objects.latest()).data
+            except (DefaultPricelist.DoesNotExist, AttributeError):
+                return Response(status=404)
+        elif pricelist_id:
             try:
                 pricelist = ServicePricelist.objects.get(pk=pricelist_id)
             except ServicePricelist.DoesNotExist:
@@ -77,6 +83,30 @@ class PricelistAPIView(APIView):
             'default': default_id,
             'data': data
         })
+
+    def post(self, request):
+
+        data = request.data
+        if not data:
+            return Response(status=400)
+
+        pricelist = ServicePricelist.objects.create(
+            created_by=request.user,
+            variables=data.get('constants', {}),
+            is_active=False
+        )
+        pricelist.save()
+
+        modules: dict = data.get('modules')
+        for id, module in modules.items():
+            new_module = ServiceModule.objects.create(
+                name=id,
+                options=module,
+                pricelist=pricelist
+            )
+            new_module.save()
+
+        return Response(status=200)
 
     def patch(self, request):
         new_default_id = request.data.get('id')
