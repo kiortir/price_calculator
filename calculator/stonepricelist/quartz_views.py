@@ -33,23 +33,23 @@ class QuartzData(APIView):
 
     def get(self, request):
         search_str = request.GET.get('search')
-        stones = QuartzStone.objects.prefetch_related('manufacturer')
+        stones = QuartzStone.objects#.prefetch_related('manufacturer')
         for sub_str in search_str.split(' '):
             stones = stones.filter(vector_column__icontains=sub_str)
         # stones = QuartzStone.objects.annotate(
         #     similarity=TrigramWordSimilarity(search_str, 'name'),
         # ).filter(similarity__gt=0.3)
         stones = SearchQuartzRepr(stones, many=True).data
-        manufacturers = defaultdict(list)
-        for stone in stones:
-            manufacturers[stone.pop('manufacturer')].append(stone)
-        m = []
-        for manufacturer, stones in manufacturers.items():
-            m.append({
-                "name": manufacturer,
-                "stones": stones
-            })
-        return Response(m)
+        # manufacturers = defaultdict(list)
+        # for stone in stones:
+        #     manufacturers[stone.pop('manufacturer')].append(stone)
+        # m = []
+        # for manufacturer, stones in manufacturers.items():
+        #     m.append({
+        #         "name": manufacturer,
+        #         "stones": stones
+        #     })
+        return Response(stones)
 
     def post(self, request):
         stones = QuartzManufacturer.objects.all()
