@@ -29,6 +29,7 @@ const fieldValue = (field_id: string, values: ProductOption) => {
     const moduleStore = useModuleStore()
     const id = field_id.split('_')[0]
     const formula = <{ [key in priceField]: [] }>moduleStore.data[id].formula
+    const settings = moduleStore.data[id].settings
     const fields = moduleStore.data[id].fields
     const results = <{
         [key in priceField]: number
@@ -74,6 +75,17 @@ const fieldValue = (field_id: string, values: ProductOption) => {
         catch (e) {
             return 0
         }
+        const price = results.price
+        if (settings.discountable) {
+            results[<priceField>'discount10'] = Math.ceil(price * 0.9)
+            results[<priceField>'discount20'] = Math.ceil(price * 0.8)
+            results[<priceField>'discount30'] = Math.ceil(price * 0.7)
+        }
+        else {
+            results[<priceField>'discount10'] = price
+            results[<priceField>'discount20'] = price
+            results[<priceField>'discount30'] = price
+        }
     }
     return results
 }
@@ -82,6 +94,7 @@ export const useProductStore = defineStore('products', {
     state: () => {
         return {
             products: <{ [id: string]: Product }>{},
+            discount: ""
         }
     },
     actions: {
@@ -98,6 +111,12 @@ export const useProductStore = defineStore('products', {
         deleteCard(id: string) {
             delete this.products[id]
         },
+        clearCard(id: string) {
+            this.products[id].data = {
+                options: {},
+                logistic_values: {}
+            }
+        }
     },
     getters: {
         product_price: function (state): Function {
@@ -129,6 +148,23 @@ export const useProductStore = defineStore('products', {
                 result.push(price_getter(product_id))
             }
             return result
+        },
+        total: function (): { [key in priceField]?: number } {
+            const total = { price: 0, discount10: 0, discount20: 0, discount30: 0, salary: 0, consumables: 0 }
+            for (const product of this.prices) {
+                product.prices.forEach(module => {
+                    const module_prices = module.price
+                    const module_raw_price = module_prices.price || 0
+                    total.price += module_raw_price
+                    total.salary += module_prices.salary || 0
+                    total.consumables += module_prices.consumables || 0
+                    total.discount10 += module_prices.discount10 || module_raw_price
+                    total.discount20 += module_prices.discount20 || module_raw_price
+                    total.discount30 += module_prices.discount30 || module_raw_price
+
+                })
+            }
+            return total
         },
         installationTotal: function (): number {
             return Object.keys(this.products).length

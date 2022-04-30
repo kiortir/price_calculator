@@ -29,12 +29,22 @@ const logisticsData = computed(() => {
         }
     }
     for (const field of Object.values(logisticStore.custom)) {
-        console.log(field)
         if (field.value > 0 && (!field.hide)) {
             filtered[field.field || 'Дополнительные работы'] = { price: field.value }
         }
     }
     return filtered
+})
+
+const total = computed(() => {
+    const total = {
+        price: 0,
+        discount10: 0,
+        discount20: 0,
+        discount30: 0
+    }
+    total.price += productStore.total.price || 0 + 0
+    return total
 })
 
 
@@ -57,5 +67,6 @@ const logisticsData = computed(() => {
                 <li v-for="(sum, job) in logisticsData">{{ job }}: {{ sum.price }}</li>
             </ul>
         </div>
+        <div class="total">{{ total }}</div>
     </div>
 </template>

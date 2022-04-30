@@ -3,6 +3,7 @@ import { ref, Ref, computed } from 'vue'
 import { Plus, Minus, Delete } from '@element-plus/icons-vue'
 import { Field, FormulaElement } from '../interfaces'
 
+
 const props = defineProps<{
     fields: {
         [id: string]: Field
@@ -188,4 +189,5 @@ const addOperator = (operator: FormulaElement) => {
             </div>
         </div>
     </div>
+
 </template>

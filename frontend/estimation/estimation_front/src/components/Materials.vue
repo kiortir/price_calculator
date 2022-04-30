@@ -11,7 +11,7 @@ const updateStone = (index: number, payload: Stone) => store.stones[index] = pay
 </script>
 
 <template>
-    <div class='flex flex-col gap-3'>
+    <div class='flex flex-col gap-3 px-1'>
         <StoneSelectorVue class="w-full" @add="data => store.addCard(data)"></StoneSelectorVue>
         <div class="flex flex-col gap-2">
             <stone-info-card-vue v-for="(stone, index) in store.stones" :key="index" :stone="stone"

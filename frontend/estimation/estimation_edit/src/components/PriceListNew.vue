@@ -5,6 +5,7 @@ import { ref, computed, onMounted } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import PriceListConstants from './PriceListConstantsBlock.vue'
 import ModuleEdit from './ModuleEdit.vue'
+import TemplatesBlockVue from './TemplatesBlock.vue'
 import { Module } from '../interfaces'
 import { useModuleStore } from '../store/modules'
 import { useConstantStore } from '../store/constants'
@@ -59,8 +60,13 @@ const savePricelist = () => {
 
 <template>
     <div class="container mx-auto mt-10 flex flex-col gap-3  mb-[100px]">
+
         <div class="settings">
             <el-button @click="savePricelist()">Сохранить</el-button>
+        </div>
+        <div>
+            <p>Шаблоны</p>
+            <TemplatesBlockVue></TemplatesBlockVue>
         </div>
 
         <div id="material-constants" class="">
@@ -100,6 +106,7 @@ const savePricelist = () => {
             </el-transfer>
             <module-edit :open="editModule" :module="edited_module" :key="Math.random()"
                 @setEdit="value => { editModule = value }" />
+
         </div>
     </div>
 

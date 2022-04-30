@@ -1,3 +1,4 @@
+from django.contrib.postgres.search import SearchVector
 from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
 from functools import partial
@@ -187,6 +188,7 @@ class quartzManufacturerInfoPictures(models.Model):
 class QuartzStone(Stone):
     manufacturer = models.ForeignKey(
         QuartzManufacturer, on_delete=models.SET_NULL, null=True, blank=True, related_name="stones", verbose_name='производитель')
+    manufacturer_name = models.CharField(max_length=150, null=True, blank=True)
     collection = models.CharField(
         max_length=150, null=True, blank=True, verbose_name='коллекция')
     modified = models.DateTimeField(auto_now=True)
@@ -200,6 +202,7 @@ class QuartzStone(Stone):
 
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
+        self.manufacturer_name = self.manufacturer.name or ""
         return super(QuartzStone, self).save(*args, **kwargs)
 
     def __repr__(self):

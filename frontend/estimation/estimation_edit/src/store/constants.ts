@@ -44,7 +44,18 @@ export const useConstantStore = defineStore('constants', {
                     consumables: 0,
                 },
             },
+            templates: <{ [name: string]: {} }>{
+
+            }
         }
     },
+    actions: {
+        addTemplate(name: string) {
+            this.templates[name] = {}
+        },
+        deleteTemplate(name: string) {
+            delete this.templates[name]
+        }
+    }
 
 })

@@ -10,13 +10,13 @@ const store = useModuleStore()
 
 
 const props = defineProps<{
-    module_id: string
+    name: string
     index: number
     data: Object
 }>()
 
-const reference = store.data[props.module_id]
-
+const reference = store.data[props.name]
+console.log({ reference })
 const refs = {
     selector: FieldSelectorVue,
     variable: FieldVariableVue,

@@ -35,7 +35,7 @@ class QuartzData(APIView):
         search_str = request.GET.get('search')
         stones = QuartzStone.objects#.prefetch_related('manufacturer')
         for sub_str in search_str.split(' '):
-            stones = stones.filter(vector_column__icontains=sub_str)
+            stones = stones.filter(vector_column__icontains=sub_str[:10])
         # stones = QuartzStone.objects.annotate(
         #     similarity=TrigramWordSimilarity(search_str, 'name'),
         # ).filter(similarity__gt=0.3)

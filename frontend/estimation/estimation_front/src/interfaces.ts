@@ -1,6 +1,6 @@
 import { Store as PiniaStore } from "pinia"
 
-export type priceField = 'price' | 'salary' | 'consumables' | 'discount'
+export type priceField = 'price' | 'salary' | 'consumables' | 'discount10' | 'discount20' | 'discount30'
 export type configSettings = 'thickness' | 'surface' | 'slab_size'
 
 export interface StoneConfiguration extends Object {

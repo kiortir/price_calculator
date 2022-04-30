@@ -11,8 +11,8 @@ import FieldConstantVue from './Constant.vue';
 const store = useConstantStore()
 
 const props = defineProps<{
-    module_name: string
-    product: object
+    name: string
+    data: object
 }>()
 
 const refs = {
@@ -22,14 +22,14 @@ const refs = {
 }
 
 
-const module = store.modules.filter(module => (module.name === props.module_name))[0]
+const module = store.modules.filter(module => (module.name === props.name))[0]
 
 </script>
 
 <template>
-    <el-form :model="product" label-width="auto" label-position="left">
+    <el-form :model="data" label-width="auto" label-position="left">
         <component v-for="(field, key) in module.fields" :is="refs[field.type]" :reference="field" :id="key"
-            :data="product">
+            :data="data">
         </component>
     </el-form>
 </template>

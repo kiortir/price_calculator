@@ -114,9 +114,16 @@ class SearchQuartzRepr(serializers.ModelSerializer):
     manufacturer = serializers.CharField(
         source="manufacturer.name", read_only=True)
 
+    # def to_representation(self, obj):
+    #     representation = super().to_representation(obj)
+    #     name = representation.pop('name')
+    #     manufacturer = representation.pop('manufacturer')
+    #     representation['name'] = f'{manufacturer} {name}'
+    #     return representation
+
     class Meta:
         model = QuartzStone
-        fields = ('id', 'name', 'manufacturer')
+        fields = ('id', 'name', 'manufacturer', 'code')
 
 
 class ConfigurationSerializer(serializers.ModelSerializer):
@@ -137,6 +144,14 @@ class QuartzStoneSerializer(serializers.ModelSerializer):
     cut_price = serializers.CharField(
         source="manufacturer.slab_cut_price", read_only=True)
 
+    # def to_representation(self, obj):
+    #     representation = super().to_representation(obj)
+    #     name = representation.pop('name')
+    #     manufacturer = representation.pop('manufacturer')
+    #     representation['name'] = f'{manufacturer} {name}'
+    #     return representation
+
     class Meta:
         model = QuartzStone
-        fields = ('id', 'name', 'code', 'manufacturer', 'configurations', 'cut_price')
+        fields = ('id', 'name', 'code', 'manufacturer',
+                  'configurations', 'cut_price')

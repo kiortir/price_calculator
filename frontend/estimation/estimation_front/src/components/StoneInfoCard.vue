@@ -1,40 +1,46 @@
 <script setup lang="ts">
 import { ref, Ref, computed } from 'vue'
-import { Delete, Edit, InfoFilled } from '@element-plus/icons-vue'
+import { Delete, Edit, InfoFilled, RefreshLeft } from '@element-plus/icons-vue'
 import { Stone } from '../interfaces';
 const props = defineProps<{
     stone: Stone
 }>()
 
 const edit = ref(false)
-let thickness = ref("")
-const surface = ref("")
-const slab_size = ref("")
 
-const thickness_options = computed(() => {
-    return [...new Set(props.stone.configurations.map(el => el.thickness))]
+const available_options = computed(() => {
+    const options = {
+        thickness: new Map(),
+        surface: new Map(),
+        slab_size: new Map(),
+    }
+
+    const chosen_values = Object.entries(props.stone.settings)
+    props.stone.configurations.forEach(configuration => {
+        console.log({ configuration })
+        const is_active = !chosen_values.some((entry) => {
+            const [key, value] = entry
+            if (value === undefined) {
+                console.log({ entry })
+                return false
+            }
+            console.log({ configuration })
+            return configuration[key] !== value
+        })
+        const settings = ['surface', 'slab_size', 'thickness']
+        settings.forEach(setting => {
+            if (!options[setting].has(configuration[setting]) || !options[setting].get(configuration[setting]))
+                options[setting].set(configuration[setting], is_active)//|| props.stone.settings[setting] !== undefined)
+        });
+    })
+
+    return options
+
 })
-const slab_size_options = computed(() => {
-    return [...new Set(props.stone.configurations.map(el => el.slab_size))]
-})
-const surface_options = computed(() => {
-    return [...new Set(props.stone.configurations.map(el => el.surface))]
-})
 
-
-
-// const configuration = computed(() => {
-//     if (!(props.stone.settings.thickness && props.stone.settings.surface && props.stone.settings.slab_size)) {
-//         return "Выберите опции"
-//     }
-//     else {
-//         const config = props.stone.configurations.find(el => {
-//             return ((el.thickness === props.stone.settings.thickness) && (el.slab_size === props.stone.settings.slab_size) && (el.surface === props.stone.settings.surface))
-//         })
-//         return "Цена: " + currency_formatter.format(config?.rub_price)
-//     }
-// })
-
+const resetStone = () => {
+    props.stone.settings = { "thickness": undefined, "slab_size": undefined, "surface": undefined }
+}
 
 </script>
 
@@ -42,11 +48,12 @@ const surface_options = computed(() => {
     <el-card class="box-card" shadow="hover">
         <template #header>
             <div class="card-header flex flex-row justify-between">
-                <div class="flex flex-row gap-2 self-end order-2 md:order-1 my-auto">
+                <div class="flex flex-row self-end order-2 md:order-1 my-auto">
+                    <el-button size="large" circle class="button" :icon="RefreshLeft" @click="resetStone" />
                     <el-popconfirm title="Точно удалить?" confirm-button-text="Да" cancel-button-text="Нет"
                         :icon="InfoFilled" icon-color="red" @confirm="$emit('Delete')" @cancel="() => { }">
                         <template #reference>
-                            <el-button size="large" circle class="button" :icon="Delete">
+                            <el-button size="large" type="danger" circle class="button" :icon="Delete">
                             </el-button>
                         </template>
                     </el-popconfirm>
@@ -66,34 +73,34 @@ const surface_options = computed(() => {
                 <el-form :model="stone.settings" label-width="auto" label-position="top">
                     <el-form-item label="Толщина камня">
                         <el-radio-group v-model="stone.settings.thickness">
-                            <el-radio-button v-for="(thickness_value, index) in thickness_options"
-                                :label="thickness_value">
+                            <el-radio-button v-for="([thickness_value, is_active]) in available_options.thickness"
+                                :label="thickness_value" :disabled="!is_active">
                                 {{ thickness_value + 'mm' }}
                             </el-radio-button>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="Тип поверхности">
                         <el-radio-group v-model="stone.settings.surface">
-                            <el-radio-button v-for="(surface_value, index) in surface_options" :label="surface_value">
+                            <el-radio-button v-for="([surface_value, is_active]) in available_options.surface"
+                                :label="surface_value" :disabled="!is_active">
                                 {{ surface_value }}
                             </el-radio-button>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="Размер плиты">
                         <el-radio-group v-model="stone.settings.slab_size">
-                            <el-radio-button v-for="(slab_size_value, index) in slab_size_options"
-                                :label="slab_size_value">
+                            <el-radio-button v-for="([slab_size_value, is_active]) in available_options.slab_size"
+                                :label="slab_size_value" :disabled="!is_active">
                                 {{ slab_size_value + 'mm' }}
                             </el-radio-button>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="Количество листов">
-                        <el-input-number :min="0" :step="0.5" v-model="stone.count"></el-input-number>
+                        <el-input-number :min="0.5" :step="0.5" v-model="stone.count"></el-input-number>
                     </el-form-item>
                 </el-form>
             </div>
         </div>
-
     </el-card>
 
     <el-dialog width="70%" top="10vh" lock-scroll :fullscreen="false" v-model="edit" title="Редактировать материал">

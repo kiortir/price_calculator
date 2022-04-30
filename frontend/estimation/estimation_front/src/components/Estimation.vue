@@ -3,7 +3,7 @@ import Materials from './Materials.vue'
 import Product from './Product.vue'
 import ResultsVue from './Results.vue';
 import LogisticsVue from './Logistics.vue';
-
+import MenuVue from './Menu.vue';
 
 import { ref, computed, onMounted, onBeforeMount, Ref } from 'vue'
 import { useRoute, } from 'vue-router';
@@ -55,7 +55,7 @@ const control_buttons = computed(() => {
     if (!grid.md) {
         buttons.push({
             title: 'Итог',
-            action: () => { }
+            action: showResults
         })
     }
     if (currentTab.value == 'изделие') {
@@ -108,13 +108,16 @@ const addCard = () => {
     store.value.addCard()
 }
 
+const showResultsModal = ref(false)
+const showResults = () => {
+    showResultsModal.value = true
+}
+
 </script>
 
 <template>
     <div class="md:container md:mx-auto mt-10 flex flex-col gap-2 font-sans antialiased">
-        <div class="controls ring-1 p-2 mx-1 md:mx-0 rounded-lg">Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Adipisci hic est ullam maxime debitis doloremque molestiae pariatur omnis reprehenderit fugit rerum
-            laudantium quae mollitia quis sint, vel autem soluta dicta.</div>
+        <menu-vue></menu-vue>
         <div class="md:flex flex-row gap-3">
             <div ref="calculationBlock" class="calculation_block basis-11/12 w-full mb-[68px]">
                 <el-tabs tab-position="top" v-model="currentTab" :stretch="true">
@@ -148,6 +151,9 @@ const addCard = () => {
 
 
         </div>
+        <el-dialog fullscreen v-model="showResultsModal">
+            <ResultsVue></ResultsVue>
+        </el-dialog>
         <el-backtop :right="25" :bottom="80" />
     </div>
 </template>

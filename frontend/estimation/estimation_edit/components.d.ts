@@ -17,6 +17,8 @@ declare module '@vue/runtime-core' {
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
+    ElTag: typeof import('element-plus/es')['ElTag']
     ElTransfer: typeof import('element-plus/es')['ElTransfer']
     FormulaBlock: typeof import('./src/components/FormulaBlock.vue')['default']
     ModuleEdit: typeof import('./src/components/ModuleEdit.vue')['default']
@@ -26,6 +28,8 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SelectorFields: typeof import('./src/components/SelectorFields.vue')['default']
+    TemplatesBlock: typeof import('./src/components/TemplatesBlock.vue')['default']
+    TemplateSelector: typeof import('./src/components/TemplateSelector.vue')['default']
   }
 }
 

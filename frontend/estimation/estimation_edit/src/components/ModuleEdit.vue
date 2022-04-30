@@ -4,7 +4,9 @@ import { useModuleStore } from '../store/modules'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import SelectorFields from './SelectorFields.vue'
 import FormulaBlock from './FormulaBlock.vue'
+import TemplateSelector from './TemplateSelector.vue'
 import ConstField from './ConstField.vue'
+import { useConstantStore } from '../store/constants';
 import { Field, Module, Option } from '../interfaces';
 
 const store = useModuleStore()
@@ -51,7 +53,9 @@ onMounted(() => {
                 salary: [],
                 price: [],
                 consumables: [],
-            }
+            },
+            templates: useConstantStore().templates
+
         }
     }
 })
@@ -119,6 +123,7 @@ function save() {
         </div>
         <div class="main container mx-auto p-30 mb-[50px] flex flex-col gap-3" v-else>
             <formula-block :fields="form.fields" :formula=form.formula></formula-block>
+            <TemplateSelector :moduleId="form.code" :form="form" />
         </div>
         <template #footer>
             <span class="dialog-footer" v-if="editFormulas">
