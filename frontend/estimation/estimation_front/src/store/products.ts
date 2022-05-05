@@ -28,7 +28,8 @@ interface ProductPrice {
 const fieldValue = (field_id: string, values: ProductOption) => {
     const moduleStore = useModuleStore()
     const id = field_id.split('_')[0]
-    const formula = <{ [key in priceField]: [] }>moduleStore.data[id].formula
+    console.log({field_id: id})
+    const formula = <{ [key in priceField]: [] }>moduleStore.data[id]?.formula
     const settings = moduleStore.data[id].settings
     const fields = moduleStore.data[id].fields
     const results = <{
@@ -128,11 +129,27 @@ export const useProductStore = defineStore('products', {
                 for (const option_id in options) {
                     const option = options[option_id]
                     const option_price = fieldValue(option_id, option)
+                    if (!option_price.price) {
+                        continue
+                    }
                     const option_name = moduleStore.data[option_id.split('_')[0]].name
+                    const option_fields = options[option_id]
+                    const new_option_fields = <{
+                        [key: string]: { name?: string, value?: string | number, measurement?: string }
+                    }>{}
+                    for (const option_field_id of Object.keys(option_fields)) {
+                        new_option_fields[option_field_id] = {}
+                        new_option_fields[option_field_id]!.name = moduleStore.data[option_id.split('_')[0]].fields[option_field_id].name
+                        new_option_fields[option_field_id]!.measurement = moduleStore.data[option_id.split('_')[0]].fields[option_field_id].measurement
+
+                        new_option_fields[option_field_id]!.value = option_fields[option_field_id]
+                    }
                     option_prices.push({
                         name: option_name,
-                        price: <{ [key in priceField]: number }>option_price
+                        price: <{ [key in priceField]: number }>option_price,
+                        fields: new_option_fields
                     })
+                    console.log(option_fields)
                 }
                 return {
                     id: product_id,
@@ -143,9 +160,10 @@ export const useProductStore = defineStore('products', {
         },
         prices: function (state): ProductPrice[] {
             const result = []
-            const price_getter = this.product_price
+            const getPrice = this.product_price
             for (const product_id in state.products) {
-                result.push(price_getter(product_id))
+                const price = getPrice(product_id)
+                if (price.prices.length) { result.push(price) }
             }
             return result
         },

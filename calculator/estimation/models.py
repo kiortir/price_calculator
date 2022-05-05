@@ -66,7 +66,7 @@ class Estimation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     title = models.TextField(null=True, blank=True)
-    amo_lead_id = models.CharField(max_length=10, null=True, blank=True)
+    amo_lead_id = models.CharField(max_length=50, null=True, blank=True)
     pricelist = models.ForeignKey(ServicePricelist, on_delete=models.PROTECT)
 
     iteration_group = models.PositiveSmallIntegerField(default=0)
@@ -79,3 +79,5 @@ class Estimation(models.Model):
     class Meta:
         unique_together = ['amo_lead_id',
                            'iteration_group', 'iteration_version']
+
+        ordering = ['-created_at']

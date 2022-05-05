@@ -1,3 +1,6 @@
+<script lang="ts">
+</script>
+
 <script setup lang="ts">
 import Materials from './Materials.vue'
 import Product from './Product.vue'
@@ -5,8 +8,8 @@ import ResultsVue from './Results.vue';
 import LogisticsVue from './Logistics.vue';
 import MenuVue from './Menu.vue';
 
-import { ref, computed, onMounted, onBeforeMount, Ref } from 'vue'
-import { useRoute, } from 'vue-router';
+import { ref, computed, onMounted, onBeforeMount, Ref, nextTick, watch } from 'vue'
+import { useRoute, useRouter, } from 'vue-router';
 import { useGrid } from 'vue-screen'
 import { useStore as useStoneStorage } from '../store/stones';
 import { useLogisticStore } from '../store/logistics';
@@ -14,10 +17,11 @@ import { useConstantStore } from '../store/constants';
 import { useModuleStore } from '../store/modules';
 import { useProductStore } from '../store/products'
 
-import { ArrowUp, } from '@element-plus/icons-vue';
 
 import { Store } from '../interfaces';
+
 import axios from 'axios';
+import { useGlobalStore } from '../store/globals';
 
 const grid = useGrid('tailwind')
 
@@ -29,12 +33,18 @@ const productStorage = useProductStore()
 const logisticStorage = useLogisticStore()
 const constantStorage = useConstantStore()
 const moduleStorage = useModuleStore()
+const globalStorage = useGlobalStore()
 
 
-defineProps<{
-    id: Number
+
+const route = useRoute()
+
+const router = useRouter()
+
+const props = defineProps<{
+    id: number | string
 }>()
-
+console.log({ props })
 
 
 const tabToStorage = <{
@@ -77,31 +87,53 @@ const control_buttons = computed(() => {
 const calculationBlock = ref()
 const control_buttons_w = ref()
 
-const route = useRoute()
-const current_id = ref()
-const getPricelist = () => {
+const getEstimation = async (id: number | string) => {
+    axios.get('/estimation/api/', {
+        params: { id }
+    }).then(async response => {
+        let pricelist_id = response.data.globals?.pricelist || null
+        await getPricelist(pricelist_id)
+        return response.data
+    }).then((data) => {
+        console.log({ id })
+        if ((id !== 'new') && (id !== undefined)) {
+            const state = data.state
+            console.log({ data: state })
+            globalStorage.$state = data.globals
+            logisticStorage.$state = state.logistics
+            productStorage.$state = state.products
+            stoneStorage.$state = state.stones
+        }
+    })//.catch(e => router.replace({ name: 'new' }))
+}
+
+const getPricelist = async (id?: number) => {
+    await axios.get('/estimation/api/pricelist/', {
+        params: {
+            latest: id == null,
+            id
+        }
+    }).then(response => {
+        const data = response.data.data
+        constantStorage.$state = data.variables
+        moduleStorage.data = data.modules
+    })
     return
 }
 
-getPricelist()
+
+// getPricelist()
+getEstimation(props.id)
 
 onMounted(() => {
     control_buttons_w.value = calculationBlock.value.clientWidth + 'px'
     addEventListener('resize', () => {
-        if (!calculationBlock.value) {
-            return
+        if (calculationBlock.value) {
+            control_buttons_w.value = calculationBlock.value.clientWidth + 'px'
         }
-        control_buttons_w.value = calculationBlock.value.clientWidth + 'px'
     }, true)
 
-    axios.get('/estimation/api/pricelist/', {
-        params: { latest: true }
-    }).then(response => {
-        const data = response.data.data
-        console.log({ data: data.variables })
-        constantStorage.$state = data.variables
-        moduleStorage.data = data.modules
-    })
+
 })
 
 const addCard = () => {
@@ -112,6 +144,8 @@ const showResultsModal = ref(false)
 const showResults = () => {
     showResultsModal.value = true
 }
+
+
 
 </script>
 
@@ -143,10 +177,13 @@ const showResults = () => {
                 </div>
             </div>
 
-            <div class="result-block basis-6/12 hidden md:flex">
-                <el-affix :offset="0">
+            <div class="result-block basis-6/12 hidden md:flex w-full">
+
+                <el-affix :offset="0" class="w-full">
+
                     <ResultsVue key="1" />
                 </el-affix>
+
             </div>
 
 

@@ -3,8 +3,67 @@
     "file": "js/main.js",
     "src": "src/main.ts",
     "isEntry": true,
+    "dynamicImports": [
+      "src/components/EstimationList.vue",
+      "src/components/404.vue",
+      "src/components/Estimation.vue"
+    ],
     "css": [
       "css/main.css"
+    ]
+  },
+  "src/components/EstimationList.vue": {
+    "file": "js/EstimationList.js",
+    "src": "src/components/EstimationList.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_vue-screen.esm.js",
+      "src/main.ts"
+    ],
+    "css": [
+      "css/EstimationList.css",
+      "css/base.css"
+    ]
+  },
+  "_vue-screen.esm.js": {
+    "file": "js/vue-screen.esm.js",
+    "imports": [
+      "src/main.ts"
+    ],
+    "css": [
+      "css/vue-screen.esm.css"
+    ]
+  },
+  "src/components/404.vue": {
+    "file": "js/404.js",
+    "src": "src/components/404.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_plugin-vue_export-helper.js",
+      "src/main.ts"
+    ],
+    "css": [
+      "css/base.css"
+    ]
+  },
+  "_plugin-vue_export-helper.js": {
+    "file": "js/plugin-vue_export-helper.js",
+    "css": [
+      "css/plugin-vue_export-helper.css"
+    ]
+  },
+  "src/components/Estimation.vue": {
+    "file": "js/Estimation.js",
+    "src": "src/components/Estimation.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.ts",
+      "_vue-screen.esm.js",
+      "_plugin-vue_export-helper.js"
+    ],
+    "css": [
+      "css/Estimation.css",
+      "css/base.css"
     ]
   }
 }

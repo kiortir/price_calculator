@@ -5,6 +5,7 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    404: typeof import('./src/components/404.vue')['default']
     Constant: typeof import('./src/components/Constant.vue')['default']
     ConstantButtons: typeof import('./src/components/ConstantButtons.vue')['default']
     ConstantFields: typeof import('./src/components/ConstantFields.vue')['default']
@@ -14,6 +15,7 @@ declare module '@vue/runtime-core' {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
     ElCard: typeof import('element-plus/es')['ElCard']
+    ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']
@@ -21,7 +23,9 @@ declare module '@vue/runtime-core' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElOption: typeof import('element-plus/es')['ElOption']
+    ElPagination: typeof import('element-plus/es')['ElPagination']
     ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
+    ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
@@ -30,6 +34,7 @@ declare module '@vue/runtime-core' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     Estimation: typeof import('./src/components/Estimation.vue')['default']
+    EstimationList: typeof import('./src/components/EstimationList.vue')['default']
     FieldSelector: typeof import('./src/components/FieldSelector.vue')['default']
     FieldVariable: typeof import('./src/components/FieldVariable.vue')['default']
     Lead: typeof import('./src/components/menu/Lead.vue')['default']
@@ -37,15 +42,19 @@ declare module '@vue/runtime-core' {
     Materials: typeof import('./src/components/Materials.vue')['default']
     Menu: typeof import('./src/components/Menu.vue')['default']
     ModuleFields: typeof import('./src/components/ModuleFields.vue')['default']
+    Price: typeof import('./src/components/Price.vue')['default']
+    PriceTotal: typeof import('./src/components/PriceTotal.vue')['default']
     Product: typeof import('./src/components/Product.vue')['default']
     ProductEdit: typeof import('./src/components/ProductEdit.vue')['default']
     Results: typeof import('./src/components/Results.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Salary: typeof import('./src/components/Salary.vue')['default']
     StoneInfoCard: typeof import('./src/components/StoneInfoCard.vue')['default']
     StoneSelector: typeof import('./src/components/StoneSelector.vue')['default']
     TemplateSelector: typeof import('./src/components/TemplateSelector.vue')['default']
     Title: typeof import('./src/components/menu/Title.vue')['default']
+    Toolbox: typeof import('./src/components/Toolbox.vue')['default']
   }
 }
 

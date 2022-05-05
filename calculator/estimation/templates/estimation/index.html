@@ -19,8 +19,8 @@
         {% else %}
             <script type="module"
                     src="{% static '/src/estimation/dist/estimation/js/main.js'%}"></script>
-            <script type="module"
-                    src="{% static '/src/estimation/dist/estimation/js/vendor.js'%}"></script>
+            {% comment %} <script type="module"
+                    src="{% static '/src/estimation/dist/estimation/js/vendor.js'%}"></script> {% endcomment %}
         {% endif %}
     </body>
 {% endblock %}

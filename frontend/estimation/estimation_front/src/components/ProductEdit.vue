@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, WritableComputedRef, ComputedRef } from 'vue'
+import { ref, computed, WritableComputedRef, ComputedRef, onMounted, onDeactivated, onUnmounted, } from 'vue'
 import { useGrid } from 'vue-screen';
 import { Product, ProductOption, ModuleField, Module } from '../interfaces';
 import { useProductStore } from '../store/products'
@@ -103,14 +103,59 @@ const tabs = computed(() => {
     return tabs
 })
 
+const nextTab = () => {
+    const t = tabs.value
+    if (t !== undefined) {
+        const current_index = t.findIndex((el) => el.name === selectedModule.value)
+        if (current_index + 1 < t.length) {
+            selectedModule.value = t[current_index + 1].name
+        }
+        else {
+            selectedModule.value = t[0].name
+        }
+    }
+}
+const prevTab = () => {
+    const t = tabs.value
+    if (t !== undefined) {
+        const current_index = t.findIndex((el) => el.name === selectedModule.value)
+        if (current_index > 0) {
+            selectedModule.value = t[current_index - 1].name
+        }
+        else {
+            selectedModule.value = t[t.length - 1].name
+        }
+    }
+}
+
+const listener = (e) => {
+    if (isOpen.value) {
+        if (e.ctrlKey && e.key === ' ') {
+            e.preventDefault()
+            nextTab()
+        }
+        else if (e.shiftKey && e.key === ' ') {
+            e.preventDefault()
+            prevTab()
+        }
+    }
+}
+
+onMounted(() => {
+    window.addEventListener('keydown', listener)
+})
+
+
 </script>
 
 <template>
-    <el-dialog :fullscreen="!grid.lg" width="60vw" v-model="isOpen" :title="product?.template || 'Новое изделие'" draggable>
-        <div class="container mx-auto flex flex-col">
+    <el-dialog destroy-on-close :fullscreen="!grid.lg" class="" width="80vw" v-model="isOpen"
+        :title="product?.template || 'Новое изделие'">
+        <div class="container mx-auto flex flex-col min-h-[50vh]">
             <div class="controls">
-                <el-tabs v-model="selectedModule" type="card">
-                    <el-tab-pane v-for="(item, idx) in tabs" :key="idx" :label="item.title" :name="item.name">
+                <el-tabs v-model="selectedModule" type="border-card">
+                    <el-tab-pane v-for="(item, idx) in tabs" :key="item.name + idx" :label="item.title"
+                        :name="item.name">
                         <component :is="item.component" :data="item.data" :index="item.index" :name="item.name"
                             @clear-product="store.clearCard(edited_card_id)" />
                     </el-tab-pane>
@@ -119,9 +164,16 @@ const tabs = computed(() => {
         </div>
         <template #footer>
             <span class="dialog-footer">
-                <el-button @click="isOpen = false">Cancel</el-button>
-                <el-button type="primary" @click="isOpen = false">Confirm</el-button>
+                <el-button @click="prevTab()">Предыдущая</el-button>
+                <el-button @click="nextTab()">Следующая</el-button>
+                <el-button type="primary" @click="isOpen = false">Готово</el-button>
             </span>
         </template>
     </el-dialog>
 </template>
+
+<style>
+/* .el-dialog {
+    min-height: 70vh;
+} */
+</style>

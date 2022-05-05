@@ -17,15 +17,11 @@ const search_str = ref("")
 
 const loading = ref(false)
 const search = (queryString: string, cb: (arg: any) => void) => {
-    let data: Array<Manufacturer> = []
     if (queryString.length) {
         loading.value = true
         axios.get('/pricelist/quartz/stones/', {
             params: { search: queryString }
-        }).then((response) => {
-            // const data =response.data[0].stones || [] 
-            cb(<Stone[]>response.data)
-        })
+        }).then(response => cb(<Stone[]>response.data))
     }
     else {
         cb(<Stone[]>[])

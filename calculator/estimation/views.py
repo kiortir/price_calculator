@@ -1,3 +1,8 @@
+import datetime
+from django.db.models import Q
+from django.core.paginator import Paginator
+from urllib.request import HTTPRedirectHandler
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
@@ -57,7 +62,8 @@ class PricelistListView(TemplateView):
 class PricelistAPIView(APIView):
     def get(self, request):
         pricelist_id = request.GET.get('id')
-        latest = request.GET.get('latest')
+        latest = not (request.GET.get('latest') == 'false')
+        print(pricelist_id)
         try:
             default_pricelist = DefaultPricelist.objects.first()
             default_id = default_pricelist.pricelist.id
@@ -73,6 +79,7 @@ class PricelistAPIView(APIView):
         elif pricelist_id:
             try:
                 pricelist = ServicePricelist.objects.get(pk=pricelist_id)
+                print(pricelist.id)
             except ServicePricelist.DoesNotExist:
                 return Response(status=404)
             data = PriceListSerializer(pricelist).data
@@ -131,24 +138,60 @@ class PricelistModulesAPIView(APIView):
 class EstimationAPI(APIView):
 
     def get(self, request):
-        estimation_id = request.GET.get('estimation_id')
-        try:
-            estimation = Estimation.objects.get(pk=estimation_id)
-            serialized_estimation = EstimationSerializer(estimation)
-            return Response(serialized_estimation.data)
-        except Estimation.DoesNotExist:
-            return Response(status=404)
+        estimation_id = request.query_params.getlist('id')
+        if len(estimation_id) == 1:
+            estimation_id = estimation_id[0]
+
+            if estimation_id == 'new':
+                return Response(status=204)
+            try:
+                estimation = Estimation.objects.get(pk=estimation_id)
+                serialized_estimation = EstimationSerializer(estimation)
+                return Response(serialized_estimation.data)
+            except Estimation.DoesNotExist:
+                return Response(status=404)
+        elif not estimation_id:
+            page = request.query_params.get('page', 1)
+            estimations_per_page = min(
+                int(request.query_params.get('limit', 25)), 100)
+            estimations = Estimation.objects.all()
+
+            dates = request.query_params.getlist('dates[]')
+            title = request.query_params.get('title')
+            lead = request.query_params.get('lead')
+            print(dates, request.query_params)
+            if len(dates):
+                try:
+                    gte, lte = [datetime.datetime.strptime(
+                        date[:-14], '%Y-%m-%d') + datetime.timedelta(index+1) for index, date in enumerate(dates)]
+                    estimations = estimations.filter(Q(created_at__gte=gte) &
+                                                     Q(created_at__lte=lte))
+                except Exception:
+                    pass
+            if title:
+                estimations = estimations.filter(title=title)
+            if lead:
+                estimations = estimations.filter(amo_lead_id=lead)
+
+            paginator = Paginator(estimations, estimations_per_page)
+            page_obj = paginator.get_page(page)
+            return Response({
+                "estimations": EstimationSerializer(page_obj, many=True).data,
+                "total": paginator.num_pages
+            })
 
     def post(self, request):
         state = request.data.get('state')
-        pricelist_id = request.data.get('pricelist_id')
-        title = request.data.get('title')
-        amo_lead_id = request.data.get('amo_lead_id')
-        iteration_group = request.data.get('iteration_group', 0)
+        globals = request.data.get('globals', {})
+        pricelist_id = globals.get('pricelist_id')
+        title = globals.get('title')
+        amo_lead_id = globals.get('amo_lead_id')
+        iteration_group = globals.get('iteration_group', 0)
         iteration_version = 1
         related_estimations = Estimation.objects.filter(
             amo_lead_id=amo_lead_id)
-
+        if not related_estimations:
+            iteration_group = 0
         if iteration_group:
             group = related_estimations.filter(
                 iteration_group=iteration_group)
@@ -159,15 +202,28 @@ class EstimationAPI(APIView):
                 iteration_group = related_estimations.latest(
                     'iteration_group').iteration_group + 1
             except Estimation.DoesNotExist:
-                pass
-
+                iteration_group = 0
+        pricelist = None
+        try:
+            pricelist = ServicePricelist.objects.get(pk=pricelist_id)
+        except ServicePricelist.DoesNotExist:
+            pricelist = DefaultPricelist.objects.first().pricelist
+        print(
+            {'amo_lead_id': amo_lead_id,
+             'title': title,
+             'iteration_group': iteration_group,
+             'iteration_version': iteration_version,
+             'state': state,
+             'pricelist': pricelist,
+             'created_by': request.user}
+        )
         new_estimation: Estimation = Estimation.objects.create(
             amo_lead_id=amo_lead_id,
             title=title,
             iteration_group=iteration_group,
             iteration_version=iteration_version,
             state=state,
-            pricelist=ServicePricelist.objects.get(pk=pricelist_id),
+            pricelist=pricelist,
             created_by=request.user
         )
         return Response(
@@ -190,3 +246,16 @@ class EstimationAPI(APIView):
             return Response(status=200)
         except Estimation.DoesNotExist:
             return Response(status=404)
+
+
+class EstimationAPISearch(APIView):
+
+    def get(self, request):
+        dates = request.query_params.getlist('dates')
+        title = request.query_params.get('title')
+        lead = request.query_params.get('lead')
+
+        estimations = Estimation.objects.all()
+        if dates:
+            gte, lte = dates
+            # estimations = estimations.filter(created_at__lte)

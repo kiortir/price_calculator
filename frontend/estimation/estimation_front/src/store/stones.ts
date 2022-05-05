@@ -2,10 +2,27 @@ import { defineStore } from 'pinia'
 import { useLogisticStore } from './logistics'
 import { useConstantStore } from './constants'
 import { priceField, Stone } from '../interfaces'
+import { de } from 'element-plus/lib/locale'
 
 interface FlatPrice {
     [name: string]: {
         [key in priceField]?: number
+    }
+}
+
+function getEnding(count: number) {
+    if (count === 1) {
+        return ''
+    }
+    if (count % 1) {
+        return 'а'
+    }
+    const lastdigit = count % 10
+    if ((10 <= count && count <= 20) || [0, 5, 6, 7, 8, 9].some(digit => digit === lastdigit)) {
+        return 'ов'
+    }
+    else {
+        return 'а'
     }
 }
 
@@ -37,8 +54,9 @@ export const useStore = defineStore('stones', {
             const result: FlatPrice = {}
             // const valid_results = []
             for (const stone of Object.values(this.stones)) {
+                const name = `${stone.manufacturer + (stone.code ? ' ' + stone.code : '')} ${stone.name}, ${stone.count} лист${getEnding(stone.count)}`
                 if (Object.values(stone.settings).some(val => !val)) {
-                    result[stone.name] = { price: 0, salary: 0, consumables: 0 }
+                    result[name] = { price: 0, salary: 0, consumables: 0 }
                     continue
                 }
                 const config = stone.configurations.filter(configuration => {
@@ -50,15 +68,21 @@ export const useStore = defineStore('stones', {
                     return true
                 })
                 if (config.length === 0) {
-                    result[stone.name] = { price: 0, salary: 0, consumables: 0 }
+                    result[name] = { price: 0, salary: 0, consumables: 0 }
                     continue
                 }
+
                 const cut_price = stone.cut_price * Math.ceil(stone.count % 1)
-                const alleged_overprice = config[0].rub_price * constants.overprice.percent
-                const overprice = alleged_overprice < constants.overprice.lte ? alleged_overprice : constants.overprice.lte
-                result[stone.name] = {
-                    price: (((config[0].rub_price + overprice) * stone.count + cut_price * 1.5 + constants.delivery.price) || 0),
-                    consumables: config[0].rub_price * stone.count + cut_price + constants.delivery.price // !Заменить на расходник!!
+                const alleged_overprice = config[0].rub_price * constants.overprice.percent / 100
+                const overprice = Math.min(alleged_overprice, constants.overprice.lte)
+                const same_manufacturer_stones = this.stones.filter(s => s.manufacturer === stone.manufacturer).length
+                const delivery = {
+                    price: constants.delivery.price / same_manufacturer_stones,
+                    consumables: constants.delivery.price / same_manufacturer_stones// !Заменить на расходник
+                }
+                result[name] = {
+                    price: Math.ceil(((config[0].rub_price + overprice) * stone.count + cut_price * 1.5 + delivery.price) || 0),
+                    consumables: config[0].rub_price * stone.count + cut_price + delivery.consumables
                 }
                 // valid_results.push(stone.name)
             }
@@ -69,15 +93,12 @@ export const useStore = defineStore('stones', {
             const hidden = useLogisticStore().hiddenSum
             const valid_results = []
             const prices = JSON.parse(JSON.stringify(this.raw_prices)) || {}
-            console.log(prices)
             for (const [key, value] of Object.entries(prices)) {
-                console.log({ value })
                 if (value.price > 0) {
                     valid_results.push(key)
                 }
             }
             const hidden_spread = Math.ceil(hidden / (valid_results.length || 1))
-            console.log(valid_results)
 
             valid_results.forEach(name => {
                 prices[name].price += hidden_spread

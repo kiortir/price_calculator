@@ -75,38 +75,43 @@ export const useLogisticStore = defineStore('logistics', {
                 consumables: this.standart.floor.value
                     * this.standart.lifted_details.value
                     * this.constants.logistics.manual_lift.consumables,
+                name: `${this.standart.floor.value}-й этаж, ${this.standart.lifted_details.value} детал.`
+
             }
         },
         delivery: function (): { [key in priceField]?: number } {
             return {
-                price: Number(this.standart.delivery_count.value)
+                price: this.standart.delivery_count.value
                     * (this.constants.logistics.delivery.price
                         + this.constants.logistics.delivery.distance_modifier
                         * this.standart.distance.value),
                 salary: 0,
-                consumables: Number(this.standart.delivery_count.value)
+                consumables: this.standart.delivery_count.value
                     * (this.constants.logistics.delivery.consumables
                         + this.constants.logistics.delivery.distance_modifier
-                        * this.standart.distance.value)
+                        * this.standart.distance.value),
+                name: `${this.standart.delivery_count.value} шт., ${this.standart.distance.value ? this.standart.distance.value + ' км от МКАД' : ''}`
+
             }
         },
         installation: function (): { [key in priceField]?: number } {
             return {
-                price: Number(this.standart.installation_count.value)
+                price: this.standart.installation_count.value
                     * ((this.products.installationTotal > 2
                         ? this.constants.logistics.installation?.price_var * this.products.installationTotal
                         : 0)
                         + this.constants.logistics.installation?.price_const
                         + this.constants.logistics.installation?.salary_distance_modifier
                         * this.standart.distance.value),
-                salary: Number(this.standart.installation_count.value)
+                salary: this.standart.installation_count.value
                     * ((this.products.installationTotal > 2
                         ? this.constants.logistics.installation?.salary_var * this.products.installationTotal
                         : 0)
                         + this.constants.logistics.installation?.salary_const
                         + this.constants.logistics.installation?.salary_distance_modifier
                         * this.standart.distance.value),
-                consumables: Number(this.standart.installation_count.value) * this.constants.logistics.installation.consumables
+                consumables: this.standart.installation_count.value * this.constants.logistics.installation.consumables,
+                name: `${this.products.installationTotal} шт.`
             }
         },
         measures: function (): { [key in priceField]?: number } {
@@ -130,6 +135,31 @@ export const useLogisticStore = defineStore('logistics', {
                 }
             }
             result += this.measures.price || 0
+            return result
+        },
+        customSum: function (): number {
+            let result = 0
+            for (const field of Object.values(this.custom)) {
+                if (!field.hide) {
+                    result += field.value
+                }
+            }
+            result += this.measures.price || 0
+            return result
+        },
+        total: function (state): { [key in priceField]?: number } {
+            const result = {
+                price: 0,
+                salary: 0,
+                consumables: 0,
+                discount10: 0,
+                discount20: 0,
+                discount30: 0,
+            }
+            result.price += this.installation.price! + this.delivery.price! + this.lifting.price!
+            result.salary += this.installation.salary! + this.delivery.salary! + this.lifting.salary!
+            result.consumables += this.installation.consumables! + this.delivery.consumables! + this.lifting.consumables!
+            result.discount10 = result.discount20 = result.discount30 = result.price
             return result
         }
 

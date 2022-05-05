@@ -3,7 +3,8 @@ import Estimation from './components/Estimation.vue'
 </script>
 
 <template>
-  <Estimation />
+  <router-view></router-view>
+  <!-- <Estimation /> -->
 </template>
 
 <style>

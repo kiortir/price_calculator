@@ -11,7 +11,7 @@ export interface StoneConfiguration extends Object {
     rub_price: number
 }
 
-export interface Stone extends Object {
+export interface Stone {
     id: number
     name: string
     code?: string
@@ -72,6 +72,9 @@ export interface Module {
     }
     formula: {
         [key in priceField]: FormulaElement[]
+    },
+    settings: {
+        [key: string]: boolean
     }
 }
 

@@ -1,11 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import ServiceModule, ServicePricelist, DefaultPricelist
-
-
-class EstimationSerializer(serializers.ModelSerializer):
-    pass
+from .models import ServiceModule, ServicePricelist, DefaultPricelist, Estimation
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,6 +9,25 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name',  'id', 'username')
+
+
+class EstimationSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer()
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        state = representation.pop('state')
+        new_representation = {
+            "state": state,
+            "globals": representation
+        }
+        return new_representation
+
+    class Meta:
+        model = Estimation
+        fields = '__all__'
+        # read_only_fields = ('status',)
+        # exclude = ('pricelist',)
 
 
 class DefaultPricelistSerializer(serializers.ModelSerializer):
@@ -45,7 +60,8 @@ class PriceListSerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
         representation = super().to_representation(obj)
         modules = representation['modules']
-        modules_dict = {module['name']: module['options'] for module in modules}
+        modules_dict = {module['name']: module['options']
+                        for module in modules}
         representation['modules'] = modules_dict
         return representation
 

@@ -17,14 +17,11 @@ const available_options = computed(() => {
 
     const chosen_values = Object.entries(props.stone.settings)
     props.stone.configurations.forEach(configuration => {
-        console.log({ configuration })
         const is_active = !chosen_values.some((entry) => {
             const [key, value] = entry
             if (value === undefined) {
-                console.log({ entry })
                 return false
             }
-            console.log({ configuration })
             return configuration[key] !== value
         })
         const settings = ['surface', 'slab_size', 'thickness']

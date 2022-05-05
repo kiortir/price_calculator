@@ -2,11 +2,16 @@
 import { ref } from 'vue'
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { useProductStore } from '../store/products'
+import { useModuleStore } from '../store/modules';
 import ProductEditVue from './ProductEdit.vue';
 const store = useProductStore()
-
+const module = useModuleStore()
 
 const edited_card_id = ref("")
+
+const getName = (id: string, fid: string) => {
+    return module.data[id.split('_')[0]]?.fields[fid]?.name || ''
+}
 
 </script>
 
@@ -24,8 +29,14 @@ const edited_card_id = ref("")
                             </div>
                         </div>
                     </template>
-                    <div v-if="Object.keys(product.data).length">
-                        {{ product.data }}
+                    <div class="flex divide-x gap-2 flex-wrap" v-if="Object.keys(product.data).length">
+                        <div class="pl-2" v-for="(option, id) in product.data.options" :key="id">
+                            <div class="font-semibold">{{ module.data[String(id).split('_')[0]]?.name }}</div>
+                            <div class="flex justify-between text-[0.75rem]" v-for="(field, fid) in option" :key="fid">
+                                <span>{{ getName(String(id), String(fid)) }}:</span>
+                                <span>{{ field }}</span>
+                            </div>
+                        </div>
                     </div>
                     <div v-else>
                         <el-empty description="Пока ничего нет(">
