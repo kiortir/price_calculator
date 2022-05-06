@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { useLogisticStore } from './logistics'
 import { useConstantStore } from './constants'
 import { priceField, Stone } from '../interfaces'
-import { de } from 'element-plus/lib/locale'
 
 interface FlatPrice {
     [name: string]: {
@@ -78,7 +77,7 @@ export const useStore = defineStore('stones', {
                 const same_manufacturer_stones = this.stones.filter(s => s.manufacturer === stone.manufacturer).length
                 const delivery = {
                     price: constants.delivery.price / same_manufacturer_stones,
-                    consumables: constants.delivery.price / same_manufacturer_stones// !Заменить на расходник
+                    consumables: constants.delivery.consumables / same_manufacturer_stones// !Заменить на расходник
                 }
                 result[name] = {
                     price: Math.ceil(((config[0].rub_price + overprice) * stone.count + cut_price * 1.5 + delivery.price) || 0),

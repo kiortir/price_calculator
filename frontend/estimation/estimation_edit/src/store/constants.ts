@@ -7,6 +7,7 @@ export const useConstantStore = defineStore('constants', {
             material: {
                 delivery: {
                     price: 0,
+                    consumables: 0,
                 },
                 overprice: {
                     percent: 0,
