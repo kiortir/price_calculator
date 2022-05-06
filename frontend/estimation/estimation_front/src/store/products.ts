@@ -28,7 +28,7 @@ interface ProductPrice {
 const fieldValue = (field_id: string, values: ProductOption) => {
     const moduleStore = useModuleStore()
     const id = field_id.split('_')[0]
-    console.log({field_id: id})
+    console.log({ field_id: id })
     const formula = <{ [key in priceField]: [] }>moduleStore.data[id]?.formula
     const settings = moduleStore.data[id].settings
     const fields = moduleStore.data[id].fields
@@ -168,12 +168,13 @@ export const useProductStore = defineStore('products', {
             return result
         },
         total: function (): { [key in priceField]?: number } {
-            const total = { price: 0, discount10: 0, discount20: 0, discount30: 0, salary: 0, consumables: 0 }
+            const total = { price: 0, discount10: 0, discount20: 0, discount30: 0, salary: 0, consumables: 0, raw: 0 }
             for (const product of this.prices) {
                 product.prices.forEach(module => {
                     const module_prices = module.price
                     const module_raw_price = module_prices.price || 0
                     total.price += module_raw_price
+                    total.raw = total.price
                     total.salary += module_prices.salary || 0
                     total.consumables += module_prices.consumables || 0
                     total.discount10 += module_prices.discount10 || module_raw_price

@@ -4,7 +4,7 @@ export const useGlobalStore = defineStore('globals', {
     state: () => {
         return {
             pricelist: null,
-            title: "Новый расчет",
+            title: "",
             amo_lead_id: "",
             iteration_group: null,
             iteration_version: null,

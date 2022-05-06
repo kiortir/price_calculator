@@ -67,7 +67,7 @@ const resetStone = () => {
         <div
             class="flex flex-col md:grid  md:grid-flow-row md:grid-rows-1 md:grid-cols-2 gap-2 divide-y-2 md:divide-y-0 md:divide-x-2">
             <div class="controls flex flex-col">
-                <el-form :model="stone.settings" label-width="auto" label-position="top">
+                <el-form :model="stone.settings" label-width="auto" label-position="top" @submit.prevent>
                     <el-form-item label="Толщина камня">
                         <el-radio-group v-model="stone.settings.thickness">
                             <el-radio-button v-for="([thickness_value, is_active]) in available_options.thickness"

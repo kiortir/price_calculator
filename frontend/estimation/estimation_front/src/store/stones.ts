@@ -106,13 +106,14 @@ export const useStore = defineStore('stones', {
             return prices
         },
         total: function () {
-            const total = { price: 0, discount10: 0, discount20: 0, discount30: 0, salary: 0, consumables: 0 }
+            const total = { price: 0, discount10: 0, discount20: 0, discount30: 0, salary: 0, consumables: 0, raw:0 }
             Object.values(this.prices).forEach(stone => {
                 total.price += stone.price
                 total.discount10 += stone.price
                 total.discount20 += stone.price
                 total.discount30 += stone.price
                 total.consumables += stone.consumables
+                total.raw += stone.price
             })
             return total
         }

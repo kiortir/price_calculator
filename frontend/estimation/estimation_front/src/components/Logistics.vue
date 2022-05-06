@@ -10,23 +10,34 @@ const label_position = computed(() => {
     return grid.sm ? 'left' : 'top'
 })
 
+const sorted_logistics = computed(() => {
+
+    const keys = Object.keys(store.standart).sort((a, b) => store.standart[a]._order - store.standart[b]._order)
+    const values = new Map()
+    keys.forEach(key => {
+        values.set(key, store.standart[key])
+    })
+    return values
+})
+
 </script>
 
 <template>
     <div class='flex flex-col gap-3 px-2 md:px-0'>
         <el-form :model="store.standart" label-width="auto" :label-position="label_position">
-            <field-variable-vue v-for="(field, id) in store.standart" :key="id" :data="store.standart[id]" id="value"
-                :reference="field">
+            <field-variable-vue v-for="([id, field], idx) in sorted_logistics" :key="id" :data="store.standart[id]"
+                id="value" :reference="field">
             </field-variable-vue>
         </el-form>
         <div class="flex flex-col divide-y">
-            <el-form class="pt-2" v-for="(custom_field, idx) in store.custom" :key="idx"
-                :inline="true" :model="custom_field" :label-position="label_position">
+            <el-form class="pt-2" v-for="(custom_field, idx) in store.custom" :key="idx" :inline="true"
+                :model="custom_field" :label-position="label_position">
                 <el-form-item label="Название">
                     <el-input placeholder="название" v-model="custom_field.field"></el-input>
                 </el-form-item>
                 <el-form-item label="Сумма">
-                    <el-input-number class="self-end" step="1000" min="0" placeholder="цена" v-model="custom_field.value">
+                    <el-input-number class="self-end" step="1000" min="0" placeholder="цена"
+                        v-model="custom_field.value">
                     </el-input-number>
                 </el-form-item>
                 <el-form-item label="Спрятать">

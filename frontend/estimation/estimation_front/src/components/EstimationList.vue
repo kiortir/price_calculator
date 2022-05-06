@@ -86,7 +86,7 @@ const setField = (payload) => {
             <el-card class="box-card w-full" v-for="estimation in estimations">
                 <template #header>
                     <div class="card-header flex justify-between items-center">
-                        <span>{{ estimation.globals.title }}</span>
+                        <span>{{ estimation.globals.title || `Расчет #${estimation.globals.id}` }}</span>
                         <el-button class="button" type="text" @click="open_estimation(estimation.globals.id)"
                             :loading="routed_id === estimation.globals.id">
                             Перейти

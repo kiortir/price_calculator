@@ -50,6 +50,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Salary: typeof import('./src/components/Salary.vue')['default']
+    Spendings: typeof import('./src/components/Spendings.vue')['default']
     StoneInfoCard: typeof import('./src/components/StoneInfoCard.vue')['default']
     StoneSelector: typeof import('./src/components/StoneSelector.vue')['default']
     TemplateSelector: typeof import('./src/components/TemplateSelector.vue')['default']

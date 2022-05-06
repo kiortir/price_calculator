@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Estimation, ServicePricelist, ServiceModule, DefaultPricelist
-from .serializers import EstimationSerializer, PriceListSerializer, ServiceModuleSerializer
+from .serializers import EstimationSerializer, PriceListSerializer, ServiceModuleSerializer, UserSerializer
 
 
 class NewEstimation(TemplateView):
@@ -147,7 +147,9 @@ class EstimationAPI(APIView):
             try:
                 estimation = Estimation.objects.get(pk=estimation_id)
                 serialized_estimation = EstimationSerializer(estimation)
-                return Response(serialized_estimation.data)
+                data = serialized_estimation.data
+                data['user'] = UserSerializer(request.user).data
+                return Response(data)
             except Estimation.DoesNotExist:
                 return Response(status=404)
         elif not estimation_id:
@@ -169,7 +171,7 @@ class EstimationAPI(APIView):
                 except Exception:
                     pass
             if title:
-                estimations = estimations.filter(title=title)
+                estimations = estimations.filter(title__icontains=title)
             if lead:
                 estimations = estimations.filter(amo_lead_id=lead)
 

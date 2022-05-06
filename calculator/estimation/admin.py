@@ -20,3 +20,9 @@ class ServiceModuleAdmin(admin.ModelAdmin):
 @admin.register(models.DefaultPricelist)
 class DefaultPricelistAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.Estimation)
+class EstimationAdmin(admin.ModelAdmin):
+    pass
+

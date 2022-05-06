@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Price from './price.vue'
 import SalaryVue from './Salary.vue';
+import SpendingsVue from './Spendings.vue';
 import { useGrid } from 'vue-screen';
 const grid = useGrid('tailwind')
 </script>
@@ -22,6 +23,14 @@ const grid = useGrid('tailwind')
             </el-scrollbar>
             <div v-else>
                 <salary-vue></salary-vue>
+            </div>
+        </el-tab-pane>
+        <el-tab-pane label="Затраты" disabled>
+            <el-scrollbar height="" max-height="90vh" class="w-full" v-if="grid.md">
+                <spendings-vue class="pr-3"></spendings-vue>
+            </el-scrollbar>
+            <div v-else>
+                <spendings-vue></spendings-vue>
             </div>
         </el-tab-pane>
 

@@ -27,7 +27,7 @@ const module = store.modules.filter(module => (module.name === props.name))[0]
 </script>
 
 <template>
-    <el-form :model="data" label-width="auto" label-position="left">
+    <el-form :model="data" label-width="auto" label-position="left" @submit.prevent>
         <component v-for="(field, key) in module.fields" :is="refs[field.type]" :reference="field" :id="key"
             :data="data">
         </component>

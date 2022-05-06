@@ -22,7 +22,7 @@ const editVisible = () => {
 
     <el-input ref="input" v-if="edit" v-model="store.title" @keyup.enter="edit = false" @blur="edit = false"></el-input>
     <div class="flex gap-2 items-center group" v-else>
-        <div class="text-xl">{{ store.title }}</div>
+        <div class="text-xl">{{ store.title || 'Новый расчет' }}</div>
         <div class="md:hidden md:group-hover:flex">
             <el-button @click="editVisible" :icon="Edit"></el-button>
         </div>

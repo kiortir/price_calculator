@@ -27,7 +27,7 @@ const refs = {
 
 <template>
     <div class="mt-2">
-        <el-form :model="data" label-width="auto" label-position="left">
+        <el-form :model="data" label-width="auto" label-position="left" @submit.prevent> 
             <component v-for="(field, id) in reference.fields" :is="refs[field.type]" :reference="field" :data="data"
                 :id="id">
             </component>

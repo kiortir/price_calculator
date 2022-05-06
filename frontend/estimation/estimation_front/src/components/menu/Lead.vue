@@ -49,7 +49,7 @@ const open_link = () => {
     }
 }
 
-const link_is_valid = computed(() => Boolean(props.store.amo_lead_id.length))
+const link_is_valid = computed(() => Boolean(props.store.amo_lead_id?.length))
 </script>
 
 <template>

@@ -21,28 +21,38 @@ export const useLogisticStore = defineStore('logistics', {
             standart: {
                 distance: {
                     name: 'Расстояние',
-                    value: 0
+                    value: 0,
+                    _order: 5,
                 },
                 delivery_count: {
                     name: 'Число доставок',
-                    value: 0
+                    value: 0,
+                    _order: 10,
+
                 },
                 installation_count: {
                     name: 'Число установок',
-                    value: 0
+                    value: 0,
+                    _order: 15,
+
                 },
                 measurement_count: {
                     name: 'Число замеров',
-                    value: 2
-                },
+                    value: 2,
+                    _order: 20,
 
+                },
                 floor: {
                     name: 'Этаж',
                     value: 0,
+                    _order: 25,
+
                 },
                 lifted_details: {
                     name: 'Число деталей для подъема',
-                    value: 0
+                    value: 0,
+                    _order: 30,
+
                 }
             },
             custom: <{ [id: string]: { field: string, value: number, hide: boolean } }>{}
@@ -155,8 +165,10 @@ export const useLogisticStore = defineStore('logistics', {
                 discount10: 0,
                 discount20: 0,
                 discount30: 0,
+                raw: 0
             }
-            result.price += this.installation.price! + this.delivery.price! + this.lifting.price!
+            result.raw += this.installation.price! + this.delivery.price! + this.lifting.price! + (this.measures.price || 0)
+            result.price += this.installation.price! + this.delivery.price! + this.lifting.price! + this.customSum
             result.salary += this.installation.salary! + this.delivery.salary! + this.lifting.salary!
             result.consumables += this.installation.consumables! + this.delivery.consumables! + this.lifting.consumables!
             result.discount10 = result.discount20 = result.discount30 = result.price
