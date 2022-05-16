@@ -19,7 +19,6 @@ declare module '@vue/runtime-core' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTag: typeof import('element-plus/es')['ElTag']
-    ElTransfer: typeof import('element-plus/es')['ElTransfer']
     FormulaBlock: typeof import('./src/components/FormulaBlock.vue')['default']
     ModuleEdit: typeof import('./src/components/ModuleEdit.vue')['default']
     ModuleSettings: typeof import('./src/components/ModuleSettings.vue')['default']
