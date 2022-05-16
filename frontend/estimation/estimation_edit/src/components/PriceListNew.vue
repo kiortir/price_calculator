@@ -90,9 +90,13 @@ if (route.query.from !== undefined) {
         <div id="material-constants" class="">
             <PriceListConstants />
         </div>
-        <div class="modules w-fit"> 
+        <div class="modules w-fit">
             <div class="flex flex-col gap-2 mb-12">
-                <div class="text-xl font-semibold">Модули</div>
+                <div class="text-xl font-semibold flex gap-2"><span>Модули</span>
+                    <el-button class="transfer-footer" size="small" @click="edited_module = {}; editModule = true">
+                        Добавить опцию
+                    </el-button>
+                </div>
                 <div class="flex flex-row gap-2 items-center justify-between w-full pr-1"
                     v-for="option in moduleStore.modules">
                     <span class="">{{ option.name }}</span>
