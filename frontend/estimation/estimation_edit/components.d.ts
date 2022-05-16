@@ -26,11 +26,13 @@ declare module '@vue/runtime-core' {
     PriceListConstantsBlock: typeof import('./src/components/PriceListConstantsBlock.vue')['default']
     PriceListHome: typeof import('./src/components/PriceListHome.vue')['default']
     PriceListNew: typeof import('./src/components/PriceListNew.vue')['default']
+    Radio: typeof import('./src/components/Radio.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SelectorFields: typeof import('./src/components/SelectorFields.vue')['default']
     TemplatesBlock: typeof import('./src/components/TemplatesBlock.vue')['default']
     TemplateSelector: typeof import('./src/components/TemplateSelector.vue')['default']
+    Variable: typeof import('./src/components/Variable.vue')['default']
   }
 }
 

@@ -14,6 +14,12 @@ export default defineConfig({
         assetFileNames: 'css/[name][extname]',
         chunkFileNames: 'js/[name].js',
         entryFileNames: 'js/[name].js'
+      },
+      manualChunks: {
+        // lodash: ['lodash'],
+        html2canvas: ['html2canvas'],
+        // "element-plus": ['element-plus'],
+
       }
     },
     outDir: '../../../calculator/estimation/static/src/estimation/dist/estimation',

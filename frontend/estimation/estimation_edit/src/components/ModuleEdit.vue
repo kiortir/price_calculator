@@ -7,6 +7,8 @@ import FormulaBlock from './FormulaBlock.vue'
 import TemplateSelector from './TemplateSelector.vue'
 import ModuleSettingsVue from './ModuleSettings.vue'
 import ConstField from './ConstField.vue'
+import RadioField from './Radio.vue'
+import VariableVue from './Variable.vue'
 import { useConstantStore } from '../store/constants';
 import { Field, Module, Option } from '../interfaces';
 
@@ -68,7 +70,11 @@ onMounted(() => {
 
 const ComponentFields = {
     selector: SelectorFields,
-    constant: ConstField
+    constant: ConstField,
+    radio: RadioField,
+    variable: VariableVue,
+
+
 }
 
 function addModuleField() {
@@ -118,10 +124,11 @@ function save() {
                                 <el-option label="Константа" value="constant" />
                                 <el-option label="Переменная" value="variable" />
                                 <el-option label="Селектор" value="selector" />
-                                <el-option label="Радиогруппа" value="Radio" />
+                                <el-option label="Радиогруппа" value="radio" />
                             </el-select>
                         </el-form-item>
-                        <component :is="ComponentFields[field.type]" :field="field"></component>
+                        <component :is="ComponentFields[field.type]" :field="field"
+                            @deleteOption="(index: number) => field.options?.splice(index, 1)"></component>
                     </el-form>
                 </div>
             </div>

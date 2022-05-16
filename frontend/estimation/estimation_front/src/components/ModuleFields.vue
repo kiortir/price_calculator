@@ -2,6 +2,7 @@
 import { useModuleStore } from '../store/modules'
 import FieldSelectorVue from './FieldSelector.vue';
 import FieldVariableVue from './FieldVariable.vue';
+import RadioFieldsVue from './RadioFields.vue';
 import FieldConstantVue from './Constant.vue';
 
 
@@ -21,7 +22,8 @@ const reference = store.data[props.name]
 const refs = {
     selector: FieldSelectorVue,
     variable: FieldVariableVue,
-    constant: FieldConstantVue
+    constant: FieldConstantVue,
+    radio: RadioFieldsVue,
 }
 
 const duplicate = () => {

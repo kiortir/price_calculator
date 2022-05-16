@@ -98,7 +98,7 @@ const showOffer = () => {
                             <div class="flex justify-between text-[0.75rem] pl-3 text-gray-500"
                                 v-for="field in option.fields">
                                 <span>{{ field.name }}</span>
-                                <span>{{ field.value }}</span>
+                                <span>{{ field.value }} {{ field.measurement }}</span>
                             </div>
                         </li>
                     </ul>

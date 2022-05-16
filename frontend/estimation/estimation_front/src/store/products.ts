@@ -54,7 +54,7 @@ const fieldValue = (field_id: string, values: ProductOption) => {
                         return 0
                     }
                     const field = fields[el.reference || '']
-                    if (field.type === 'selector') {
+                    if (field.type === 'selector' || field.type === 'radio') {
                         if (!(field.options)) {
                             return 0
                         }
@@ -140,7 +140,7 @@ export const useProductStore = defineStore('products', {
                     for (const option_field_id of Object.keys(option_fields)) {
                         new_option_fields[option_field_id] = {}
                         new_option_fields[option_field_id]!.name = moduleStore.data[option_id.split('_')[0]].fields[option_field_id].name
-                        new_option_fields[option_field_id]!.measurement = moduleStore.data[option_id.split('_')[0]].fields[option_field_id].measurement
+                        new_option_fields[option_field_id]!.measurement = moduleStore.data[option_id.split('_')[0]].fields[option_field_id].placeholder
 
                         new_option_fields[option_field_id]!.value = option_fields[option_field_id]
                     }

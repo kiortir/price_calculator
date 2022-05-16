@@ -95,7 +95,6 @@ const styles = computed(() => {
             const discount_array = [0, 10, 20, 30]
             const calculated_index = discount_array.findIndex((el) => el === discount_value)
             const recommended_discount_index = discount_array.findIndex((el) => el === recommended_discount_value)
-            console.log({ ind: calculated_index - recommended_discount_index, discount })
             if (calculated_index - recommended_discount_index === -1) {
                 discount_dict.text = ""
                 discount_dict.style = {

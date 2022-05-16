@@ -70,7 +70,7 @@ const getPricelist = (id?: number): void => {
 
 
 if (route.query.from !== undefined) {
-    
+
     getPricelist(Number(route.query.from))
 }
 
@@ -90,8 +90,21 @@ if (route.query.from !== undefined) {
         <div id="material-constants" class="">
             <PriceListConstants />
         </div>
-        <div class="modules w-fit mx-auto">
-            <el-transfer v-model="selected_modules" filterable :titles="['Доступные', 'Используемые']"
+        <div class="modules w-fit"> 
+            <div class="flex flex-col gap-2 mb-12">
+                <div class="text-xl font-semibold">Модули</div>
+                <div class="flex flex-row gap-2 items-center justify-between w-full pr-1"
+                    v-for="option in moduleStore.modules">
+                    <span class="">{{ option.name }}</span>
+                    <div class="flex flex-row">
+                        <el-button size="small" :icon="Edit"
+                            @click="editModule = true; edited_module = moduleStore.modules[option.code]" />
+                        <el-button size="small" :icon="Delete" type="danger"
+                            @click="delete moduleStore.modules[option.code]" />
+                    </div>
+                </div>
+            </div>
+            <!-- <el-transfer v-model="selected_modules" filterable :titles="['Доступные', 'Используемые']"
                 :button-texts="['Убрать', 'Добавить']" :data="Object.values(moduleStore.modules)" :props="{
                     key: 'code',
                     label: 'name',
@@ -121,7 +134,7 @@ if (route.query.from !== undefined) {
                 <template #right-footer>
                     <el-button class="transfer-footer" size="small">Operation</el-button>
                 </template>
-            </el-transfer>
+            </el-transfer> -->
             <module-edit :open="editModule" :module="edited_module" :key="Math.random()"
                 @setEdit="value => { editModule = value }" />
 

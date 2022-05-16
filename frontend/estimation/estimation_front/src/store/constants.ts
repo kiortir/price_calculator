@@ -31,7 +31,7 @@ export const useConstantStore = defineStore('constants', {
                     "price_var": 0, "salary_var": 0, "consumables": 0, "price_const": 0, "salary_const": 0, "distance_modifier": 0, "salary_distance_modifier": 0
                 }
             },
-            material: { "delivery": { "price": 0 }, "overprice": { "lte": 0, "percent": 0 } },
+            material: { "delivery": { "price": 0, "consumables": 0 }, "overprice": { "lte": 0, "percent": 0 } },
             templates: {}
         }
     }

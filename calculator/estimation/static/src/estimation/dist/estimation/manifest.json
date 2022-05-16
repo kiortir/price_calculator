@@ -12,26 +12,43 @@
       "css/main.css"
     ]
   },
+  "_lodash.js": {
+    "file": "js/lodash.js"
+  },
+  "_html2canvas.js": {
+    "file": "js/html2canvas.js"
+  },
   "src/components/EstimationList.vue": {
     "file": "js/EstimationList.js",
     "src": "src/components/EstimationList.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_vue-screen.esm.js",
-      "src/main.ts"
+      "_base.js",
+      "_index.js",
+      "src/main.ts",
+      "_lodash.js"
     ],
     "css": [
-      "css/EstimationList.css",
-      "css/base.css"
+      "css/EstimationList.css"
     ]
   },
-  "_vue-screen.esm.js": {
-    "file": "js/vue-screen.esm.js",
+  "_base.js": {
+    "file": "js/base.js",
     "imports": [
       "src/main.ts"
     ],
     "css": [
-      "css/vue-screen.esm.css"
+      "css/base.css"
+    ]
+  },
+  "_index.js": {
+    "file": "js/index.js",
+    "imports": [
+      "src/main.ts",
+      "_base.js"
+    ],
+    "css": [
+      "css/index.css"
     ]
   },
   "src/components/404.vue": {
@@ -39,15 +56,17 @@
     "src": "src/components/404.vue",
     "isDynamicEntry": true,
     "imports": [
+      "_base.js",
       "_plugin-vue_export-helper.js",
       "src/main.ts"
-    ],
-    "css": [
-      "css/base.css"
     ]
   },
   "_plugin-vue_export-helper.js": {
     "file": "js/plugin-vue_export-helper.js",
+    "imports": [
+      "_base.js",
+      "src/main.ts"
+    ],
     "css": [
       "css/plugin-vue_export-helper.css"
     ]
@@ -57,13 +76,14 @@
     "src": "src/components/Estimation.vue",
     "isDynamicEntry": true,
     "imports": [
+      "_base.js",
       "src/main.ts",
-      "_vue-screen.esm.js",
-      "_plugin-vue_export-helper.js"
+      "_index.js",
+      "_plugin-vue_export-helper.js",
+      "_html2canvas.js"
     ],
     "css": [
-      "css/Estimation.css",
-      "css/base.css"
+      "css/Estimation.css"
     ]
   }
 }

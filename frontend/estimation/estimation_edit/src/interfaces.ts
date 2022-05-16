@@ -22,6 +22,7 @@ export interface Field {
     code: string
     options?: Option[]
     value?: number
+    placeholder?: string
 }
 
 export interface Module {

@@ -32,7 +32,6 @@ onMounted(() => {
 
 const deleteOption = (index: number) => {
     emits('deleteOption', index)
-    // props.field.options?.splice(index, 1)
 }
 
 </script>
@@ -62,8 +61,7 @@ const deleteOption = (index: number) => {
 
     </el-form-item>
     <div>
-        <el-button size='small' type="primary" :icon="Plus" @click="field.options.push(defaultOption())">Добавить
-            опцию
+        <el-button size='small' type="primary" :icon="Plus" @click="field.options!.push(defaultOption())">Добавить опцию
         </el-button>
     </div>
 </template>

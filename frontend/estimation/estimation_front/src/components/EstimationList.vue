@@ -3,10 +3,12 @@ import Toolbox from './Toolbox.vue';
 
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import ru from 'element-plus/lib/locale/lang/ru'
+import { ElConfigProvider } from 'element-plus'
 import axios from 'axios'
 const route = useRoute()
 const router = useRouter()
-
+const locale = ru
 
 const estimations = ref([])
 const page_count = ref(1)
@@ -78,36 +80,37 @@ const setField = (payload) => {
 </script>
 
 <template>
-
-    <div class="container mx-auto mt-10">
-        <toolbox :title="filter.title" :lead="filter.lead" :dates="filter.dates" @update="payload => setField(payload)"
-            @search="values => fetchEstimations({ ...values })"></toolbox>
-        <div class="flex flex-col gap-3 align-center w-full  px-10">
-            <el-card class="box-card w-full" v-for="estimation in estimations">
-                <template #header>
-                    <div class="card-header flex justify-between items-center">
-                        <span>{{ estimation.globals.title || `Расчет #${estimation.globals.id}` }}</span>
-                        <el-button class="button" type="text" @click="open_estimation(estimation.globals.id)"
-                            :loading="routed_id === estimation.globals.id">
-                            Перейти
-                        </el-button>
+    <el-config-provider :locale="locale">
+        <div class="container mx-auto mt-10">
+            <toolbox :title="filter.title" :lead="filter.lead" :dates="filter.dates"
+                @update="payload => setField(payload)" @search="values => fetchEstimations({ ...values })"></toolbox>
+            <div class="flex flex-col gap-3 align-center w-full  px-10">
+                <el-card class="box-card w-full" v-for="estimation in estimations">
+                    <template #header>
+                        <div class="card-header flex justify-between items-center">
+                            <span>{{ estimation.globals.title || `Расчет #${estimation.globals.id}` }}</span>
+                            <el-button class="button" type="text" @click="open_estimation(estimation.globals.id)"
+                                :loading="routed_id === estimation.globals.id">
+                                Перейти
+                            </el-button>
+                        </div>
+                    </template>
+                    <div>
+                        <ul>
+                            <li>Автор: {{ getName(estimation.globals.created_by) }}</li>
+                            <li>Дата создания: {{ getDateTime(estimation.globals.created_at) }}</li>
+                            <li v-if="estimation.globals.amo_lead_id">Привязанный лид: <a
+                                    :href="estimation.globals.amo_lead_id">{{ estimation.globals.amo_lead_id }}</a>
+                            </li>
+                        </ul>
                     </div>
-                </template>
-                <div>
-                    <ul>
-                        <li>Автор: {{ getName(estimation.globals.created_by) }}</li>
-                        <li>Дата создания: {{ getDateTime(estimation.globals.created_at) }}</li>
-                        <li v-if="estimation.globals.amo_lead_id">Привязанный лид: <a
-                                :href="estimation.globals.amo_lead_id">{{ estimation.globals.amo_lead_id }}</a>
-                        </li>
-                    </ul>
-                </div>
-            </el-card>
+                </el-card>
+            </div>
+            <div class="mx-auto w-fit mt-3 mb-10">
+                <el-pagination v-model:page-size="page_size" layout="prev, pager, next, sizes" :page-count="page_count"
+                    :current-page="current_page" @current-change="page => fetchEstimations({ page })"
+                    :page-sizes="[10, 25, 50, 75]" hide-on-single-page />
+            </div>
         </div>
-        <div class="mx-auto w-fit mt-3 mb-10">
-            <el-pagination v-model:page-size="page_size" layout="prev, pager, next, sizes" :page-count="page_count"
-                :current-page="current_page" @current-change="page => fetchEstimations({ page })"
-                :page-sizes="[10, 25, 50, 75]" hide-on-single-page />
-        </div>
-    </div>
+    </el-config-provider>
 </template>

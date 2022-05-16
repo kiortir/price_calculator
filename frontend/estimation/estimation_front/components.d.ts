@@ -48,6 +48,7 @@ declare module '@vue/runtime-core' {
     PriceTotal: typeof import('./src/components/PriceTotal.vue')['default']
     Product: typeof import('./src/components/Product.vue')['default']
     ProductEdit: typeof import('./src/components/ProductEdit.vue')['default']
+    RadioFields: typeof import('./src/components/RadioFields.vue')['default']
     Results: typeof import('./src/components/Results.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

@@ -51,6 +51,7 @@ let currency_formatter = new Intl.NumberFormat('ru-RU', {
                     </div>
                 </template>
                 <div class="flex flex-col gap-2">
+                    
                     <el-form label-position="left" :model="values" label-width="auto">
                         <el-form-item v-for="(_, field) in values" :key="constant + field" :label="field_alias[field]">
                             <el-input-number :controls="grid.sm" step="500" min="0" v-model="values[field]" />

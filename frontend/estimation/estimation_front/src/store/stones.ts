@@ -74,14 +74,14 @@ export const useStore = defineStore('stones', {
                 const cut_price = stone.cut_price * Math.ceil(stone.count % 1)
                 const alleged_overprice = config[0].rub_price * constants.overprice.percent / 100
                 const overprice = Math.min(alleged_overprice, constants.overprice.lte)
-                const same_manufacturer_stones = this.stones.filter(s => s.manufacturer === stone.manufacturer).length
+                const same_manufacturer_stones = this.stones.filter(s => s.manufacturer === stone.manufacturer).length || 1
                 const delivery = {
-                    price: constants.delivery.price / same_manufacturer_stones,
-                    consumables: constants.delivery.consumables / same_manufacturer_stones// !Заменить на расходник
+                    price: Math.ceil(constants.delivery.price / same_manufacturer_stones),
+                    consumables: Math.ceil(constants.delivery.consumables / same_manufacturer_stones)// !Заменить на расходник
                 }
                 result[name] = {
-                    price: Math.ceil(((config[0].rub_price + overprice) * stone.count + cut_price * 1.5 + delivery.price) || 0),
-                    consumables: config[0].rub_price * stone.count + cut_price + delivery.consumables
+                    raw: Math.ceil(((Number(config[0].rub_price) + overprice) * stone.count + cut_price * 1.5 + delivery.price) || 0),
+                    consumables: Math.ceil(Number(config[0].rub_price) * stone.count + cut_price + delivery.consumables)
                 }
                 // valid_results.push(stone.name)
             }
@@ -93,26 +93,26 @@ export const useStore = defineStore('stones', {
             const valid_results = []
             const prices = JSON.parse(JSON.stringify(this.raw_prices)) || {}
             for (const [key, value] of Object.entries(prices)) {
-                if (value.price > 0) {
+                if (value.raw > 0) {
                     valid_results.push(key)
                 }
             }
             const hidden_spread = Math.ceil(hidden / (valid_results.length || 1))
 
             valid_results.forEach(name => {
-                prices[name].price += hidden_spread
+                prices[name].price = hidden_spread + prices[name].raw
             })
             return prices
         },
         total: function () {
-            const total = { price: 0, discount10: 0, discount20: 0, discount30: 0, salary: 0, consumables: 0, raw:0 }
-            Object.values(this.prices).forEach(stone => {
+            const total = { price: 0, discount10: 0, discount20: 0, discount30: 0, salary: 0, consumables: 0, raw: 0 }
+            Object.values(this.prices).forEach((stone) => {
                 total.price += stone.price
                 total.discount10 += stone.price
                 total.discount20 += stone.price
                 total.discount30 += stone.price
                 total.consumables += stone.consumables
-                total.raw += stone.price
+                total.raw += stone.raw
             })
             return total
         }
