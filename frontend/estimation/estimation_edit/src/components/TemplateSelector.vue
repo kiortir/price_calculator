@@ -14,7 +14,6 @@ const template_values = computed(() => {
     for (const template in templates) {
         new_obj[template] = Object.keys(templates[template]).some(el => el === props.moduleId)
     }
-    console.log(new_obj)
     return new_obj
 },
 

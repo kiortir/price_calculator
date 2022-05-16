@@ -49,11 +49,13 @@ export const useConstantStore = defineStore('constants', {
             },
             templates: <{ [name: string]: {} }>{
 
-            }
+            },
+            templates_list: <string[]>[]
         }
     },
     actions: {
         addTemplate(name: string) {
+            this.templates_list.push(name)
             this.templates[name] = {}
         },
         deleteTemplate(name: string) {
