@@ -6,7 +6,7 @@ const props = defineProps<{
 }>()
 
 onMounted(() => {
-    props.field.value = 0
+    if (props.field.value === undefined) { props.field.value = 0 }
 })
 
 </script>
