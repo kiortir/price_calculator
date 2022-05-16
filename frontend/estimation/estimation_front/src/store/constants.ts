@@ -32,7 +32,8 @@ export const useConstantStore = defineStore('constants', {
                 }
             },
             material: { "delivery": { "price": 0, "consumables": 0 }, "overprice": { "lte": 0, "percent": 0 } },
-            templates: {}
+            templates: {},
+            templates_list: []
         }
     }
 })

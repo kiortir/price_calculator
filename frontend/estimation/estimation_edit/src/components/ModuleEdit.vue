@@ -119,6 +119,10 @@ function save() {
                         <el-form-item label="Название поля">
                             <el-input v-model="field.name" clearable type='string' />
                         </el-form-item>
+                        <el-form-item label="Подсказка">
+                            <el-input v-model="field.tooltip" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea"
+                                placeholder="Введите подсказку" />
+                        </el-form-item>
                         <el-form-item label="Тип поля">
                             <el-select v-model="field.type" placeholder="выберите тип поля">
                                 <el-option label="Константа" value="constant" />
@@ -128,7 +132,9 @@ function save() {
                             </el-select>
                         </el-form-item>
                         <component :is="ComponentFields[field.type]" :field="field"
-                            @deleteOption="(index: number) => field.options?.splice(index, 1)"></component>
+                            @deleteOption="(index: number) => field.options?.splice(index, 1)">
+
+                        </component>
                     </el-form>
                 </div>
             </div>

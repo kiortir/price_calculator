@@ -8,11 +8,9 @@ const props = defineProps<{
     id: number
 }>()
 
-onMounted(() => {
-    if (props.data[props.id] === undefined) {
-        props.data[props.id] = props.reference.options![0].key
-    }
-})
+if (props.data[props.id] === undefined) {
+    props.data[props.id] = props.reference.options![0].key
+}
 
 </script>
 
@@ -21,8 +19,8 @@ onMounted(() => {
         <el-radio-group v-model="data[id]">
             <el-radio-button v-for="({ key, value }, index) in reference.options" :key="index" :label="key"
                 :value="key" />
-
         </el-radio-group>
+        <slot></slot>
         <!-- <el-select v-model="props.data[props.id]" class="" placeholder="Выбор">
             <el-option v-for="({ key, value }, index) in reference.options" :key="index" :label="key" :value="key" />
         </el-select> -->

@@ -26,8 +26,8 @@ const showInput = () => {
 
 <template>
 
-    <el-tag v-for="template in Object.keys(store.templates)" :key="template" class="mx-1" closable
-        :disable-transitions="false" @close="store.deleteTemplate(template)">
+    <el-tag v-for="(template, idx) in store.templates_list" :key="template" class="mx-1" closable
+        :disable-transitions="false" @close="store.deleteTemplate(template, idx)">
         {{ template }}
     </el-tag>
     <el-input v-if="inputVisible" ref="InputRef" v-model="inputValue" class="" size="small"

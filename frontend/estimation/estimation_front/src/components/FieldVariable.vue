@@ -22,5 +22,6 @@ const value = computed({
 <template>
     <el-form-item :label="reference.name">
         <el-input-number :min="0" :step=1 v-model="value" :placeholder="reference.placeholder || 'шт./п.м.'" />
+        <slot></slot>
     </el-form-item>
 </template>

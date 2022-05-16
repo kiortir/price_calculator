@@ -6,8 +6,8 @@ const props = defineProps<{
     form: object
     moduleId: string
 }>()
-
-const templates = props.form.templates
+const store = useConstantStore()
+const templates = store.templates
 
 const template_values = computed(() => {
     const new_obj = {}
@@ -32,8 +32,8 @@ function setModule(template: string, val: boolean) {
 
 <template>
     <el-form>
-        <el-form-item v-for="(list, template) in template_values" :label="template" :key="template">
-            <el-switch :model-value="list" @change="val => setModule(template, val)"></el-switch>
+        <el-form-item v-for="(template, index) in store.templates_list" :label="template" :key="index">
+            <el-switch :model-value="template_values[template]" @change="(val) => setModule(template, val)"></el-switch>
         </el-form-item>
     </el-form>
 

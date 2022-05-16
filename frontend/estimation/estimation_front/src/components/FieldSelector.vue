@@ -14,5 +14,7 @@ const props = defineProps<{
         <el-select v-model="props.data[props.id]" class="" placeholder="Выбор">
             <el-option v-for="({ key, value }, index) in reference.options" :key="index" :label="key" :value="key" />
         </el-select>
+        <slot></slot>
     </el-form-item>
+
 </template>

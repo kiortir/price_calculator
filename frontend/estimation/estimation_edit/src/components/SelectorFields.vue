@@ -61,6 +61,8 @@ const deleteOption = (index: number) => {
         </el-form>
 
     </el-form-item>
+
+
     <div>
         <el-button size='small' type="primary" :icon="Plus" @click="field.options.push(defaultOption())">Добавить
             опцию

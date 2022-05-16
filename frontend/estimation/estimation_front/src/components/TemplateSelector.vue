@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useConstantStore } from '../store/constants'
 const store = useConstantStore()
-const templates = computed(() => ['Изделие'].concat(...Object.keys(store.templates)))
+const templates = computed(() => ['Изделие'].concat(store.templates_list))
 defineProps<{
     data: string
     index: string

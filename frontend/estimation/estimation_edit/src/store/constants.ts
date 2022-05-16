@@ -58,7 +58,8 @@ export const useConstantStore = defineStore('constants', {
             this.templates_list.push(name)
             this.templates[name] = {}
         },
-        deleteTemplate(name: string) {
+        deleteTemplate(name: string, index: number) {
+            this.templates_list.splice(index, 1)
             delete this.templates[name]
         }
     }
