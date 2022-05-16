@@ -167,15 +167,16 @@ export default {
 <style lang="scss">
 $slide_speed: 0.5s;
 
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 801px) {
   .wide {
+    min-width: 800px!important;
     width: 80vw !important;
   }
   .main-offcanvas {
     width: 40vw !important;
   }
 }
-@media screen and (max-width: 540px) {
+@media screen and (max-width: 800px) {
   .wide {
     width: 100vw !important;
   }

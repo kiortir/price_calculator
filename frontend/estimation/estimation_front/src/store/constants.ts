@@ -25,7 +25,7 @@ export const useConstantStore = defineStore('constants', {
                     "price": 0, "salary": 0, "consumables": 0
                 },
                 "measurement": {
-                    "price": 0, "salary": 0, "template": 0, "consumables": 0, "distance_modifier": 0, "salary_distance_modifier": 0
+                    "price": 0, "salary": 0, "template_price": 0, "template_salary": 0, "consumables": 0, "distance_modifier": 0, "salary_distance_modifier": 0
                 },
                 "installation": {
                     "price_var": 0, "salary_var": 0, "consumables": 0, "price_const": 0, "salary_const": 0, "distance_modifier": 0, "salary_distance_modifier": 0

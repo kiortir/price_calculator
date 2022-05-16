@@ -134,19 +134,19 @@ const styles = computed(() => {
 const discounts = [
     {
         label: 'price',
-        title: 'Стандарт'
+        title: 'РРЦ'
     },
     {
         label: 'discount10',
-        title: '10%'
+        title: 'Колонка 1'
     },
     {
         label: 'discount20',
-        title: '20%'
+        title: 'Колонка 2'
     },
     {
         label: 'discount30',
-        title: '30%'
+        title: 'Дилерская'
     },
 ]
 

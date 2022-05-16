@@ -121,7 +121,7 @@ export const useLogisticStore = defineStore('logistics', {
                         + this.constants.logistics.installation?.salary_distance_modifier
                         * this.standart.distance.value),
                 consumables: this.standart.installation_count.value * this.constants.logistics.installation.consumables,
-                name: `${this.products.installationTotal} шт.`
+                name: `${this.standart.installation_count.value} шт.`
             }
         },
         measures: function (): { [key in priceField]?: number } {
@@ -129,12 +129,14 @@ export const useLogisticStore = defineStore('logistics', {
                 price: this.standart.measurement_count.value
                     * (this.constants.logistics.measurement?.price
                         + this.constants.logistics.measurement?.distance_modifier
-                        * this.standart.distance.value),
+                        * this.standart.distance.value
+                        + this.constants.logistics.measurement.template_price),
                 salary: 0,
                 consumables: this.standart.measurement_count.value
-                    * (this.constants.logistics.measurement?.price
+                    * (this.constants.logistics.measurement?.salary
                         + this.constants.logistics.measurement?.salary_distance_modifier
-                        * this.standart.distance.value)
+                        * this.standart.distance.value
+                        + this.constants.logistics.measurement.template_salary),
             }
         },
         hiddenSum: function (state): number {
@@ -154,7 +156,7 @@ export const useLogisticStore = defineStore('logistics', {
                     result += field.value
                 }
             }
-            result += this.measures.price || 0
+            // result += this.measures.price || 0
             return result
         },
         total: function (state): { [key in priceField]?: number } {

@@ -5,6 +5,7 @@ import { Plus, Delete } from '@element-plus/icons-vue'
 import SelectorFields from './SelectorFields.vue'
 import FormulaBlock from './FormulaBlock.vue'
 import TemplateSelector from './TemplateSelector.vue'
+import ModuleSettingsVue from './ModuleSettings.vue'
 import ConstField from './ConstField.vue'
 import { useConstantStore } from '../store/constants';
 import { Field, Module, Option } from '../interfaces';
@@ -48,7 +49,10 @@ onMounted(() => {
             name: "",
             code: makeid(9),
             fields: {},
-            settings: {},
+            settings: {
+                discountable: true,
+                duplicable: false
+            },
             formula: {
                 salary: [],
                 price: [],
@@ -88,6 +92,8 @@ function save() {
 <template>
     <el-dialog fullscreen v-model="isOpen" :title="module.name || 'Новый модуль'">
         <div class="main container mx-auto p-30 mb-[50px] flex flex-col gap-3" v-if="!editFormulas">
+            <module-settings-vue :settings="form.settings"></module-settings-vue>
+
             <el-form :model="form">
                 <el-form-item label="Название модуля">
                     <el-input v-model="form.name" />

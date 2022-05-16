@@ -17,7 +17,7 @@ const loading = ref(false)
 const error = ref()
 
 const default_pricelist_id = ref()
-const pricelists = ref()
+const pricelists = ref([])
 
 const fetch = () => {
   loading.value = true
@@ -52,11 +52,11 @@ onMounted(() => {
 </script>
 
 <template>
-
+  <!-- {{pricelists}} -->
   <div class="container mx-auto mt-10 font-sans flex flex-col gap-3">
     <div class="filter-panel rounded-sm p-1 ring-1">zzz</div>
     <div class="pricelist-container flex min-h-[40vh]">
-      <div class="place-self-center text-center mx-auto h-full text-gray-500" v-if="pricelists && !pricelists.length">
+      <div class="place-self-center text-center mx-auto h-full text-gray-500" v-if="!pricelists.length">
         <el-empty description="Ни одного прайс-листа не было найдено(" />
         <router-link class="underline underline-offset-2 text-lg hover:text-blue-600" to="/new">Создайте первый!
         </router-link>
@@ -95,7 +95,7 @@ onMounted(() => {
                 </el-button>
 
                 <el-button class="button" type="primary" :icon="DocumentCopy">
-                  <router-link :to="{ name: 'new_pricelist', params: { from: pricelist.id } }">
+                  <router-link :to="{ name: 'new_pricelist', query: { from: pricelist.id } }">
                     <span>Создать на основе</span>
                   </router-link>
                 </el-button>

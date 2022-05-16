@@ -2,7 +2,7 @@ from django.urls import path, include
 # from django.urls.conf import include
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
-from .views import AmoWebhookEndpoint, amo_get_leads, amo_update_tokens, amo_update_leads
+from .views import AmoWebhookEndpoint, amo_get_leads, amo_update_tokens, amo_update_leads, getCustomFields, getEvents
 
 app_name = 'amoApi'
 urlpatterns = [
@@ -10,4 +10,8 @@ urlpatterns = [
     path('leads', amo_get_leads.as_view()),
     path('tokens', amo_update_tokens),
     path('update', amo_update_leads),
+    path('fields', getCustomFields),
+    path('events', getEvents),
+    
+    
 ]

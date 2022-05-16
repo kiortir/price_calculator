@@ -15,19 +15,27 @@ const props = defineProps<{
     data: Object
 }>()
 
+const emits = defineEmits(['duplicate'])
+
 const reference = store.data[props.name]
-console.log({ reference })
 const refs = {
     selector: FieldSelectorVue,
     variable: FieldVariableVue,
     constant: FieldConstantVue
 }
 
+const duplicate = () => {
+    emits('duplicate')
+}
+
 </script>
 
 <template>
-    <div class="mt-2">
-        <el-form :model="data" label-width="auto" label-position="left" @submit.prevent> 
+    <div class="mt-2 flex flex-col gap-2">
+        <!-- <div>
+            <el-button type="text" v-if="reference.settings.duplicable" @click="duplicate">Дублировать</el-button>
+        </div> -->
+        <el-form :model="data" label-width="auto" label-position="left" @submit.prevent>
             <component v-for="(field, id) in reference.fields" :is="refs[field.type]" :reference="field" :data="data"
                 :id="id">
             </component>

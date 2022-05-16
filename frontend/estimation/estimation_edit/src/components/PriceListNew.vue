@@ -24,7 +24,6 @@ const moduleStore = useModuleStore()
 const constStore = useConstantStore()
 const loading = ref(false)
 const error = ref()
-
 const selected_modules = ref([])
 
 const editModule = ref(false)
@@ -54,6 +53,25 @@ const savePricelist = () => {
     }).then(() => {
         router.back()
     })
+}
+
+
+const getPricelist = (id?: number): void => {
+    axios.get('/estimation/api/pricelist/', {
+        params: {
+            id
+        }
+    }).then(response => {
+        const data = response.data.data
+        constStore.$state = data.variables
+        moduleStore.modules = data.modules
+    })
+}
+
+
+if (route.query.from !== undefined) {
+    
+    getPricelist(Number(route.query.from))
 }
 
 </script>

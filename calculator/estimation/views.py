@@ -62,8 +62,8 @@ class PricelistListView(TemplateView):
 class PricelistAPIView(APIView):
     def get(self, request):
         pricelist_id = request.GET.get('id')
-        latest = not (request.GET.get('latest') == 'false')
-        print(pricelist_id)
+        latest = request.GET.get('latest', None)
+        latest = not latest is None and not latest == 'false'
         try:
             default_pricelist = DefaultPricelist.objects.first()
             default_id = default_pricelist.pricelist.id
@@ -79,13 +79,12 @@ class PricelistAPIView(APIView):
         elif pricelist_id:
             try:
                 pricelist = ServicePricelist.objects.get(pk=pricelist_id)
-                print(pricelist.id)
             except ServicePricelist.DoesNotExist:
                 return Response(status=404)
             data = PriceListSerializer(pricelist).data
         else:
-            data = PriceListSerializer(
-                ServicePricelist.objects.all(), many=True).data
+            pricelists = ServicePricelist.objects.all()
+            data = PriceListSerializer(pricelists, many=True).data
         return Response({
             'default': default_id,
             'data': data

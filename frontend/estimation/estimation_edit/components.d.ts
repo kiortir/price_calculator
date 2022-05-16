@@ -22,6 +22,7 @@ declare module '@vue/runtime-core' {
     ElTransfer: typeof import('element-plus/es')['ElTransfer']
     FormulaBlock: typeof import('./src/components/FormulaBlock.vue')['default']
     ModuleEdit: typeof import('./src/components/ModuleEdit.vue')['default']
+    ModuleSettings: typeof import('./src/components/ModuleSettings.vue')['default']
     PriceListConstantsBlock: typeof import('./src/components/PriceListConstantsBlock.vue')['default']
     PriceListHome: typeof import('./src/components/PriceListHome.vue')['default']
     PriceListNew: typeof import('./src/components/PriceListNew.vue')['default']

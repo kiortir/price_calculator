@@ -37,7 +37,9 @@ export const useConstantStore = defineStore('constants', {
                     consumables: 0,
                     distance_modifier: 0,
                     salary_distance_modifier: 0,
-                    template: 0,
+                    template_price: 0,
+                    template_salary: 0,
+
                 },
                 manual_lift: {
                     price: 0,

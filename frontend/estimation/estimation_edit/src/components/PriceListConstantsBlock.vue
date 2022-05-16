@@ -16,7 +16,9 @@ const field_alias = {
     price_var: 'Цена (п.м.|м2)',
     salary_const: 'Зарплата (фикс)',
     salary_var: "Зарплата (п.м.|м2)",
-    template: "Стоимость шаблона",
+    template_price: "Стоимость шаблона",
+    template_salary: "Зп за шаблон",
+
 
     lte: "Не более",
     percent: "Процент",

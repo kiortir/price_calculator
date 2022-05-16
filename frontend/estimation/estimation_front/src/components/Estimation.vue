@@ -95,7 +95,6 @@ const getEstimation = async (id: number | string) => {
         await getPricelist(pricelist_id)
         return response.data
     }).then((data) => {
-        console.log({ id })
         if ((id !== 'new') && (id !== undefined)) {
             const state = data.state
             globalStorage.$state = data.globals
@@ -103,12 +102,12 @@ const getEstimation = async (id: number | string) => {
             productStorage.$state = state.products
             stoneStorage.$state = state.stones
 
-            if (data.user.username === 'roman') {
-                showcursor.value = true
-                nextTick(() => followCursor())
-            }
+            // if (data.user.username === 'admin') {
+            //     showcursor.value = true
+            //     nextTick(() => followCursor())
+            // }
         }
-    })//.catch(e => router.replace({ name: 'new' }))
+    }).catch(e => router.replace({ name: 'new' }))
 }
 
 const getPricelist = async (id?: number) => {
@@ -162,7 +161,9 @@ const showResults = () => {
 }
 
 
-
+const showResultsBlock = computed(() => {
+    return productStorage.total.price || logisticStorage.total.price || stoneStorage.total.price
+})
 </script>
 
 <template>
@@ -213,7 +214,7 @@ const showResults = () => {
                 </div>
             </div>
 
-            <div class="result-block basis-6/12 hidden md:flex w-full">
+            <div class="result-block basis-6/12 hidden md:flex w-full" v-if="showResultsBlock">
 
                 <el-affix :offset="0" class="w-full">
 
@@ -231,7 +232,7 @@ const showResults = () => {
     </div>
 </template>
 
-<style>
+<!-- <style>
 .follow-cursor {
     display: block;
     width: 24px;
@@ -353,4 +354,4 @@ const showResults = () => {
         transform: rotate(360deg);
     }
 }
-</style>
+</style> -->

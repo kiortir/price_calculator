@@ -128,7 +128,7 @@ const prevTab = () => {
     }
 }
 
-const listener = (e) => {
+const listener = (e: KeyboardEvent) => {
     if (isOpen.value) {
         if (e.ctrlKey && e.key === ' ') {
             e.preventDefault()
@@ -157,7 +157,7 @@ onMounted(() => {
                     <el-tab-pane v-for="(item, idx) in tabs" :key="item.name + idx" :label="item.title"
                         :name="item.name">
                         <component :is="item.component" :data="item.data" :index="item.index" :name="item.name"
-                            @clear-product="store.clearCard(edited_card_id)" />
+                            @clear-product="store.clearCard(edited_card_id)" @duplicate="products.duplicate(item.index)"/>
                     </el-tab-pane>
                 </el-tabs>
             </div>

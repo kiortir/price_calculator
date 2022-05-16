@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rechnung</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+              rel="stylesheet"
+              media="screen">
+        <style type="text/css">
+    .container {
+      max-width: 800px;
+      padding-top: 15px;
+    }
+    p {font-size: medium; text-align: left; display:flex; flex-direction: column}
+    h4 {text-align: center;}
+    h3 {text-align:center; color: rgb(19, 17, 17);}
+    table {
+      width: 100%;
+    }
+    td {
+vertical-align: text-top;
+    }
+    thead {
+      color: orange;
+    }
+    li {
+      font-size: 90%;
+      color: gray;
+    }
+    .option-list {
+        width: 100%;
+        display: flex;
+      	justify-content: space-between;
+        
+    }
+
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">
+                <img src="https://unirock.ru/images/content/unirock.svg"
+                     alt=""
+                     role="presentation">
+            </div>
+            <div>
+                <table >
+                    <thead>
+                      <tr>
+                        <td>Тип работ</td>
+                        <td>Цена без скидки</td>
+                        <td>Скидка</td>
+                        <td>Цена со скидкой</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for product in products %}
+                        <tr>
+                          <td>
+                            {{product.name}}
+                            <ul>
+                            {% for option in product.children %}
+                            <li class="option-list">
+                              <span>{{option.key}}:</span>
+                              <span>{{option.value}}</span>
+                            </li>
+                            {% endfor %}
+                            </ul>
+                          </td>
+                          <td>
+                            {{product.raw}}
+                          </td>
+                          <td>
+                            {{product.discount}}
+                          </td>
+                          <td>
+                            {{product.price}}
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    </body>
+</html>

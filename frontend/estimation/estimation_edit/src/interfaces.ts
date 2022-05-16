@@ -35,4 +35,7 @@ export interface Module {
         salary: FormulaElement[]
         consumables: FormulaElement[]
     }
+    settings: {
+        [key: string]: string
+    }
 }

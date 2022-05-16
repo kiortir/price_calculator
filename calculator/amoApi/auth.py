@@ -44,5 +44,8 @@ def check_tokens():
     return tokens.expiration_time > datetime.now()
 
 
+def token():
+    return Token.objects.get(id=1).access_token
+
 if __name__ == '__main__':
     pass
