@@ -12,9 +12,6 @@
       "css/main.css"
     ]
   },
-  "_lodash.js": {
-    "file": "js/lodash.js"
-  },
   "_html2canvas.js": {
     "file": "js/html2canvas.js"
   },
@@ -25,8 +22,7 @@
     "imports": [
       "_base.js",
       "_index.js",
-      "src/main.ts",
-      "_lodash.js"
+      "src/main.ts"
     ],
     "css": [
       "css/EstimationList.css"
