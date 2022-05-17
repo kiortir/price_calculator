@@ -45,10 +45,11 @@ const selectedIndex = ref(0)
 
 const injected_modules: ComputedRef<Module[]> = computed(() => {
     if (product.template === 'Изделие') {
-        return Object.values(modules.data)
+        return modules.modules
     }
     else {
-        return Object.keys(constants.templates[product.template]).map(id => modules.data[id])
+        const m = Object.keys(constants.templates[product.template])
+        return modules.modules?.filter(module => m.includes(module.code))
     }
 
 })
@@ -145,19 +146,42 @@ onMounted(() => {
     window.addEventListener('keydown', listener)
 })
 
+function debounce(func, timeout = 80) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+}
+
+
+function wheel_event(event) {
+    const classlist = event.target.classList
+    if (classlist.contains("el-tabs__item")) {
+        if (event.wheelDelta > 0) {
+            prevTab()
+        }
+        else {
+            nextTab()
+        }
+    }
+}
+
+const wheel_tab = debounce((event) => wheel_event(event));
 
 </script>
 
 <template>
-    <el-dialog destroy-on-close :fullscreen="!grid.lg" class="" width="80vw" v-model="isOpen"
+    <el-dialog destroy-on-close :fullscreen="!grid.lg" width="85vw" class="" v-model="isOpen"
         :title="product?.template || 'Новое изделие'">
-        <div class="container mx-auto flex flex-col min-h-[50vh]">
-            <div class="controls">
-                <el-tabs v-model="selectedModule" type="border-card">
+        <div class="mx-auto flex flex-col min-h-[50vh]">
+            <div class="controls" @wheel.prevent="event => wheel_tab(event)">
+                <el-tabs v-model="selectedModule" type="" :tab-position="grid.lg ? 'right' : 'top'">
                     <el-tab-pane v-for="(item, idx) in tabs" :key="item.name + idx" :label="item.title"
                         :name="item.name">
                         <component :is="item.component" :data="item.data" :index="item.index" :name="item.name"
-                            @clear-product="store.clearCard(edited_card_id)" @duplicate="products.duplicate(item.index)"/>
+                            @clear-product="store.clearCard(edited_card_id)"
+                            @duplicate="products.duplicate(item.index)" />
                     </el-tab-pane>
                 </el-tabs>
             </div>

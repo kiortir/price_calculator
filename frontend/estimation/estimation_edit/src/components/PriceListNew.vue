@@ -2,6 +2,7 @@
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { ref, computed, onMounted } from 'vue'
+import draggable from 'vuedraggable'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import PriceListConstants from './PriceListConstantsBlock.vue'
 import ModuleEdit from './ModuleEdit.vue'
@@ -47,7 +48,7 @@ const savePricelist = () => {
         url: '/estimation/api/pricelist/',
         data: {
             constants: constStore.$state,
-            modules: moduleStore.modules
+            modules: moduleStore.ordered_modules,
         },
         headers: { "X-CSRFToken": csrftoken }
     }).then(() => {
@@ -74,6 +75,7 @@ if (route.query.from !== undefined) {
     getPricelist(Number(route.query.from))
 }
 
+const drag = ref(false)
 </script>
 
 <template>
@@ -97,16 +99,30 @@ if (route.query.from !== undefined) {
                         Добавить опцию
                     </el-button>
                 </div>
-                <div class="flex flex-row gap-2 items-center justify-between w-full pr-1"
-                    v-for="option in moduleStore.modules">
-                    <span class="">{{ option.name }}</span>
-                    <div class="flex flex-row">
-                        <el-button size="small" :icon="Edit"
-                            @click="editModule = true; edited_module = moduleStore.modules[option.code]" />
-                        <el-button size="small" :icon="Delete" type="danger"
-                            @click="delete moduleStore.modules[option.code]" />
-                    </div>
-                </div>
+                <draggable :list="moduleStore.modules_list" @start="drag = true" @end="drag = false" item-key="code"
+                    class="list-group" ghost-class="ghost">
+                    <template #item="{ element }">
+                        <div class="flex flex-row gap-2 items-center justify-between w-full pr-1">
+                            <span class="">{{ element.name }}</span>
+                            <div class="flex flex-row">
+                                <el-button size="small" :icon="Edit"
+                                    @click="editModule = true; edited_module = moduleStore.modules[element.code]" />
+                                <el-button size="small" :icon="Delete" type="danger"
+                                    @click="moduleStore.delete(element.code)" />
+                            </div>
+                        </div>
+                    </template>
+                    <!-- <div class="flex flex-row gap-2 items-center justify-between w-full pr-1"
+                        v-for="option in moduleStore.modules">
+                        <span class="">{{ option.name }}</span>
+                        <div class="flex flex-row">
+                            <el-button size="small" :icon="Edit"
+                                @click="editModule = true; edited_module = moduleStore.modules[option.code]" />
+                            <el-button size="small" :icon="Delete" type="danger"
+                                @click="delete moduleStore.modules[option.code]" />
+                        </div>
+                    </div> -->
+                </draggable>
             </div>
             <!-- <el-transfer v-model="selected_modules" filterable :titles="['Доступные', 'Используемые']"
                 :button-texts="['Убрать', 'Добавить']" :data="Object.values(moduleStore.modules)" :props="{

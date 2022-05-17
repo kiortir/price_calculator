@@ -11,8 +11,13 @@ defineProps<{
 </script>
 
 <template>
-    <el-select @change="_ => $emit('clearProduct')" v-model="data[index]" class="m-2" placeholder="Выберите тип">
-        <el-option v-for="(template_code, idx) in templates" :key="template_code + idx" :label="template_code"
-            :value="template_code" />
-    </el-select>
+    <el-form>
+        <el-form-item label="Тип изделия">
+            <el-select @change="_ => $emit('clearProduct')" v-model="data[index]" class="m-2"
+                placeholder="Выберите тип">
+                <el-option v-for="(template_code, idx) in templates" :key="template_code + idx" :label="template_code"
+                    :value="template_code" />
+            </el-select>
+        </el-form-item>
+    </el-form>
 </template>

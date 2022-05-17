@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useStore as useStoneStore } from '../store/stones';
+import { useStore } from '../store/stones';
 
 import { useProductStore } from '../store/products';
 import { useLogisticStore } from '../store/logistics';
 import { useGlobalStore } from '../store/globals';
 import { ref, computed } from 'vue';
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
 
 import Total from './PriceTotal.vue'
 import Offer from './Offer.vue'
 
-const stoneStore = useStoneStore()
+const stoneStore = useStore()
 const productStore = useProductStore()
 const logisticStore = useLogisticStore()
 const globals = useGlobalStore()
@@ -46,11 +46,11 @@ const logisticsData = computed(() => {
     return filtered
 })
 
-const capture = () => {
-    html2canvas(result.value).then(canvas => {
-        canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]))
-    });
-}
+// const capture = () => {
+//     html2canvas(result.value).then(canvas => {
+//         canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]))
+//     });
+// }
 
 const result = ref()
 
@@ -63,7 +63,7 @@ const showOffer = () => {
 
 <template>
     <div class="modules flex flex-col gap-2" ref="result">
-        <div data-html2canvas-ignore>
+        <div>
             <el-button @click="showOffer">КП</el-button>
         </div>
         <el-dialog v-model="showOfferDialog">

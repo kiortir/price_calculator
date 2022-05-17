@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { useStore as useStoneStore } from '../store/stones';
+import { computed } from 'vue';
 
+import { useStore as useStoneStore } from '../store/stones';
 import { useProductStore } from '../store/products';
 import { useLogisticStore } from '../store/logistics';
 import { useGlobalStore } from '../store/globals';
 import { useGrid } from 'vue-screen';
 
-import { ref, computed } from 'vue';
+
+
 const grid = useGrid('tailwind')
 const stoneStore = useStoneStore()
 const productStore = useProductStore()

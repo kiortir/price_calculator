@@ -90,6 +90,7 @@ const editFormulas = ref(false)
 
 function save() {
     store.modules[form.value.code] = form.value
+    store.modules_list.push(form.value)
     emits('setEdit', false)
 }
 

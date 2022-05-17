@@ -62,6 +62,7 @@ export interface ModuleField {
     type: string
     placeholder?: string
     options?: SelectorObject[]
+    tooltip: string
 }
 
 export interface Module {
@@ -84,4 +85,46 @@ export interface Modules {
 
 export interface Store extends PiniaStore {
     addCard: () => {}
+}
+
+type standart_logistics = 'floor' | 'distance' | 'delivery_count' | 'lifted_details' | 'measurement_count' | 'installation_count'
+
+export interface EstimationAPI {
+    state: {
+        stones: Stone[]
+        products: Product[]
+        logistics: {
+            standart: {
+                [key in standart_logistics]: {
+                    name: string
+                    value: number
+                    _order: number
+                }
+            }
+            custom: {
+                [key: string]: {
+                    hide: boolean
+                    field: string
+                    value: number
+                }
+            }
+        }
+    }
+    globals: {
+        id: number
+        created_at: string
+        title: string
+        amo_lead_id: string
+        iteration_group: number
+        iteration_version: number
+        is_active: boolean
+        pricelist: number
+        created_by: {
+            first_name: string
+            last_name: string
+            username: string
+            id: number
+        }
+
+    }
 }

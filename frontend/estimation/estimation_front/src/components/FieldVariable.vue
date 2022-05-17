@@ -5,7 +5,7 @@ import { ModuleField, ProductOption } from '../interfaces';
 const props = defineProps<{
     reference: ModuleField
     data: ProductOption
-    id: number
+    id: number | string
 }>()
 
 const value = computed({

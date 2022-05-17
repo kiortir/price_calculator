@@ -3,14 +3,19 @@ import Toolbox from './Toolbox.vue';
 
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import ru from 'element-plus/lib/locale/lang/ru'
 import { ElConfigProvider } from 'element-plus'
+
+import { EstimationAPI } from '../interfaces'
+
 import axios from 'axios'
+
 const route = useRoute()
 const router = useRouter()
 const locale = ru
 
-const estimations = ref([])
+const estimations = ref(<EstimationAPI[]>[])
 const page_count = ref(1)
 const current_page = ref()
 const page_size = ref(10)
@@ -19,13 +24,14 @@ const filter = ref({
     dates: ["", ""],
     lead: ""
 })
+
 const fetchEstimations = ({ page = 1, limit = page_size.value, title = "", dates = [], lead = "" }) => {
     const params = { page, limit, title, dates, lead }
     axios.get('api/', {
         params
     }).then((response: {
         data: {
-            estimations: Array<object>
+            estimations: EstimationAPI[]
             total: number
         }
     }) => {
@@ -41,7 +47,9 @@ const fetchEstimations = ({ page = 1, limit = page_size.value, title = "", dates
     })
 }
 onMounted(() => {
-    current_page.value = parseInt(route.query.page)
+    if (!route.query.page?.length) {
+        current_page.value = parseInt(<string>route.query.page)
+    }
 
     fetchEstimations({ ...route.query })
 })
@@ -72,8 +80,9 @@ const search = (values: object) => {
     axios.get('api/search/', { params: Object.assign(values, { limit: page_size.value, page: 0 }) })
 }
 
-const setField = (payload) => {
+const setField = (payload: { field: string; value: string | string[] }) => {
     const field = payload.field
+    // @ts-expect-error
     filter.value[field] = payload.value
 }
 
