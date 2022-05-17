@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { ref, computed, onMounted } from 'vue'
 import draggable from 'vuedraggable'
-import { Edit, Delete } from '@element-plus/icons-vue'
+import { Edit, Delete, Rank } from '@element-plus/icons-vue'
 import PriceListConstants from './PriceListConstantsBlock.vue'
 import ModuleEdit from './ModuleEdit.vue'
 import TemplatesBlockVue from './TemplatesBlock.vue'
@@ -66,6 +66,7 @@ const getPricelist = (id?: number): void => {
         const data = response.data.data
         constStore.$state = data.variables
         moduleStore.modules = data.modules
+        moduleStore.modules_list = Object.values(data.modules).sort((a: Module, b: Module) => { return (a._order || 0) - (b._order || 0) }) || []
     })
 }
 
@@ -76,6 +77,13 @@ if (route.query.from !== undefined) {
 }
 
 const drag = ref(false)
+const dragOptions = computed(() => {
+    return {
+        animation: 200,
+        disabled: false,
+        ghostClass: "ghost"
+    };
+})
 </script>
 
 <template>
@@ -99,11 +107,21 @@ const drag = ref(false)
                         Добавить опцию
                     </el-button>
                 </div>
-                <draggable :list="moduleStore.modules_list" @start="drag = true" @end="drag = false" item-key="code"
-                    class="list-group" ghost-class="ghost">
+                <draggable :list="moduleStore.modules_list" @start="drag = true" @end="drag = false" 
+                    tag="transition-group" :component-data="{
+                        tag: 'div',
+                        type: 'transition-group',
+                        name: !drag ? 'flip-list' : null
+                    }" class="list-group" v-bind="dragOptions">
                     <template #item="{ element }">
-                        <div class="flex flex-row gap-2 items-center justify-between w-full pr-1">
-                            <span class="">{{ element.name }}</span>
+                        <div
+                            class="flex flex-row gap-2 items-center justify-between w-full pr-1 mb-2 ring-1 rounded-md p-2 list-group-item">
+                            <div class="flex items-center gap-2">
+                                <el-icon>
+                                    <rank></rank>
+                                </el-icon>
+                                <span>{{ element.name }}</span>
+                            </div>
                             <div class="flex flex-row">
                                 <el-button size="small" :icon="Edit"
                                     @click="editModule = true; edited_module = moduleStore.modules[element.code]" />
@@ -112,49 +130,8 @@ const drag = ref(false)
                             </div>
                         </div>
                     </template>
-                    <!-- <div class="flex flex-row gap-2 items-center justify-between w-full pr-1"
-                        v-for="option in moduleStore.modules">
-                        <span class="">{{ option.name }}</span>
-                        <div class="flex flex-row">
-                            <el-button size="small" :icon="Edit"
-                                @click="editModule = true; edited_module = moduleStore.modules[option.code]" />
-                            <el-button size="small" :icon="Delete" type="danger"
-                                @click="delete moduleStore.modules[option.code]" />
-                        </div>
-                    </div> -->
                 </draggable>
             </div>
-            <!-- <el-transfer v-model="selected_modules" filterable :titles="['Доступные', 'Используемые']"
-                :button-texts="['Убрать', 'Добавить']" :data="Object.values(moduleStore.modules)" :props="{
-                    key: 'code',
-                    label: 'name',
-                    disabled: ''
-                }">
-                <template #default="{ option }">
-                    <div class="flex flex-row gap-2 items-center justify-between w-full pr-1">
-                        <span class="">{{ option.name }}</span>
-                        <div class="flex flex-row">
-                            <el-button size="small" :icon="Edit"
-                                @click="editModule = true; edited_module = moduleStore.modules[option.code]" />
-                            <el-button size="small" :icon="Delete" type="danger"
-                                @click="delete moduleStore.modules[option.code]" />
-                        </div>
-                    </div>
-                </template>
-                <template #left-footer>
-                    <div class=" w-full h-full flex place-content-center">
-                        <div class="my-auto">
-                            <el-button class="transfer-footer" size="small"
-                                @click="edited_module = {}; editModule = true">Добавить
-                                опцию
-                            </el-button>
-                        </div>
-                    </div>
-                </template>
-                <template #right-footer>
-                    <el-button class="transfer-footer" size="small">Operation</el-button>
-                </template>
-            </el-transfer> -->
             <module-edit :open="editModule" :module="edited_module" :key="Math.random()"
                 @setEdit="value => { editModule = value }" />
 
@@ -163,5 +140,33 @@ const drag = ref(false)
 
 </template>
 
-<style >
+<style>
+.button {
+    margin-top: 35px;
+}
+
+.flip-list-move {
+    transition: transform 0.5s;
+}
+
+.no-move {
+    transition: transform 0s;
+}
+
+.ghost {
+    opacity: 0.5;
+    background: #c8ebfb;
+}
+
+.list-group {
+    min-height: 20px;
+}
+
+.list-group-item {
+    cursor: move;
+}
+
+.list-group-item i {
+    cursor: pointer;
+}
 </style>

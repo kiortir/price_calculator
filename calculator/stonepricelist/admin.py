@@ -12,12 +12,13 @@ from import_export import fields, resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, BooleanWidget
 from import_export.results import Result
+
 from stonepricelist.models import (AcrylicCollection, AcrylicConfiguration,
                                    AcrylicManufacturer, AcrylicStone, Colors,
                                    ConfigurationDiscount, Currency,
                                    EquivalentGroup, Material, SlabSize,
                                    SurfaceType, Texture, Thickness,
-                                   additionalWorkAcryl)
+                                   additionalWorkAcryl, CurrencyModifier)
 from stonepricelist.quartz_models import (
     QuartzManufacturer, QuartzStone, QuartzStoneConfiguration, quartzManufacturerInfoPictures)
 
@@ -267,6 +268,11 @@ class CurrencyAdmin(admin.ModelAdmin):
     readonly_fields = ('update_time',)
     list_display = ('name', 'value', 'value_date')
     list_editable = ('value', 'value_date')
+
+
+@ admin.register(CurrencyModifier)
+class CurrencyModifierAdmin(admin.ModelAdmin):
+    pass
 
 
 admin.site.register(AcrylicCollection, AcrylicCollectionAdmin)

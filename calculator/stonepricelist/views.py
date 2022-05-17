@@ -52,13 +52,15 @@ class DefaultAcrylPricelist(APIView):
         CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request):
-        try:
-            configs = AcrylicManufacturer.objects.all()
-            reverse = ReverseAcrylicManufactureSerializer(
-                configs, many=True).data
-            return Response(reverse)
-        except Exception:
-            return Response({"error": Exception})
+
+        configs = AcrylicManufacturer.objects.all()
+        print(configs)
+        reverse = ReverseAcrylicManufactureSerializer(
+            configs, many=True).data
+        print(reverse)
+        print("8"*10)
+
+        return Response(reverse)
 
 
 class AcrylicCollectionView(APIView):

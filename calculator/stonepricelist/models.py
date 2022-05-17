@@ -1,4 +1,5 @@
 
+from decimal import Decimal
 import datetime
 import math
 
@@ -13,11 +14,12 @@ from django.utils import timezone
 class Material(models.Model):
     name = CharField(
         max_length=25, default='Акриловый камень', primary_key=True)
-    percentage = SmallIntegerField(default=0, verbose_name='наценка, %')
+    percentage = models.DecimalField(
+        max_digits=15, decimal_places=2, default=Decimal("0"), verbose_name='наценка, %')
 
     @property
     def overprice(self):
-        return 1 + self.percentage / 100
+        return 1 + self.percentage / Decimal(100)
 
     class Meta:
         verbose_name = 'глобальная наценка'
@@ -185,7 +187,8 @@ class Currency(models.Model):
                             null=True, default="Доллар", verbose_name='название')
     code = models.CharField(max_length=3, unique=True,
                             default="USD", verbose_name='код валюты ЦБ', null=True, blank=True)
-    value = models.FloatField(default=0.0)
+    value = models.DecimalField(max_digits=15, decimal_places=2)
+
     value_date = models.DateField(null=True, blank=True)
     update_time = models.DateTimeField(auto_now=True)
     auto_update = models.BooleanField(
@@ -196,6 +199,15 @@ class Currency(models.Model):
         verbose_name = 'валюта'
         verbose_name_plural = 'валюты'
 
+    @property
+    def _value(self):
+
+        v = max(self.value, self.min or Decimal("0"))
+        if self.max:
+            v = min(v, self.max)
+        print(v)
+        return v
+
     def __repr__(self) -> str:
         return self.name
 
@@ -203,39 +215,63 @@ class Currency(models.Model):
         return self.name
 
 
-class Manufacturer(models.Model):
-    __original_currency_value_override = None
+class CurrencyModifier(models.Model):
+    title = models.CharField(max_length=50, blank=True,
+                             null=True, verbose_name='Название схемы')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.__original_currency_value_override = self.currency_value_modified_at
+    currency = models.ForeignKey(
+        Currency, on_delete=models.CASCADE, related_name='modifiers', verbose_name='валюта основы')
+
+    margin = models.DecimalField(
+        max_digits=15, decimal_places=2, null=True, blank=True, verbose_name='наценка, %')
+
+    floor = models.DecimalField(
+        max_digits=15, decimal_places=2, null=True, blank=True, verbose_name='минимальное значение')
+    ceiling = models.DecimalField(
+        max_digits=15, decimal_places=2, null=True, blank=True, verbose_name='максимальное значение значение')
+
+    @property
+    def value_date(self):
+        return max(self.currency.value_date, self.currency.update_time.date())
+
+    @property
+    def value(self):
+        if self.currency:
+            raw = self.currency.value
+        else:
+            raw = 0
+        margin = 1 + self.margin / Decimal('100')
+        with_margin = raw * margin
+        v = max(self.floor or Decimal(0), with_margin)
+        if self.ceiling:
+            v = min(v, self.ceiling)
+        return v
+
+    def __repr__(self):
+        return self.title or self.id
+
+    def __str__(self):
+        return self.title or self.id
+
+
+class Manufacturer(models.Model):
 
     name = models.CharField(max_length=50, blank=True,
                             null=True, unique=True, verbose_name='название')
-    code = models.CharField(max_length=10, blank=True,
-                            null=True, verbose_name='код поставщика')
+
     currency = models.ForeignKey(
-        Currency, on_delete=models.PROTECT, null=True, blank=True, verbose_name='валюта распространения')
-    currency_value_override = models.SmallIntegerField(
-        verbose_name='ручной курс валют', null=True, blank=True)
+        CurrencyModifier, on_delete=models.PROTECT, null=True, blank=True, verbose_name='валюта распространения')
 
-    currency_multiplier_percent = models.FloatField(
-        verbose_name='дополнительная наценка на курс', default=0, null=True, blank=True)
-
-    currency_value_modified_at = models.DateField(null=True, blank=True)
-
-    vendor_discount = models.FloatField(
-        default=0.0, verbose_name='скидка поставщика, %')
+    vendor_discount = models.DecimalField(max_digits=5, decimal_places=2,
+                                          default=Decimal("0"), verbose_name='скидка поставщика, %')
 
     @property
     def discount(self):
-        return 1 - self.vendor_discount / 100
+        return Decimal(1) - self.vendor_discount / Decimal(100)
 
-    def save(self, *args, **kwargs):
-        print(datetime.date.today())
-        if self.currency_value_override != self.__original_currency_value_override:
-            self.currency_value_modified_at = datetime.date.today()
-        super().save(*args, **kwargs)
+    @property
+    def currency_value(self):
+        return self.currency.value
 
     class Meta:
         abstract = True
@@ -284,9 +320,9 @@ class AcrylicCollection(models.Model):
 
     isWhite = models.BooleanField(default=False)
 
-    @ property
+    @property
     def price(self) -> int:
-        currency_value = self.manufacturer.currency_value_override or self.manufacturer.currency.value
+        currency_value = self.manufacturer.currency_value
         return math.ceil(self.standart_raw_price * self.manufacturer.discount * currency_value * self.manufacturer.material.overprice)
 
     class Meta:

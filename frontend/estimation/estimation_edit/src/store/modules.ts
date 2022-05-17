@@ -15,6 +15,7 @@ export const useModuleStore = defineStore('modules', {
             for (let i = 0; i < this.modules_list.length; i++) {
                 const module = this.modules_list[i].code
                 ordered[module]._order = i
+                delete ordered[module].templates
             }
             return ordered
         }

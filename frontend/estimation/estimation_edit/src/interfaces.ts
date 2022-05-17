@@ -28,6 +28,7 @@ export interface Field {
 export interface Module {
     name: string
     code: string
+    _order?: number
     fields: {
         [id: string]: Field
     }

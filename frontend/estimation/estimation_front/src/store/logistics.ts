@@ -106,7 +106,7 @@ export const useLogisticStore = defineStore('logistics', {
         },
         installation: function (): { [key in priceField]?: number } {
             return {
-                price: (this.products.installationTotal > 2
+                price: ((this.products.installationTotal > 2 && this.standart.installation_count.value)
                     ? this.constants.logistics.installation?.price_var * this.products.installationTotal
                     : 0)
                     + this.standart.installation_count.value

@@ -77,27 +77,15 @@ class QuartzManufacturer(Manufacturer):
 
     @property
     def applied_currency(self):
-        if self.currency_value_override:
-            date = self.currency_value_modified_at.strftime(
-                '%d.%m.%y') if self.currency_value_modified_at else None
-            currency_used = {
-                "source": f"внутренний курс поставщика{f' на {date}' if date else ''}",
-                "value": self.currency_value_override
-            }
-        elif self.currency_multiplier_percent:
-            currency_used = {
-                "source": "внутренний курс поставщика (наценка к ЦБ)",
-                "value": self.currency_multiplier_percent * self.currency.value
-            }
-        else:
-            name = self.currency.name
-            date = self.currency.value_date.strftime(
-                '%d.%m.%y') if self.currency.value_date else None
-            value = self.currency.value
-            currency_used = {
-                "source": f"{name}{f' на {date}' if date else ''}",
-                "value": value
-            }
+        date = self.currency.value_date
+        name = self.currency.currency.name
+        date = date.strftime(
+            '%d.%m.%y') if date else None
+        currency_used = {
+            "source": f"Валюта: {name}{f' на {date}' if date else ''}",
+            "value": self.currency.value
+        }
+
         return currency_used
 
     @property
