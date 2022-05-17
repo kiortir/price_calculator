@@ -232,7 +232,7 @@ class CurrencyModifier(models.Model):
 
     @property
     def value_date(self):
-        return max(self.currency.value_date, self.currency.update_time.date())
+        return max(self.currency.value_date or datetime.date(2000, 0, 0), self.currency.update_time.date())
 
     @property
     def value(self):
