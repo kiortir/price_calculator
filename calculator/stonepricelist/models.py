@@ -240,7 +240,7 @@ class CurrencyModifier(models.Model):
             raw = self.currency.value
         else:
             raw = 0
-        margin = 1 + self.margin / Decimal('100')
+        margin = 1 + (self.margin or 0) / Decimal('100')
         with_margin = raw * margin
         v = max(self.floor or Decimal(0), with_margin)
         if self.ceiling:
