@@ -82,7 +82,7 @@ class QuartzManufacturer(Manufacturer):
         date = date.strftime(
             '%d.%m.%y') if date else None
         currency_used = {
-            "source": f"Валюта: {name}{f' на {date}' if date else ''}",
+            "source": f"{name}{f' на {date}' if date else ''}",
             "value": self.currency.value
         }
 

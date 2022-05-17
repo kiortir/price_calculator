@@ -131,11 +131,11 @@ const prevTab = () => {
 
 const listener = (e: KeyboardEvent) => {
     if (isOpen.value) {
-        if (e.ctrlKey && e.key === ' ') {
+        if (e.shiftKey && e.key === ' ') {
             e.preventDefault()
             nextTab()
         }
-        else if (e.shiftKey && e.key === ' ') {
+        else if (e.shiftKey && e.ctrlKey && e.key === ' ') {
             e.preventDefault()
             prevTab()
         }
@@ -156,8 +156,7 @@ function debounce(func, timeout = 80) {
 
 
 function wheel_event(event) {
-    const classlist = event.target.classList
-    if (classlist.contains("el-tabs__item")) {
+    if (event.shiftKey) {
         if (event.wheelDelta > 0) {
             prevTab()
         }
@@ -172,10 +171,10 @@ const wheel_tab = debounce((event) => wheel_event(event));
 </script>
 
 <template>
-    <el-dialog destroy-on-close :fullscreen="!grid.lg" width="85vw" class="" v-model="isOpen"
+    <el-dialog destroy-on-close :fullscreen="!grid.lg" width="800px" class="" v-model="isOpen"
         :title="product?.template || 'Новое изделие'">
-        <div class="mx-auto flex flex-col min-h-[50vh]">
-            <div class="controls" @wheel.prevent="event => wheel_tab(event)">
+        <div class="mx-auto flex flex-col min-h-[50vh]" @wheel="event => wheel_tab(event)">
+            <div class="controls">
                 <el-tabs v-model="selectedModule" type="" :tab-position="grid.lg ? 'right' : 'top'">
                     <el-tab-pane v-for="(item, idx) in tabs" :key="item.name + idx" :label="item.title"
                         :name="item.name">
