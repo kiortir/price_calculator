@@ -1,3 +1,6 @@
+import json
+import logging
+
 from django.http import HttpResponse, JsonResponse
 from querystring_parser import parser as qs_parser
 from rest_framework.authentication import (BasicAuthentication,
@@ -7,10 +10,22 @@ from rest_framework.parsers import BaseParser
 from rest_framework.views import APIView
 
 import amoApi.deserializers as deserialize
-from amoApi.amo_api import getLeads, handle_query_response, handle_webhook, updateCustomFields, updateEvents
+from amoApi.amo_api import (getLeads, handle_query_response, handle_webhook,
+                            updateCustomFields, updateEvents)
 from amoApi.auth import setTokensByAuth
 from amoApi.models import Lead, Token
 from amoApi.serializers import LeadSerializer
+
+logname = 'webhooks.log'
+
+
+logging.basicConfig(filename=logname,
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.INFO)
+
+logger = logging.getLogger('webhooks')
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
@@ -32,7 +47,9 @@ class AmoWebhookEndpoint(APIView):
     parser_classes = [AmoParser]
 
     def post(self, request):
-        handle_webhook(deserialize.webhook(request.data))
+        data = request.data
+        logger.info(json.dumps(data))
+        handle_webhook(deserialize.webhook(data))
         return HttpResponse(status=204)
 
 
@@ -41,7 +58,6 @@ def amo_update_leads(request):
     print('update')
     tokens = Token.objects.get(id=1)
     leads = getLeads(tokens.access_token)
-    print(leads)
     handle_query_response(map(deserialize.response, leads))
     return HttpResponse(status=204)
 
@@ -66,13 +82,14 @@ def amo_update_tokens(request):
     setTokensByAuth(request.data['auth_key'])
     return JsonResponse({'success': True})
 
+
 @api_view(['GET'])
 def getCustomFields(request):
-    
+
     return JsonResponse(updateCustomFields(), safe=False)
 
 
 @api_view(['GET'])
 def getEvents(request):
-    
+
     return JsonResponse(updateEvents(), safe=False)
