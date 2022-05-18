@@ -160,9 +160,8 @@ const showResultsBlock = computed(() => {
                     </div>
                 </div>
             </div>
-            <div class="result-block basis-6/12 hidden md:flex w-full" v-if="showResultsBlock">
-                <el-affix :offset="0" class="w-full">
-
+            <div class="result-block basis-6/12 hidden md:flex w-full">
+                <el-affix :offset="0" class="w-full" v-if="showResultsBlock">
                     <ResultsVue key="1" />
                 </el-affix>
             </div>

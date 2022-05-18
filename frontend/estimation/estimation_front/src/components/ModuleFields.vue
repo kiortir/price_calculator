@@ -38,7 +38,8 @@ const duplicate = () => {
         <!-- <div>
             <el-button type="text" v-if="reference.settings.duplicable" @click="duplicate">Дублировать</el-button>
         </div> -->
-        <el-form :model="data" label-width="auto" :label-position="grid.md ? 'left' : 'top'" @submit.prevent>
+        <div class="text-xl mb-2 font-semibold">{{ reference.name }}</div>
+        <el-form :model="data" label-width="auto" :label-position="grid.lg ? 'left' : 'top'" @submit.prevent>
             <component v-for="(field, id) in reference.fields" :is="refs[field.type]" :reference="field" :data="data"
                 :id="id">
                 <div class="ml-2">
