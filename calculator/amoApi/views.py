@@ -16,16 +16,16 @@ from amoApi.auth import setTokensByAuth
 from amoApi.models import Lead, Token
 from amoApi.serializers import LeadSerializer
 
-logname = 'webhooks.log'
+# logname = 'webhooks.log'
 
 
-logging.basicConfig(filename=logname,
-                    filemode='a',
-                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                    datefmt='%H:%M:%S',
-                    level=logging.INFO)
+# logging.basicConfig(filename=logname,
+#                     filemode='a',
+#                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+#                     datefmt='%H:%M:%S',
+#                     level=logging.INFO)
 
-logger = logging.getLogger('webhooks')
+# logger = logging.getLogger('webhooks')
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
@@ -48,7 +48,7 @@ class AmoWebhookEndpoint(APIView):
 
     def post(self, request):
         data = request.data
-        logger.info(json.dumps(data))
+        # logger.info(json.dumps(data))
         handle_webhook(deserialize.webhook(data))
         return HttpResponse(status=204)
 
