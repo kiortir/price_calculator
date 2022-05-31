@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { useStore } from 'vuex'
 const store = useStore()
 onMounted(async () => {
+  window.onfocus = () => store.dispatch('loadManufacturers')
   store.dispatch('hydrate')
 })
 </script>

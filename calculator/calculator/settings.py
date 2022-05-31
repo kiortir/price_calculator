@@ -205,9 +205,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 USE_DJANGO_JQUERY = True
 
-AMO_CLIENT_SECRET = env('AMO_CLIENT_SECRET')
-AMO_CLIENT_ID = env('AMO_CLIENT_ID')
-
+try:
+    AMO_CLIENT_SECRET = env('AMO_CLIENT_SECRET')
+    AMO_CLIENT_ID = env('AMO_CLIENT_ID')
+except Exception:
+    pass
 
 CHANNEL_LAYERS = {
     'default': {

@@ -44,7 +44,7 @@ class AmoParser(BaseParser):
 class AmoWebhookEndpoint(APIView):
     authentication_classes = (
         CsrfExemptSessionAuthentication, BasicAuthentication)
-    parser_classes = [AmoParser]
+    # parser_classes = [AmoParser]
 
     def post(self, request):
         data = request.data

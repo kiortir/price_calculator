@@ -1,25 +1,24 @@
 {% extends "base_new.html" %}
 {% load static %}
 {% block head %}
-    <head>
-        {% if not debug %}
-            <link href="{% static '/src/pricelist/dist/quartz/css/main.css' %}"
-                  rel="stylesheet">
-        {% endif %}
-        <title>Прайс-лист кварц</title>
-    </head>
+
+<head>
+    {% if not debug %}
+    <link href="{% static '/src/pricelist/dist/quartz/css/main.css' %}" rel="stylesheet">
+    {% endif %}
+    <title>Прайс-лист кварц</title>
+</head>
 {% endblock %}
-<body >
+
+<body>
     {% block content %}<div id="app"></div>{% endblock %}
     {% block scripts %}
-        {% if debug %}
-            <script type="module" src="http://10.0.0.3:9000/@vite/client"></script>
-            <script type="module" src="http://10.0.0.3:9000/src/main.ts"></script>
-        {% else %}
-            <script type="module"
-                    src="{% static 'src/pricelist/dist/quartz/js/main.js'%}"></script>
-            <script type="module"
-                    src="{% static 'src/pricelist/dist/quartz/js/vendor.js'%}"></script>
-        {% endif %}
-    </body>
+    {% if debug %}
+    <script type="module" src="http://localhost:3000/@vite/client"></script>
+    <script type="module" src="http://localhost:3000/src/main.ts"></script>
+    {% else %}
+    <script type="module" src="{% static 'src/pricelist/dist/quartz/js/main.js'%}"></script>
+    <script type="module" src="{% static 'src/pricelist/dist/quartz/js/vendor.js'%}"></script>
+    {% endif %}
+</body>
 {% endblock %}
