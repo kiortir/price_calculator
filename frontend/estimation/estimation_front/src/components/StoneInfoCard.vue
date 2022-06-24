@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, Ref, computed } from 'vue'
+import { ref, Ref, computed, ComputedRef } from 'vue'
 import { Delete, Edit, InfoFilled, RefreshLeft } from '@element-plus/icons-vue'
+import { CascaderValue, CascaderNodeValue } from 'element-plus/es/components/cascader-panel'
 import { Stone } from '../interfaces';
 const props = defineProps<{
     stone: Stone
@@ -8,36 +9,52 @@ const props = defineProps<{
 
 const edit = ref(false)
 
-const available_options = computed(() => {
-    const options = {
-        thickness: new Map(),
-        surface: new Map(),
-        slab_size: new Map(),
-    }
-
-    const chosen_values = Object.entries(props.stone.settings)
-    props.stone.configurations.forEach(configuration => {
-        const is_active = !chosen_values.some((entry) => {
-            const [key, value] = entry
-            if (value === undefined) {
-                return false
-            }
-            return configuration[key] !== value
-        })
-        const settings = ['surface', 'slab_size', 'thickness']
-        settings.forEach(setting => {
-            if (!options[setting].has(configuration[setting]) || !options[setting].get(configuration[setting]))
-                options[setting].set(configuration[setting], is_active)//|| props.stone.settings[setting] !== undefined)
-        });
-    })
-
-    return options
-
-})
-
 const resetStone = () => {
     props.stone.settings = { "thickness": undefined, "slab_size": undefined, "surface": undefined }
 }
+
+const generated_options = computed(() => {
+    const options: object[] = []
+    const used_surface: string[] = []
+    props.stone.configurations.forEach((option) => {
+        let surface_index = used_surface.findIndex((val) => val === option.surface)
+        if (surface_index === -1) {
+            options.push({
+                label: option.surface,
+                value: option.surface,
+                children: []
+            })
+            used_surface.push(option.surface)
+            surface_index = used_surface.length - 1
+        }
+        let thickness_index = options[surface_index].children.findIndex((val) => val.value === option.thickness)
+        if (thickness_index === -1) {
+            options[surface_index].children.push({
+                label: `${option.thickness} мм`,
+                value: option.thickness,
+                children: []
+            })
+            thickness_index = options[surface_index].children.length - 1
+        }
+
+        options[surface_index].children[thickness_index].children.push({
+            label: `${option.slab_size} мм`,
+            value: option.slab_size,
+        })
+    })
+    return options
+})
+
+const stone_value: ComputedRef<CascaderValue | undefined> = computed({
+    get() {
+        return [<CascaderNodeValue>props.stone.settings.surface, <CascaderNodeValue>props.stone.settings.thickness, <CascaderNodeValue>props.stone.settings.slab_size]
+    },
+    set(val: Array<string>) {
+        props.stone.settings.surface = val[0]
+        props.stone.settings.thickness = val[1]
+        props.stone.settings.slab_size = val[2]
+    }
+})
 
 </script>
 
@@ -64,10 +81,20 @@ const resetStone = () => {
                 </div>
             </div>
         </template>
-        <div
-            class="flex flex-col md:grid  md:grid-flow-row md:grid-rows-1 md:grid-cols-2 gap-2 divide-y-2 md:divide-y-0 md:divide-x-2">
-            <div class="controls flex flex-col">
+        <div class="w-full h-fit">
+
+            <div class="">
                 <el-form :model="stone.settings" label-width="auto" label-position="top" @submit.prevent>
+                    <el-form-item label="Конфигурация камня">
+
+                        <el-cascader class="w-full max-w-[400px]" v-model="stone_value" :options="generated_options" />
+                    </el-form-item>
+                    <el-form-item label="Количество листов">
+                        <el-input-number :min="0.5" :step="0.5" v-model="stone.count"></el-input-number>
+                    </el-form-item>
+                </el-form>
+
+                <!-- <el-form :model="stone.settings" label-width="auto" label-position="top" @submit.prevent>
                     <el-form-item label="Толщина камня">
                         <el-radio-group v-model="stone.settings.thickness">
                             <el-radio-button v-for="([thickness_value, is_active]) in available_options.thickness"
@@ -95,7 +122,7 @@ const resetStone = () => {
                     <el-form-item label="Количество листов">
                         <el-input-number :min="0.5" :step="0.5" v-model="stone.count"></el-input-number>
                     </el-form-item>
-                </el-form>
+                </el-form> -->
             </div>
         </div>
     </el-card>

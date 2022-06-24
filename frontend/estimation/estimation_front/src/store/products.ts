@@ -30,8 +30,8 @@ const fieldValue = (field_id: string, values: ProductOption) => {
     const id = field_id.split('_')[0]
     console.log({ field_id: id })
     const formula = <{ [key in priceField]: [] }>moduleStore.data[id]?.formula
-    const settings = moduleStore.data[id].settings
-    const fields = moduleStore.data[id].fields
+    const settings = moduleStore.data[id]?.settings
+    const fields = moduleStore.data[id]?.fields
     const results = <{
         [key in priceField]: number
     }>{}
@@ -162,6 +162,7 @@ export const useProductStore = defineStore('products', {
             const result = []
             const getPrice = this.product_price
             for (const product_id in state.products) {
+                console.log({product_id})
                 const price = getPrice(product_id)
                 if (price.prices.length) { result.push(price) }
             }

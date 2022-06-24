@@ -70,7 +70,7 @@ export const useStore = defineStore('stones', {
                     result[name] = { price: 0, salary: 0, consumables: 0 }
                     continue
                 }
-
+                console.log({config})
                 const cut_price = stone.cut_price * Math.ceil(stone.count % 1)
                 const alleged_overprice = config[0].rub_price * constants.overprice.percent / 100
                 const overprice = Math.min(alleged_overprice, constants.overprice.lte)
