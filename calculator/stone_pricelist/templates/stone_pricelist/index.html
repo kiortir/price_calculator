@@ -1,0 +1,26 @@
+{% extends "base_new.html" %}
+{% load static %}
+{% block head %}
+{% csrf_token %}
+
+<head>
+  {% if not debug %}
+  <link href="{% static '/src/estimation/dist/estimation/css/main.css' %}" rel="stylesheet">
+  {% endif %}
+  <title>Список расчетов</title>
+</head>
+{% endblock %}
+
+<body>
+  {% block content %}<div id="app"></div>{% endblock %}
+  {% block scripts %}
+  {% if debug %}
+  <script type="module" src="http://10.0.0.3:3000/@vite/client"></script>
+  <script type="module" src="http://10.0.0.3:3000/src/main.ts"></script>
+  {% else %}
+  <script type="module" src="{% static '/src/estimation/dist/estimation/js/main.js'%}"></script>
+  {% comment %}
+  <script type="module" src="{% static '/src/estimation/dist/estimation/js/vendor.js'%}"></script> {% endcomment %}
+  {% endif %}
+</body>
+{% endblock %}

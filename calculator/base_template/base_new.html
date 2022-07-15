@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="/static/src/std/dist/css/app.css" rel="stylesheet" />
-    {% block head %}{% endblock %}
-  </head>
 
-  <body class="override">
-    <div class="nav-css">
-        <input type="checkbox" id="nav-css-check">
-        <div class="nav-css-header">
-          <div class="nav-css-title">
-            Unirock
-          </div>
-        </div>
-        <div class="nav-css-btn">
-          <label for="nav-css-check">
-            <span></span>
-            <span></span>
-            <span></span>
-          </label>
-        </div>
-        
-        <div class="nav-css-links">
-          <a href="/estimation/new" tabindex="-1">Новый расчет</a>
-          <a href="/estimation/list" tabindex="-1">Все расчеты</a>
-          <a href="/pricelist/acryl" tabindex="-1">Прайс акрила</a>
-          <a href="/pricelist/quartz" tabindex="-1">Прайс кварца</a>
-          <a href="/production/table" tabindex="-1">График</a>
-        </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="/static/src/std/dist/css/app.css" rel="stylesheet" />
+  {% block head %}{% endblock %}
+</head>
+
+<body class="override">
+  <div class="nav-css" id="navbar">
+    <input type="checkbox" id="nav-css-check">
+    <div class="nav-css-header">
+      <div class="nav-css-title">
+        Unirock
       </div>
-    {% block content %}{% endblock %} {% block scripts %}{% endblock %}
-  </body>
+    </div>
+    <div class="nav-css-btn">
+      <label for="nav-css-check">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+    </div>
+
+    <div class="nav-css-links">
+      <a href="/estimation/new" tabindex="-1">Новый расчет</a>
+      <a href="/estimation/list" tabindex="-1">Все расчеты</a>
+      <a href="/pricelist/acryl" tabindex="-1">Прайс акрила</a>
+      <a href="/pricelist/quartz" tabindex="-1">Прайс кварца</a>
+      <a href="/production/table" tabindex="-1">График</a>
+    </div>
+  </div>
+  {% block content %}{% endblock %} {% block scripts %}{% endblock %}
+</body>
+
 </html>

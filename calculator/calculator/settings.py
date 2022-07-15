@@ -88,6 +88,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'main',
     'stonepricelist',
+    'stone_pricelist',
+
     'amoApi',
     'production_graph',
     'estimation'

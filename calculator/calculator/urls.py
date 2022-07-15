@@ -24,6 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('estimation/', include('estimation.urls')),
     path('pricelist/', include('stonepricelist.urls')),
+    path('price_list/', include('stone_pricelist.urls')),
+
     path('amo/', include('amoApi.urls')),
     path('production/', include('production_graph.urls')),
 ]
